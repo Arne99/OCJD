@@ -1,6 +1,7 @@
 package suncertify.datafile;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
 
@@ -83,6 +84,18 @@ public final class BusinessColumnTest {
 
 	assertFalse(columnOne.equals(columnTwo));
 	assertTrue(columnOne.hashCode() != columnTwo.hashCode());
+    }
+
+    @Test
+    public void shouldCreateAnEmptyStringWithTheSizeOfTheColumnAsTheDefaultValue() {
+
+	final Range range = new Range(0, 10);
+	final BusinessColumn column = new BusinessColumn("test", range);
+
+	final RecordValue value = column.createDefaultValue();
+
+	assertThat(value.getValue().length(), is(equalTo(range.getSize())));
+	assertThat(value.getValue(), is(equalTo("           ")));
     }
 
 }
