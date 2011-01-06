@@ -264,7 +264,41 @@ public final class SchemaWithDeletedColumnTest {
 
 	final String testRecord = "12345deVALID";
 
-	schema.createRecord(testRecord.getBytes(), 1);
+	final DataFileRecord record = schema.createRecord(
+		testRecord.getBytes(), 1);
+
+	assertTrue(record.isValid());
+    }
+
+    @Test
+    public void shouldCreateAnValidRecordFromAnArrayOfBytesIfTheDeletedFlagIsTrue() {
+
+	final String deletedColumnName = "deleted";
+	final String isDeletedValue = "deleted";
+	final String notdeletedFlag = "       ";
+
+	final DeletedColumn newDeletedColumn = new DeletedColumn(
+		deletedColumnName, new Range(0, isDeletedValue.length() - 1),
+		notdeletedFlag, isDeletedValue);
+
+	@SuppressWarnings("serial")
+	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
+	    {
+		add(new BusinessColumn("TestColumn", new Range(
+			isDeletedValue.length(), 12)));
+	    }
+	};
+
+	final DataFileMetaData schema = new SchemaWithDeletedColumn(
+		new DataFileHeader(12, 1234), newDeletedColumn, columns,
+		new Utf8Decoder());
+
+	final String testRecord = isDeletedValue + "12345";
+
+	final DataFileRecord record = schema.createRecord(
+		testRecord.getBytes(), 1);
+
+	assertFalse(record.isValid());
     }
 
     /**
