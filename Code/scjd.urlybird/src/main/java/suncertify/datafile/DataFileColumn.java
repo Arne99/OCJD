@@ -16,8 +16,4 @@ public interface DataFileColumn {
 
     RecordValue createDefaultValue();
 
-    boolean isValidValue(String value);
-
-    boolean isValueDeletedFlag(final String value);
-
 }

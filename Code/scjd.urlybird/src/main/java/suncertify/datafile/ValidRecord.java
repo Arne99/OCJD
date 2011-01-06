@@ -14,18 +14,7 @@ import java.util.List;
  * @author arnelandwehr
  * 
  */
-final class ValidRecord implements DataFileRecord {
-
-    /**
-     * The values of the record. The order represents the column order in the
-     * underlying datafile.
-     */
-    private final List<RecordValue> values;
-
-    /**
-     * the index of the record in the datafile.
-     */
-    private final int index;
+final class ValidRecord extends DataFileRecord {
 
     /**
      * Constructor.
@@ -36,10 +25,7 @@ final class ValidRecord implements DataFileRecord {
      *            the index of this record, must be positiv.
      */
     public ValidRecord(final List<RecordValue> values, final int index) {
-	super();
-	this.values = Collections.unmodifiableList(new ArrayList<RecordValue>(
-		values));
-	this.index = index;
+	super(values, index);
     }
 
     @Override
@@ -59,7 +45,7 @@ final class ValidRecord implements DataFileRecord {
 	}
 
 	final ValidRecord record = (ValidRecord) object;
-	return record.index == this.index && record.values.equals(this.values);
+	return record.index == index && record.values.equals(this.values);
     }
 
     @Override
@@ -71,59 +57,8 @@ final class ValidRecord implements DataFileRecord {
     }
 
     @Override
-    public byte[] getValuesAsBytes() {
-
-	final StringBuilder sb = new StringBuilder();
-	for (final RecordValue value : values) {
-	    sb.append(value.getValue());
-	}
-
-	return sb.toString().getBytes();
-    }
-
-    @Override
     public boolean isValid() {
-
-	boolean isValid = true;
-
-	for (final RecordValue value : values) {
-	    isValid &= value.isValid();
-	    isValid &= !value.isDeletedFlag();
-	}
-
-	return isValid;
+	return true;
     }
 
-    @Override
-    public int getIndex() {
-	return index;
-    }
-
-    @Override
-    public List<String> getAllBusinessValues() {
-
-	final ArrayList<String> businessValues = new ArrayList<String>();
-
-	for (final RecordValue recordValue : values) {
-	    if (recordValue.isBuisnessValue()) {
-		final String trimmedValue = recordValue.getValue().trim();
-		businessValues.add(trimmedValue);
-	    }
-
-	}
-
-	return Collections.unmodifiableList(businessValues);
-    }
-
-    @Override
-    public List<String> getAllValues() {
-
-	final List<String> allValues = new ArrayList<String>();
-
-	for (final RecordValue recordValue : values) {
-	    allValues.add(recordValue.getValue());
-	}
-
-	return Collections.unmodifiableList(allValues);
-    }
 }

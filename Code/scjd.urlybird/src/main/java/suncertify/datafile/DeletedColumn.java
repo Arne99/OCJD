@@ -2,8 +2,6 @@ package suncertify.datafile;
 
 import static suncertify.util.DesignByContract.*;
 
-import java.util.Arrays;
-
 import suncertify.util.Range;
 
 /**
@@ -25,7 +23,9 @@ final class DeletedColumn implements DataFileColumn {
 
     private final Range range;
 
-    private final String deletedFlag;
+    private final String notDeletedFlag;
+
+    private final String isDeletedFlag;
 
     /**
      * The name of the column.
@@ -42,14 +42,16 @@ final class DeletedColumn implements DataFileColumn {
      *            the name of the column, must not be <code>null</code>.
      */
     public DeletedColumn(final String name, final Range range,
-	    final String deletedFlag) {
+	    final String notdeletedFlag, final String isDeletedFlag) {
 	super();
 
-	checkMustNotBeSmallerThen(range.getSize(), deletedFlag.length());
+	checkMustNotBeSmallerThen(range.getSize(), notdeletedFlag.length());
+	checkMustNotBeSmallerThen(range.getSize(), isDeletedFlag.length());
 
 	this.name = name;
 	this.range = range;
-	this.deletedFlag = deletedFlag;
+	this.notDeletedFlag = notdeletedFlag;
+	this.isDeletedFlag = isDeletedFlag;
 
     }
 
@@ -63,7 +65,9 @@ final class DeletedColumn implements DataFileColumn {
 	}
 	final DeletedColumn deletedColumn = (DeletedColumn) object;
 	return deletedColumn.range.equals(this.range)
-		&& deletedColumn.name.equals(this.name);
+		&& deletedColumn.name.equals(this.name)
+		&& deletedColumn.isDeletedFlag.equals(this.isDeletedFlag)
+		&& deletedColumn.notDeletedFlag.equals(this.notDeletedFlag);
     }
 
     @Override
@@ -71,6 +75,8 @@ final class DeletedColumn implements DataFileColumn {
 	int result = 17;
 	result = 31 * result + range.hashCode();
 	result = 31 * result + name.hashCode();
+	result = 31 * result + isDeletedFlag.hashCode();
+	result = 31 * result + notDeletedFlag.hashCode();
 	return result;
     }
 
@@ -101,35 +107,29 @@ final class DeletedColumn implements DataFileColumn {
 
     @Override
     public RecordValue createDefaultValue() {
-	return createValue(deletedFlag);
+	return createValue(notDeletedFlag);
     }
 
     @Override
     public RecordValue createValue(final String value) {
 
-	checkIsTrue(isValidValue(value), value
-		+ "is not an valid value for this column: " + this);
+	checkMustNotBeSmallerThen(range.getSize(), value.length());
 	return new RecordValue(this, value);
-    }
-
-    @Override
-    public boolean isValidValue(final String value) {
-
-	boolean isValid = value != null;
-	isValid = isValid && value.length() <= getSize();
-
-	return isValid;
     }
 
     @Override
     public String toString() {
 	return this.getClass().getSimpleName() + " [ " + "name = " + name
-		+ "; range = " + range + "; deletedFlag = " + deletedFlag
-		+ " ] ";
+		+ "; range = " + range + "; notdeletedFlag = " + notDeletedFlag
+		+ "; isDeletedFlag = " + isDeletedFlag + " ] ";
     }
 
-    @Override
-    public boolean isValueDeletedFlag(final String value) {
-	return deletedFlag.equals(value);
+    RecordValue createDeletedValue() {
+
+	return createValue(isDeletedFlag);
+    }
+
+    boolean isDeletedValue(final String value) {
+	return isDeletedFlag.equals(value);
     }
 }

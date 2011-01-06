@@ -69,28 +69,13 @@ final class BusinessColumn implements DataFileColumn {
     @Override
     public RecordValue createValue(final String value) {
 
-	checkIsTrue(isValidValue(value), value
-		+ "is not an valid value for this column: " + this);
+	checkMustNotBeSmallerThen(range.getSize(), value.length());
 	return new RecordValue(this, value);
     }
 
     @Override
     public RecordValue createDefaultValue() {
 	return createValue("");
-    }
-
-    @Override
-    public boolean isValidValue(final String value) {
-
-	boolean isValid = value != null;
-	isValid = isValid && value.length() <= getSize();
-
-	return isValid;
-    }
-
-    @Override
-    public boolean isValueDeletedFlag(final String value) {
-	return false;
     }
 
 }

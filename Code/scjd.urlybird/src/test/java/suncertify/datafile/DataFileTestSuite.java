@@ -10,10 +10,10 @@ import org.junit.runners.Suite;
  * 
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ UrlyBirdSchemaFactoryTest.class,
+@Suite.SuiteClasses({ Format257SchemaBuilderTest.class,
 	DataFileHeaderTest.class, BusinessColumnTest.class,
-	UrlyBirdSchemaTest.class, DataFileAccessTest.class,
-	Utf8DecoderTest.class, UrlyBirdSchemaFactoryTest.class,
+	SchemaWithDeletedColumnTest.class, DataFileAccessTest.class,
+	Utf8DecoderTest.class, Format257SchemaBuilderTest.class,
 	DataFileHandlerTest.class, RecordValueTest.class,
 	DeletedColumnTest.class })
 public class DataFileTestSuite {

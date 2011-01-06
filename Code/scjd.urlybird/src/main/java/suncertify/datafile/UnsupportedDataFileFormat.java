@@ -6,7 +6,7 @@ import java.io.IOException;
 final class UnsupportedDataFileFormat implements SchemaBuilder {
 
     @Override
-    public DataFileSchema buildSchemaForDataFile(final File file)
+    public DataFileMetaData buildSchemaForDataFile(final File file)
 	    throws UnsupportedDataFileFormatException {
 
 	throw new UnsupportedDataFileFormatException("");

@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 /**
  * Tests for the Class {@link UrlyBirdSchema}.
  */
-public final class UrlyBirdSchemaTest {
+public final class SchemaWithDeletedColumnTest {
 
     /** The test file. */
     private File testFile;

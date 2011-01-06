@@ -32,10 +32,6 @@ class RecordValue {
 	return column.containsBuissnessValues();
     }
 
-    boolean isValid() {
-	return column.isValidValue(value);
-    }
-
     @Override
     public boolean equals(final Object object) {
 
@@ -63,10 +59,6 @@ class RecordValue {
     public String toString() {
 	return getClass().getSimpleName() + " [ " + "column = " + column
 		+ "; value = " + value + " ] ";
-    }
-
-    public boolean isDeletedFlag() {
-	return column.isValueDeletedFlag(value);
     }
 
 }

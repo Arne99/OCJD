@@ -17,7 +17,9 @@ final class Format257SchemaBuilder implements SchemaBuilder {
 
     private static final int SUPPORTED_FORMAT = 257;
 
-    private static final String DELETED_COLUMN_VALUE = "1";
+    private static final String NOT_DELETED_VALUE = "0";
+
+    private static final String IS_DELETED_VALUE = "1";
 
     private static final byte DELETED_COLUMN_LENGTH = 1;
 
@@ -35,7 +37,7 @@ final class Format257SchemaBuilder implements SchemaBuilder {
     }
 
     @Override
-    public final DataFileSchema buildSchemaForDataFile(final File file)
+    public final DataFileMetaData buildSchemaForDataFile(final File file)
 	    throws IOException, UnsupportedDataFileFormatException {
 
 	final int formatId = readFormatIdentifierFromFile(file);
@@ -45,7 +47,7 @@ final class Format257SchemaBuilder implements SchemaBuilder {
 	}
 
 	final RandomAccessFile reader = new RandomAccessFile(file, READ_MODE);
-	DataFileSchema schema = null;
+	DataFileMetaData schema = null;
 	try {
 	    schema = extractSchemaWithReader(reader);
 	} finally {
@@ -70,8 +72,9 @@ final class Format257SchemaBuilder implements SchemaBuilder {
 
     }
 
-    private DataFileSchema extractSchemaWithReader(final RandomAccessFile reader)
-	    throws IOException, UnsupportedDataFileFormatException {
+    private DataFileMetaData extractSchemaWithReader(
+	    final RandomAccessFile reader) throws IOException,
+	    UnsupportedDataFileFormatException {
 
 	final int dataFileFormatIdentifier = reader.readInt();
 	if (SUPPORTED_FORMAT != dataFileFormatIdentifier) {
@@ -85,8 +88,9 @@ final class Format257SchemaBuilder implements SchemaBuilder {
 	final int numberOfColumns = reader.readShort();
 
 	final ArrayList<DataFileColumn> columns = new ArrayList<DataFileColumn>();
-	columns.add(new DeletedColumn(DELETED_COLUMN_NAME, new Range(0, 0),
-		DELETED_COLUMN_VALUE));
+	final DeletedColumn deletedColumn = new DeletedColumn(
+		DELETED_COLUMN_NAME, new Range(0, 0), NOT_DELETED_VALUE,
+		IS_DELETED_VALUE);
 	int startPositionNextColumn = DELETED_COLUMN_LENGTH;
 	for (int i = 0; i < numberOfColumns; i++) {
 
@@ -103,8 +107,8 @@ final class Format257SchemaBuilder implements SchemaBuilder {
 	    startPositionNextColumn += newColumn.getSize();
 	}
 
-	return new DataFileSchema(new DataFileHeader(SUPPORTED_FORMAT,
-		(int) reader.getFilePointer(), DELETED_COLUMN_VALUE), columns,
+	return new SchemaWithDeletedColumn(new DataFileHeader(SUPPORTED_FORMAT,
+		(int) reader.getFilePointer()), deletedColumn, columns,
 		new Utf8Decoder());
     }
 

@@ -15,7 +15,7 @@ public final class DataFileHeaderTest {
     @Test
     public void shouldBeEqualsToIteself() {
 
-	final DataFileHeader header = new DataFileHeader(12, 12, "1");
+	final DataFileHeader header = new DataFileHeader(12, 12);
 	assertTrue(header.equals(header));
     }
 
@@ -27,12 +27,9 @@ public final class DataFileHeaderTest {
 
 	final int key = 13;
 	final int headerLength = 12;
-	final String deletedFlag = "2";
 
-	final DataFileHeader headerOne = new DataFileHeader(key, headerLength,
-		deletedFlag);
-	final DataFileHeader headerTwo = new DataFileHeader(key, headerLength,
-		deletedFlag);
+	final DataFileHeader headerOne = new DataFileHeader(key, headerLength);
+	final DataFileHeader headerTwo = new DataFileHeader(key, headerLength);
 
 	assertTrue(headerOne.equals(headerTwo));
 	assertTrue(headerTwo.equals(headerOne));
@@ -46,12 +43,9 @@ public final class DataFileHeaderTest {
 
 	final int key = 13;
 	final int headerLength = 12;
-	final String deletedFlag = "2";
 
-	final DataFileHeader headerOne = new DataFileHeader(key, headerLength,
-		deletedFlag);
-	final DataFileHeader headerTwo = new DataFileHeader(key, headerLength,
-		deletedFlag);
+	final DataFileHeader headerOne = new DataFileHeader(key, headerLength);
+	final DataFileHeader headerTwo = new DataFileHeader(key, headerLength);
 
 	assertTrue(headerOne.equals(headerTwo));
 	assertEquals(headerOne.hashCode(), headerTwo.hashCode());
@@ -60,8 +54,8 @@ public final class DataFileHeaderTest {
     @Test
     public void shouldReturnDifferentHashCodesForHeadersWithDifferentHeaderLength() {
 
-	final DataFileHeader headerOne = new DataFileHeader(13, 12, "2");
-	final DataFileHeader headerTwo = new DataFileHeader(13, 11, "2");
+	final DataFileHeader headerOne = new DataFileHeader(13, 12);
+	final DataFileHeader headerTwo = new DataFileHeader(13, 11);
 
 	assertFalse(headerOne.equals(headerTwo));
 	assertTrue(headerOne.hashCode() != headerTwo.hashCode());

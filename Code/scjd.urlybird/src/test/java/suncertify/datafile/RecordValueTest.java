@@ -62,18 +62,6 @@ public class RecordValueTest {
     }
 
     @Test
-    public void shouldBeValidIfTheValueIsValidForTheColumn() {
-
-	final DataFileColumn column = mock(DataFileColumn.class);
-	when(column.getSize()).thenReturn(ANY_VALUE.length());
-	when(column.isValidValue(ANY_VALUE)).thenReturn(true);
-
-	final RecordValue recordValue = new RecordValue(column, ANY_VALUE);
-
-	assertTrue(recordValue.isValid());
-    }
-
-    @Test
     public void shouldBeEqualsToItself() {
 
 	final RecordValue value = new RecordValue(ANY_COLUMN, ANY_VALUE);

@@ -1,5 +1,7 @@
 package suncertify.datafile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,5 +20,7 @@ interface DataFileMetaData {
     DataFileRecord createNullRecord(int index);
 
     void checkValidRecord(Collection<String> values);
+
+    boolean isValidDataFile(File dataFileê) throws IOException;
 
 }

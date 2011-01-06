@@ -27,7 +27,7 @@ public final class DataFileHandlerTest {
     private File testFile = new File("");
 
     final DeletedColumn firstColumn = new DeletedColumn("deleted", new Range(0,
-	    0), "1");
+	    0), "0", "1");
 
     final DataFileColumn secondColumn = new BusinessColumn("firstName",
 	    new Range(1, 7));
@@ -139,8 +139,8 @@ public final class DataFileHandlerTest {
 	    throws IOException {
 
 	when(schema.createNullRecord(10)).thenReturn(
-		new ValidRecord(Lists.newArrayList(new RecordValue(firstColumn,
-			"1")), 10));
+		new DeletedRecord(Lists.newArrayList(new RecordValue(
+			firstColumn, "1")), 10));
 
 	final DataFileHandler handler = new DataFileHandler(testFile, schema);
 	final DataFileRecord record = handler.readRecord(10);
@@ -202,12 +202,12 @@ public final class DataFileHandlerTest {
     }
 
     @Test
-    public void shouldReturnTheIndexOfTheFirstInvalidRecordAsAnEmptyIndex()
+    public void shouldReturnTheIndexOfTheFirstInValidRecordAsAnEmptyIndex()
 	    throws IOException {
 
 	final int index = 1;
 
-	final DataFileRecord nullRecord = new ValidRecord(Lists.newArrayList(
+	final DataFileRecord nullRecord = new DeletedRecord(Lists.newArrayList(
 		new RecordValue(firstColumn, "1"), new RecordValue(
 			secondColumn, "       "), new RecordValue(thirdColumn,
 			"        "), new RecordValue(fourthColumn, "  ")),

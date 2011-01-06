@@ -7,21 +7,42 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-final class DataFileSchema implements DataFileMetaData {
+final class SchemaWithDeletedColumn implements DataFileMetaData {
+
+    private static class SortColumnsInDbOrder implements
+	    Comparator<DataFileColumn> {
+
+	@Override
+	public int compare(final DataFileColumn firstColumn,
+		final DataFileColumn secondColumn) {
+	    return firstColumn.getEndIndex() - secondColumn.getStartIndex();
+	}
+
+    }
+
+    private final DeletedColumn deletedColumn;
 
     private final DataFileHeader header;
     private final ArrayList<DataFileColumn> columns;
     private final BytesToStringDecoder decoder;
+    private final int deletedColumnIndex;
 
-    DataFileSchema(final DataFileHeader header,
-	    final Collection<DataFileColumn> columns,
+    SchemaWithDeletedColumn(final DataFileHeader header,
+	    final DeletedColumn deletedColumn,
+	    final Collection<DataFileColumn> otherColumns,
 	    final BytesToStringDecoder decoder) {
 	this.header = header;
+	this.deletedColumn = deletedColumn;
 	this.decoder = decoder;
-	this.columns = new ArrayList<DataFileColumn>(columns);
+	this.columns = new ArrayList<DataFileColumn>(otherColumns);
+	this.columns.add(deletedColumn);
+	Collections.sort(this.columns, new SortColumnsInDbOrder());
+	deletedColumnIndex = this.columns.indexOf(deletedColumn);
     }
 
     @Override
@@ -29,10 +50,10 @@ final class DataFileSchema implements DataFileMetaData {
 	if (object == this) {
 	    return true;
 	}
-	if (!(object instanceof DataFileSchema)) {
+	if (!(object instanceof SchemaWithDeletedColumn)) {
 	    return false;
 	}
-	final DataFileSchema schema = (DataFileSchema) object;
+	final SchemaWithDeletedColumn schema = (SchemaWithDeletedColumn) object;
 	return this.header.equals(schema.header)
 		&& this.columns.equals(schema.columns)
 		&& this.decoder.equals(schema.decoder);
@@ -84,7 +105,8 @@ final class DataFileSchema implements DataFileMetaData {
 	return columns.get(columns.size() - 1).getEndIndex() + 1;
     }
 
-    boolean isValidDataFile(final File file) throws IOException {
+    @Override
+    public boolean isValidDataFile(final File file) throws IOException {
 
 	boolean isValid = true;
 
@@ -96,7 +118,8 @@ final class DataFileSchema implements DataFileMetaData {
     }
 
     @Override
-    public ValidRecord createRecord(final byte[] recordBuffer, final int index) {
+    public DataFileRecord createRecord(final byte[] recordBuffer,
+	    final int index) {
 
 	final List<RecordValue> values = new ArrayList<RecordValue>();
 
@@ -108,7 +131,9 @@ final class DataFileSchema implements DataFileMetaData {
 	    values.add(recordValue);
 	}
 
-	return new ValidRecord(values, index);
+	return (deletedColumn.isDeletedValue(values.get(deletedColumnIndex)
+		.getValue())) ? new DeletedRecord(values, index)
+		: new ValidRecord(values, index);
     }
 
     @Override
@@ -137,11 +162,14 @@ final class DataFileSchema implements DataFileMetaData {
 	final List<RecordValue> recordValues = new ArrayList<RecordValue>();
 
 	for (final DataFileColumn column : columns) {
-	    final RecordValue value = column.createDefaultValue();
-	    recordValues.add(value);
+	    if (deletedColumn.equals(column)) {
+		recordValues.add(deletedColumn.createDeletedValue());
+	    } else {
+		final RecordValue value = column.createDefaultValue();
+		recordValues.add(value);
+	    }
 	}
-
-	return new ValidRecord(recordValues, index);
+	return new DeletedRecord(recordValues, index);
     }
 
     @Override

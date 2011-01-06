@@ -17,7 +17,7 @@ interface SchemaBuilder {
      * @throws InvalidDataFileFormatException
      *             the unsupported data source exception
      */
-    public abstract DataFileSchema buildSchemaForDataFile(final File file)
+    public abstract DataFileMetaData buildSchemaForDataFile(final File file)
 	    throws IOException, UnsupportedDataFileFormatException;
 
 }

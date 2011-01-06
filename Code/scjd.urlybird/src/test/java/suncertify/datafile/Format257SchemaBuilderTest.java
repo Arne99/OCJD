@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 /**
  * The Tests for the Class DataFileSchemaFactory.
  */
-public final class UrlyBirdSchemaFactoryTest {
+public final class Format257SchemaBuilderTest {
 
     /** The Constant SUPPORTED_IDENTIFIER. */
     private static final int SUPPORTED_IDENTIFIER = 257;
