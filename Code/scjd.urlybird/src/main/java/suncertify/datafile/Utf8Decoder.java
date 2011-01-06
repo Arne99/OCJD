@@ -1,5 +1,7 @@
 package suncertify.datafile;
 
+import static suncertify.util.DesignByContract.*;
+
 /**
  * An <code>Utf8Decoder</code> could be used to transform an array of UTF8
  * encoded bytes into an string. This means that:
@@ -20,6 +22,8 @@ final class Utf8Decoder implements BytesToStringDecoder {
 
     @Override
     public String decodeBytesToString(final byte... bytes) {
+
+	checkNotNull(bytes, "bytes");
 
 	final StringBuilder builder = new StringBuilder();
 	for (final byte b : bytes) {

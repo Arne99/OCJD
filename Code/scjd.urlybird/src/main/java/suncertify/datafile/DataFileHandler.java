@@ -26,7 +26,10 @@ class DataFileHandler implements DatabaseHandler {
     private final DataFileMetaData schema;
     private final File file;
 
-    DataFileHandler(final File file, final DataFileMetaData schema) {
+    DataFileHandler(final File file, final DataFileMetaData schema)
+	    throws IOException {
+
+	schema.isValidDataFile(file);
 	this.file = file;
 	this.schema = schema;
     }
@@ -113,6 +116,7 @@ class DataFileHandler implements DatabaseHandler {
     public void writeRecord(final List<String> values, final int index)
 	    throws IOException {
 
+	checkNotNull(values, "values");
 	checkNotNegativ(index, "index");
 
 	final DataFileRecord record = schema.createRecord(values, index);

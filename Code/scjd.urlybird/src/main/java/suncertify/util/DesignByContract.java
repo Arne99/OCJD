@@ -1,5 +1,7 @@
 package suncertify.util;
 
+import java.util.Collection;
+
 public final class DesignByContract {
 
     private DesignByContract() {
@@ -39,4 +41,20 @@ public final class DesignByContract {
 	}
     }
 
+    public static void checkArrayHasLength(final byte[] array, final int lenght) {
+	if (array.length != lenght) {
+	    throw new IllegalArgumentException(
+		    "The array has not the specified length: " + lenght
+			    + "  array length is: " + array.length);
+	}
+    }
+
+    public static void checkCollectionHasSize(final Collection<?> collection,
+	    final int size) {
+	if (collection.size() != size) {
+	    throw new IllegalArgumentException(
+		    "The collection has not the specified size: " + size
+			    + "  collection size is: " + collection.size());
+	}
+    }
 }

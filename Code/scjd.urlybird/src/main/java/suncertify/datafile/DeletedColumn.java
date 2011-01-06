@@ -41,12 +41,9 @@ final class DeletedColumn implements DataFileColumn {
      * @param name
      *            the name of the column, must not be <code>null</code>.
      */
-    public DeletedColumn(final String name, final Range range,
+    DeletedColumn(final String name, final Range range,
 	    final String notdeletedFlag, final String isDeletedFlag) {
 	super();
-
-	checkMustNotBeSmallerThen(range.getSize(), notdeletedFlag.length());
-	checkMustNotBeSmallerThen(range.getSize(), isDeletedFlag.length());
 
 	this.name = name;
 	this.range = range;
@@ -93,6 +90,8 @@ final class DeletedColumn implements DataFileColumn {
     @Override
     public boolean containsValuesOfType(final ColumnType type) {
 
+	checkNotNull(type, "type");
+
 	switch (type) {
 	case DELETED:
 	    return true;
@@ -131,7 +130,6 @@ final class DeletedColumn implements DataFileColumn {
     }
 
     RecordValue createDeletedValue() {
-
 	return createValue(isDeletedFlag);
     }
 

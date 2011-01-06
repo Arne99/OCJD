@@ -15,16 +15,6 @@ public class DeletedColumnTest {
     private static final String ANY_DELETED_FLAG = "1";
     private static final Range ANY_RANGE = new Range(0, 10);
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowAnExceptionIfTheGivenIsDeletedFlagLengthIsGreaterThanThenTheSizeOfTheColumn() {
-
-	final Range rangeWithLength1 = new Range(0, 0);
-	final String isDeletedFlagWithLength2 = "12";
-
-	new DeletedColumn(ANY_NAME, rangeWithLength1, ANY_NOT_DELETED_FLAG,
-		isDeletedFlagWithLength2);
-    }
-
     @Test
     public void shouldBeEqualsToItself() {
 

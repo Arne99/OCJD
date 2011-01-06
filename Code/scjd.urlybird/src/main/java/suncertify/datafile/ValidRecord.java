@@ -24,7 +24,7 @@ final class ValidRecord extends DataFileRecord {
      * @param index
      *            the index of this record, must be positiv.
      */
-    public ValidRecord(final List<RecordValue> values, final int index) {
+    ValidRecord(final List<RecordValue> values, final int index) {
 	super(values, index);
     }
 

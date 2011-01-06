@@ -1,5 +1,7 @@
 package suncertify.datafile;
 
+import static suncertify.util.DesignByContract.*;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +41,8 @@ final class Format257SchemaBuilder implements SchemaBuilder {
     @Override
     public final DataFileMetaData buildSchemaForDataFile(final File file)
 	    throws IOException, UnsupportedDataFileFormatException {
+
+	checkNotNull(file, "file");
 
 	final int formatId = readFormatIdentifierFromFile(file);
 

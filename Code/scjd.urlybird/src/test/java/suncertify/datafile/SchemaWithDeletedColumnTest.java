@@ -262,7 +262,7 @@ public final class SchemaWithDeletedColumnTest {
 		new DataFileHeader(12, 1234), newDeletedColumn, columns,
 		new Utf8Decoder());
 
-	final String testRecord = "12345deVALID";
+	final String testRecord = "123456deVALID";
 
 	final DataFileRecord record = schema.createRecord(
 		testRecord.getBytes(), 1);
@@ -293,7 +293,7 @@ public final class SchemaWithDeletedColumnTest {
 		new DataFileHeader(12, 1234), newDeletedColumn, columns,
 		new Utf8Decoder());
 
-	final String testRecord = isDeletedValue + "12345";
+	final String testRecord = isDeletedValue + "123456";
 
 	final DataFileRecord record = schema.createRecord(
 		testRecord.getBytes(), 1);

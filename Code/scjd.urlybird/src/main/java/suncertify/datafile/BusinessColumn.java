@@ -9,8 +9,9 @@ final class BusinessColumn implements DataFileColumn {
     private final String name;
     private final Range range;
 
-    public BusinessColumn(final String name, final Range range) {
+    BusinessColumn(final String name, final Range range) {
 	super();
+
 	this.name = name;
 	this.range = range;
     }
@@ -75,6 +76,8 @@ final class BusinessColumn implements DataFileColumn {
 
     @Override
     public boolean containsValuesOfType(final ColumnType type) {
+
+	checkNotNull(type, "type");
 
 	switch (type) {
 	case BUSINESS:

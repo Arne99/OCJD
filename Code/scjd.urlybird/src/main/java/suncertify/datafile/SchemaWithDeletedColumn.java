@@ -1,5 +1,7 @@
 package suncertify.datafile;
 
+import static suncertify.util.DesignByContract.*;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +38,7 @@ final class SchemaWithDeletedColumn implements DataFileMetaData {
 	    final DeletedColumn deletedColumn,
 	    final Collection<DataFileColumn> otherColumns,
 	    final BytesToStringDecoder decoder) {
+
 	this.header = header;
 	this.deletedColumn = deletedColumn;
 	this.decoder = decoder;
@@ -108,7 +111,7 @@ final class SchemaWithDeletedColumn implements DataFileMetaData {
     @Override
     public boolean isValidDataFile(final File file) throws IOException {
 
-	boolean isValid = true;
+	boolean isValid = file != null;
 
 	isValid = isValid && file.exists() && file.isFile();
 	isValid = isValid && fileHasValidIdentifier(file);
@@ -120,6 +123,10 @@ final class SchemaWithDeletedColumn implements DataFileMetaData {
     @Override
     public DataFileRecord createRecord(final byte[] recordBuffer,
 	    final int index) {
+
+	checkNotNull(recordBuffer, "recordBuffer");
+	checkArrayHasLength(recordBuffer, getRecordLength());
+	checkNotNegativ(index, "index");
 
 	final List<RecordValue> values = new ArrayList<RecordValue>();
 
@@ -140,6 +147,10 @@ final class SchemaWithDeletedColumn implements DataFileMetaData {
     public DataFileRecord createRecord(final List<String> values,
 	    final int index) {
 
+	checkPositiv(index, "index");
+	checkNotNull(values, "values");
+	checkCollectionHasSize(values, columns.size() - 1);
+
 	final List<RecordValue> recordValues = new ArrayList<RecordValue>();
 
 	final Iterator<String> valueIter = values.iterator();
@@ -158,6 +169,8 @@ final class SchemaWithDeletedColumn implements DataFileMetaData {
 
     @Override
     public DataFileRecord createNullRecord(final int index) {
+
+	checkPositiv(index, "index");
 
 	final List<RecordValue> recordValues = new ArrayList<RecordValue>();
 
