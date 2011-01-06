@@ -113,7 +113,6 @@ class DataFileHandler implements DatabaseHandler {
     public void writeRecord(final List<String> values, final int index)
 	    throws IOException {
 
-	schema.checkValidRecord(values);
 	checkNotNegativ(index, "index");
 
 	final DataFileRecord record = schema.createRecord(values, index);

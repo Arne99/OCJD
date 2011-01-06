@@ -19,8 +19,6 @@ interface DataFileMetaData {
 
     DataFileRecord createNullRecord(int index);
 
-    void checkValidRecord(Collection<String> values);
-
     boolean isValidDataFile(File dataFileê) throws IOException;
 
 }

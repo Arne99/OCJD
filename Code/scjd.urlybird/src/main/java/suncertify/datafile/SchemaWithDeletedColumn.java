@@ -172,8 +172,4 @@ final class SchemaWithDeletedColumn implements DataFileMetaData {
 	return new DeletedRecord(recordValues, index);
     }
 
-    @Override
-    public void checkValidRecord(final Collection<String> values) {
-
-    }
 }

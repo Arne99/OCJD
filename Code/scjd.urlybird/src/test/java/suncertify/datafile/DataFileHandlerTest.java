@@ -224,16 +224,4 @@ public final class DataFileHandlerTest {
 	assertThat(emptyIndex, is(equalTo(index)));
     }
 
-    @SuppressWarnings("unchecked")
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldCheckIfTheValuesToBeWrittenViolatesTheSchema()
-	    throws IOException {
-
-	doThrow(new IllegalArgumentException()).when(schema).checkValidRecord(
-		any(Collection.class));
-
-	final DataFileHandler handler = new DataFileHandler(testFile, schema);
-	handler.writeRecord(Lists.<String> newArrayList(), 0);
-
-    }
 }
