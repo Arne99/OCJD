@@ -54,7 +54,7 @@ public class RecordValueTest {
 
 	final DataFileColumn column = mock(DataFileColumn.class);
 	when(column.getSize()).thenReturn(ANY_VALUE.length());
-	when(column.containsBuissnessValues()).thenReturn(true);
+	when(column.containsValuesOfType(ColumnType.BUSINESS)).thenReturn(true);
 
 	final RecordValue recordValue = new RecordValue(column, ANY_VALUE);
 

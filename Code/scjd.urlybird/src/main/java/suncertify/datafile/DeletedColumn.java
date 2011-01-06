@@ -91,8 +91,14 @@ final class DeletedColumn implements DataFileColumn {
     }
 
     @Override
-    public boolean containsBuissnessValues() {
-	return false;
+    public boolean containsValuesOfType(final ColumnType type) {
+
+	switch (type) {
+	case DELETED:
+	    return true;
+	default:
+	    return false;
+	}
     }
 
     @Override

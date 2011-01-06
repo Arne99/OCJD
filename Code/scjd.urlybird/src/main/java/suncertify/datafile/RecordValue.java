@@ -29,7 +29,7 @@ class RecordValue {
     }
 
     boolean isBuisnessValue() {
-	return column.containsBuissnessValues();
+	return column.containsValuesOfType(ColumnType.BUSINESS);
     }
 
     @Override

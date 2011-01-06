@@ -144,7 +144,7 @@ final class SchemaWithDeletedColumn implements DataFileMetaData {
 
 	final Iterator<String> valueIter = values.iterator();
 	for (final DataFileColumn column : columns) {
-	    if (column.containsBuissnessValues()) {
+	    if (column.containsValuesOfType(ColumnType.BUSINESS)) {
 		final RecordValue value = column.createValue(valueIter.next());
 		recordValues.add(value);
 	    } else {

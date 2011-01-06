@@ -52,11 +52,6 @@ final class BusinessColumn implements DataFileColumn {
     }
 
     @Override
-    public boolean containsBuissnessValues() {
-	return true;
-    }
-
-    @Override
     public int getStartIndex() {
 	return range.getStart();
     }
@@ -78,4 +73,14 @@ final class BusinessColumn implements DataFileColumn {
 	return createValue("");
     }
 
+    @Override
+    public boolean containsValuesOfType(final ColumnType type) {
+
+	switch (type) {
+	case BUSINESS:
+	    return true;
+	default:
+	    return false;
+	}
+    }
 }

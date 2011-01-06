@@ -103,7 +103,7 @@ public class DeletedColumnTest {
 	final DeletedColumn column = new DeletedColumn(ANY_NAME, ANY_RANGE,
 		ANY_NOT_DELETED_FLAG, ANY_DELETED_FLAG);
 
-	assertFalse(column.containsBuissnessValues());
+	assertFalse(column.containsValuesOfType(ColumnType.BUSINESS));
     }
 
     @Test

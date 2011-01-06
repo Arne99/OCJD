@@ -6,7 +6,7 @@ public interface DataFileColumn {
 
     int getSize();
 
-    boolean containsBuissnessValues();
+    boolean containsValuesOfType(ColumnType type);
 
     int getStartIndex();
 
