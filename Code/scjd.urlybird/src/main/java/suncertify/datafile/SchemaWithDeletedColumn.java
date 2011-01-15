@@ -147,7 +147,7 @@ final class SchemaWithDeletedColumn implements DataFileMetaData {
     public DataFileRecord createRecord(final List<String> values,
 	    final int index) {
 
-	checkPositiv(index, "index");
+	checkNotNegativ(index, "index");
 	checkNotNull(values, "values");
 	checkCollectionHasSize(values, columns.size() - 1);
 
