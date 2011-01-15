@@ -17,9 +17,11 @@ import suncertify.db.RecordMatchingSpecification;
 import suncertify.db.RecordNotFoundException;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
 
 /**
  * Test for the class {@link DataFileAccess}.
@@ -32,6 +34,14 @@ public final class DataFileAccessTest {
 
     /** The any file. */
     private File anyFile;
+
+    @Before
+    public void setUp() throws IOException {
+	anyFile = File.createTempFile("test", "test");
+	Files.copy(dataFile, anyFile);
+	anyFile.setWritable(true);
+	anyFile.setWritable(true);
+    }
 
     /**
      * Tear down.
@@ -196,4 +206,29 @@ public final class DataFileAccessTest {
 
 	DataFileAccess.instance().getDatabaseHandler(anyFile);
     }
+
+    @Test
+    public void shouldCreateADatabaseHandlerThatCouldWriteARecordToAnIndex()
+	    throws IOException, UnsupportedDataFileFormatException {
+	final DatabaseHandler handler = DataFileAccess.instance()
+		.getDatabaseHandler(dataFile);
+	final List<String> writeRecord = Lists.newArrayList("TEST",
+		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "");
+	handler.writeRecord(writeRecord, 100);
+
+	final Record readRecord = handler.readRecord(100);
+	assertThat(readRecord.getAllBusinessValues(), is(equalTo(writeRecord)));
+    }
+
+    @Test
+    public void shouldCreateADatabaseHandlerThatCouldDeleteAnValidRecordAtAnIndex()
+	    throws IOException, UnsupportedDataFileFormatException {
+	final DatabaseHandler handler = DataFileAccess.instance()
+		.getDatabaseHandler(dataFile);
+	handler.deleteRecord(6);
+
+	final Record record = handler.readRecord(6);
+	assertFalse(record.isValid());
+    }
+
 }
