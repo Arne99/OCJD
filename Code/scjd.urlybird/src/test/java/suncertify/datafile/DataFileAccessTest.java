@@ -28,17 +28,16 @@ import com.google.common.io.Files;
  */
 public final class DataFileAccessTest {
 
-    /** The data file. */
-    private final File dataFile = new File(
-	    "/Users/arnelandwehr/Coden/Sun Certified Java Developer/Project/Code/scjd.urlybird/src/test/ressources/db-1x1.db");
-
     /** The any file. */
     private File anyFile;
 
     @Before
     public void setUp() throws IOException {
 	anyFile = File.createTempFile("test", "test");
-	Files.copy(dataFile, anyFile);
+	Files.copy(
+		new File(
+			"/Users/arnelandwehr/Coden/Sun Certified Java Developer/Project/Code/scjd.urlybird/src/test/ressources/db-1x1.db"),
+		anyFile);
 	anyFile.setWritable(true);
 	anyFile.setWritable(true);
     }
@@ -70,7 +69,7 @@ public final class DataFileAccessTest {
 	    RecordNotFoundException {
 
 	final DatabaseHandler handler = DataFileAccess.instance()
-		.getDatabaseHandler(dataFile);
+		.getDatabaseHandler(anyFile);
 	final Record record = handler.readRecord(0);
 
 	final List<String> expectedReccord = Lists.newArrayList("Palace",
@@ -84,7 +83,7 @@ public final class DataFileAccessTest {
 	    UnsupportedDataFileFormatException {
 
 	final DatabaseHandler handler = DataFileAccess.instance()
-		.getDatabaseHandler(dataFile);
+		.getDatabaseHandler(anyFile);
 	final Set<Record> records = handler
 		.findMatchingRecords(new RecordMatchingSpecification() {
 
@@ -116,7 +115,7 @@ public final class DataFileAccessTest {
 	    RecordNotFoundException {
 
 	final DatabaseHandler handler = DataFileAccess.instance()
-		.getDatabaseHandler(dataFile);
+		.getDatabaseHandler(anyFile);
 	final Record record = handler.readRecord(5000);
 	assertFalse(record.isValid());
     }
@@ -138,7 +137,7 @@ public final class DataFileAccessTest {
 	    RecordNotFoundException {
 
 	final DatabaseHandler handler = DataFileAccess.instance()
-		.getDatabaseHandler(dataFile);
+		.getDatabaseHandler(anyFile);
 	final Record record = handler.readRecord(9);
 
 	final List<String> expectedReccord = Lists.newArrayList("Dew Drop Inn",
@@ -211,7 +210,7 @@ public final class DataFileAccessTest {
     public void shouldCreateADatabaseHandlerThatCouldWriteARecordToAnIndex()
 	    throws IOException, UnsupportedDataFileFormatException {
 	final DatabaseHandler handler = DataFileAccess.instance()
-		.getDatabaseHandler(dataFile);
+		.getDatabaseHandler(anyFile);
 	final List<String> writeRecord = Lists.newArrayList("TEST",
 		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "");
 	handler.writeRecord(writeRecord, 100);
@@ -224,7 +223,7 @@ public final class DataFileAccessTest {
     public void shouldCreateADatabaseHandlerThatCouldDeleteAnValidRecordAtAnIndex()
 	    throws IOException, UnsupportedDataFileFormatException {
 	final DatabaseHandler handler = DataFileAccess.instance()
-		.getDatabaseHandler(dataFile);
+		.getDatabaseHandler(anyFile);
 	handler.deleteRecord(6);
 
 	final Record record = handler.readRecord(6);
