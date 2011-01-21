@@ -2,11 +2,11 @@ package suncertify.db;
 
 import java.util.HashMap;
 
-class UrlyBirdRecordLocker implements RecordLocker {
+class SynchronizedRecordLocker implements RecordLocker {
 
-    private static final UrlyBirdRecordLocker INSTANCE = new UrlyBirdRecordLocker();
+    private static final SynchronizedRecordLocker INSTANCE = new SynchronizedRecordLocker();
 
-    static UrlyBirdRecordLocker instance() {
+    static SynchronizedRecordLocker instance() {
 	return INSTANCE;
     }
 
@@ -14,7 +14,7 @@ class UrlyBirdRecordLocker implements RecordLocker {
 
     private final String mutex = new String("MUTEX");
 
-    private UrlyBirdRecordLocker() {
+    private SynchronizedRecordLocker() {
 	super();
     }
 
