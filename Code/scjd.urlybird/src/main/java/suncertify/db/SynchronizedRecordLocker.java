@@ -51,6 +51,7 @@ class SynchronizedRecordLocker implements RecordLocker {
 	synchronized (mutex) {
 	    checkRecordOwner(index, id);
 	    lockTable.remove(index);
+	    mutex.notifyAll();
 	}
     }
 
