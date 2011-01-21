@@ -1,22 +1,30 @@
 package suncertify.db;
 
 import java.util.HashMap;
+import java.util.Map;
 
 class SynchronizedRecordLocker implements RecordLocker {
 
-    private static final SynchronizedRecordLocker INSTANCE = new SynchronizedRecordLocker();
+    private static final SynchronizedRecordLocker INSTANCE = new SynchronizedRecordLocker(
+	    new HashMap<Integer, Long>());
 
-    static SynchronizedRecordLocker instance() {
+    public static SynchronizedRecordLocker instance() {
 	return INSTANCE;
     }
 
-    HashMap<Integer, Long> lockTable = new HashMap<Integer, Long>();
+    /**
+     * For testing only!
+     * 
+     * @param lockTable
+     */
+    SynchronizedRecordLocker(final Map<Integer, Long> lockTable) {
+	super();
+	this.lockTable = lockTable;
+    }
+
+    private final Map<Integer, Long> lockTable;
 
     private final String mutex = new String("MUTEX");
-
-    private SynchronizedRecordLocker() {
-	super();
-    }
 
     @Override
     public void checkRecordOwner(final int index, final long id)
