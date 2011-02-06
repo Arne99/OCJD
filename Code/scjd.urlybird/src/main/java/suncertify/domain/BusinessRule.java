@@ -1,8 +1,6 @@
 package suncertify.domain;
 
-import suncertify.common.Command;
-
-public interface BusinessRule<T extends Command> {
+public interface BusinessRule<T> {
 
     boolean isSatisfiedBy(T command);
 

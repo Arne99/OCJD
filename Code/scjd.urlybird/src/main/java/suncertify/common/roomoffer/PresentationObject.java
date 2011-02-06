@@ -1,5 +1,7 @@
 package suncertify.common.roomoffer;
 
-public interface PresentationObject {
+import java.io.Serializable;
+
+public interface PresentationObject extends Serializable {
 
 }

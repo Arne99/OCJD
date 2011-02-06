@@ -7,7 +7,7 @@ public class ServiceFactory implements UrlyBirdServiceFactory {
 
     @Override
     public RoomOfferService getRoomOfferService() {
-	return new UrlyBirdRoomOfferService();
+	return new UrlyBirdRoomOfferService(null, null, null, null);
     }
 
 }
