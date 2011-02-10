@@ -1,8 +1,12 @@
-package suncertify.common.roomoffer;
+package suncertify.common;
 
 import java.util.List;
 
-import suncertify.common.ClientCallback;
+import suncertify.common.roomoffer.CreateRoomCommand;
+import suncertify.common.roomoffer.DeleteRoomCommand;
+import suncertify.common.roomoffer.FindRoomCommand;
+import suncertify.common.roomoffer.RoomOffer;
+import suncertify.common.roomoffer.UpdateRoomCommand;
 
 public interface RoomOfferService {
 

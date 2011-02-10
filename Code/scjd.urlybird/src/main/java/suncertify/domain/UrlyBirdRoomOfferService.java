@@ -5,12 +5,12 @@ import static suncertify.util.DesignByContract.*;
 import java.util.List;
 
 import suncertify.common.ClientCallback;
+import suncertify.common.RoomOfferService;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOffer;
-import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.common.roomoffer.UpdateRoomCommand;
 import suncertify.db.RecordNotFoundException;
 

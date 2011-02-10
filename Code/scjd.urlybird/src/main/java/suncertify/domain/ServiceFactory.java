@@ -1,7 +1,7 @@
 package suncertify.domain;
 
+import suncertify.common.RoomOfferService;
 import suncertify.common.UrlyBirdServiceFactory;
-import suncertify.common.roomoffer.RoomOfferService;
 
 public class ServiceFactory implements UrlyBirdServiceFactory {
 
