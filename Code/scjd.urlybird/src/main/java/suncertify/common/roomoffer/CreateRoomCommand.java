@@ -1,25 +1,18 @@
 package suncertify.common.roomoffer;
 
-import java.util.Date;
-
 import suncertify.common.Command;
 
-public interface CreateRoomCommand extends Command {
+public final class CreateRoomCommand implements Command {
 
-    RoomOffer getRoomOfferToCreate();
+    private final RoomOffer roomOffer;
 
-    String[] getNewRoomOfferValues();
+    public RoomOffer getRoomOffer() {
+	return roomOffer;
+    }
 
-    Date getBookableDate();
-
-    String getCity();
-
-    boolean isSmokingAllowed();
-
-    String getHotel();
-
-    int getRoomSize();
-
-    Money getPrice();
+    public CreateRoomCommand(final RoomOffer roomOffer) {
+	super();
+	this.roomOffer = roomOffer;
+    }
 
 }

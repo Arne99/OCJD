@@ -12,17 +12,20 @@ import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOffer;
 import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.common.roomoffer.UpdateRoomCommand;
+import suncertify.db.RecordNotFoundException;
 
 class UrlyBirdRoomOfferService implements RoomOfferService {
 
-    private final BusinessRule<CreateRoomCommand> isOccupancyIn48Hours;
+    private static final int NOT_LOCKED = -1;
+
+    private final BusinessRule<RoomOffer> isOccupancyIn48Hours;
     private final BusinessRule<RoomOffer> isRoomBookable;
     private final RoomOfferBuilder builder;
     private final Dao<RoomOffer> roomOfferDao;
 
     UrlyBirdRoomOfferService(final Dao<RoomOffer> roomOfferDao,
 	    final RoomOfferBuilder roomOfferBuilder,
-	    final BusinessRule<CreateRoomCommand> isOccupancyIn48Hours,
+	    final BusinessRule<RoomOffer> isOccupancyIn48Hours,
 	    final BusinessRule<RoomOffer> isRoomBookable) {
 	super();
 	this.roomOfferDao = roomOfferDao;
@@ -38,7 +41,7 @@ class UrlyBirdRoomOfferService implements RoomOfferService {
 	checkNotNull(callback, "callback");
 
 	final int roomOfferIndex = command.getRoomOfferIndex();
-	long lock = -1;
+	long lock = NOT_LOCKED;
 	try {
 	    lock = roomOfferDao.lock(roomOfferIndex);
 	    final RoomOffer roomOfferToBook = roomOfferDao.read(roomOfferIndex);
@@ -49,12 +52,10 @@ class UrlyBirdRoomOfferService implements RoomOfferService {
 		    .bookedBy(command.getCustomerId()).build();
 	    roomOfferDao.update(bookedRoomOffer, lock);
 	    callback.onSuccess(bookedRoomOffer);
-	} catch (final ConstraintViolationException e) {
+	} catch (final Exception e) {
 	    callback.onFailure(e.getMessage());
 	} finally {
-	    if (lock != -1) {
-		roomOfferDao.unlock(roomOfferIndex, lock);
-	    }
+	    unlockQuietly(roomOfferIndex, lock);
 	}
     }
 
@@ -65,20 +66,13 @@ class UrlyBirdRoomOfferService implements RoomOfferService {
 	checkNotNull(command, "command");
 	checkNotNull(callback, "callback");
 
-	if (!isOccupancyIn48Hours.isSatisfiedBy(command)
-		&& !callback.onWarning("!!!!!")) {
-	    return;
-	}
-
 	try {
-	    final RoomOffer roomOffer = builder.newRoomOffer()
-		    .bookableAt(command.getBookableDate())
-		    .fromCity(command.getCity())
-		    .smokingAllowed(command.isSmokingAllowed())
-		    .fromHotel(command.getHotel())
-		    .ofSize(command.getRoomSize())
-		    .withPrice(command.getPrice()).build();
-
+	    final RoomOffer roomOffer = builder.copyOf(command.getRoomOffer())
+		    .build();
+	    if (!isOccupancyIn48Hours.isSatisfiedBy(roomOffer)
+		    && !callback.onWarning("!!!!!")) {
+		return;
+	    }
 	    roomOfferDao.create(roomOffer);
 	    callback.onSuccess(roomOffer);
 	} catch (final Exception e) {
@@ -94,13 +88,16 @@ class UrlyBirdRoomOfferService implements RoomOfferService {
 	checkNotNull(command, "command");
 	checkNotNull(callback, "callback");
 
+	final int index = command.getRoomOfferIndexToDelete();
+	long lock = NOT_LOCKED;
 	try {
-	    final int roomOfferIdToDelete = command.getRoomOfferIdToDelete();
-	    final long lock = roomOfferDao.lock(roomOfferIdToDelete);
-	    roomOfferDao.delete(roomOfferIdToDelete, lock);
-	    callback.onSuccess(roomOfferIdToDelete);
+	    lock = roomOfferDao.lock(index);
+	    roomOfferDao.delete(index, lock);
+	    callback.onSuccess(index);
 	} catch (final Exception e) {
 	    callback.onFailure(e.getMessage());
+	} finally {
+	    unlockQuietly(index, lock);
 	}
 
     }
@@ -112,13 +109,19 @@ class UrlyBirdRoomOfferService implements RoomOfferService {
 	checkNotNull(command, "command");
 	checkNotNull(callback, "callback");
 
+	long lock = NOT_LOCKED;
+	final RoomOffer unproofedRoomOffer = command.getUpdatedRoomOffer();
+	final int updateIndex = unproofedRoomOffer.getIndex();
 	try {
-	    final RoomOffer roomOffer = command.getUpdatedRoomOffer();
-	    final long lock = roomOfferDao.lock(roomOffer.getIndex());
-	    roomOfferDao.update(roomOffer, lock);
-	    callback.onSuccess(roomOffer);
+	    final RoomOffer proofedRoomOffer = builder.copyOf(unproofedRoomOffer)
+		    .build();
+	    lock = roomOfferDao.lock(updateIndex);
+	    roomOfferDao.update(proofedRoomOffer, lock);
+	    callback.onSuccess(proofedRoomOffer);
 	} catch (final Exception e) {
 	    callback.onFailure(e.getMessage());
+	} finally {
+	    unlockQuietly(updateIndex, lock);
 	}
     }
 
@@ -135,6 +138,22 @@ class UrlyBirdRoomOfferService implements RoomOfferService {
 	    callback.onSuccess(matchingRoomOffers);
 	} catch (final Exception e) {
 	    callback.onFailure(e.getMessage());
+	}
+
+    }
+
+    private void unlockQuietly(final int index, final long lock) {
+
+	if (lock == NOT_LOCKED) {
+	    return;
+	}
+
+	try {
+	    roomOfferDao.unlock(index, lock);
+	} catch (final SecurityException e) {
+	    e.printStackTrace();
+	} catch (final RecordNotFoundException e) {
+	    e.printStackTrace();
 	}
 
     }

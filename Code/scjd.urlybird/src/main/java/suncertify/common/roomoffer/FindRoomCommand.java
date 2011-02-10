@@ -1,9 +1,20 @@
 package suncertify.common.roomoffer;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
-public interface FindRoomCommand {
+public final class FindRoomCommand {
 
-    Map<String, String> getCriteria();
+    private final Map<String, String> criteria;
+
+    public FindRoomCommand(final Map<String, String> criteria) {
+	super();
+	this.criteria = new HashMap<String, String>(criteria);
+    }
+
+    public Map<String, String> getCriteria() {
+	return Collections.unmodifiableMap(criteria);
+    }
 
 }

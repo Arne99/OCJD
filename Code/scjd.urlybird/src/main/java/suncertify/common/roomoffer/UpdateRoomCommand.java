@@ -1,7 +1,16 @@
 package suncertify.common.roomoffer;
 
-public interface UpdateRoomCommand {
+public final class UpdateRoomCommand {
 
-    RoomOffer getUpdatedRoomOffer();
+    private final RoomOffer updatedRoomOffer;
+
+    public UpdateRoomCommand(final RoomOffer updatedRoomOffer) {
+	super();
+	this.updatedRoomOffer = updatedRoomOffer;
+    }
+
+    public RoomOffer getUpdatedRoomOffer() {
+	return updatedRoomOffer;
+    }
 
 }
