@@ -1,6 +1,5 @@
 package suncertify.admin.service;
 
-import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -69,7 +68,7 @@ public final class AdministrationService {
     }
 
     public boolean isServerRunning() {
-	return state != RunningState.STOPPED;
+	return !state.equals(RunningState.STOPPED);
     }
 
     RoomOfferService startEmbeddedServer(final DatabaseConfiguration dataConfig)
