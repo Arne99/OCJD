@@ -8,6 +8,8 @@ public class ServerState {
 
     private DB database;
 
+    private ServerConfiguration serverConfig;
+
     public static ServerState instance() {
 	return INSTANCE;
     }
@@ -18,6 +20,14 @@ public class ServerState {
 
     void setDatabase(final DB db) {
 	database = db;
+    }
+
+    void setConfig(final ServerConfiguration serverConfig) {
+	this.serverConfig = serverConfig;
+    }
+
+    public ServerConfiguration getConfiguration() {
+	return serverConfig;
     }
 
 }

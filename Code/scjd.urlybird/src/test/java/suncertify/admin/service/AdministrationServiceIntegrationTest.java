@@ -61,6 +61,8 @@ public final class AdministrationServiceIntegrationTest {
 		new FindRoomCommand(Lists.<String> newArrayList("Dew Drop Inn",
 			"Pleasantville", null, null, null, null, null, null)),
 		new FindCallback());
+
+	service.stopServer();
     }
 
     @Test
@@ -83,6 +85,8 @@ public final class AdministrationServiceIntegrationTest {
 	roomOfferService.createRoomOffer(
 		new CreateRoomCommand(Lists.newArrayList("MyHotel")),
 		new CreateCallback());
+
+	service.stopServer();
     }
 
     private static final class CreateCallback implements CreateRoomCallback {
