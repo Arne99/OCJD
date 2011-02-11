@@ -1,6 +1,8 @@
 package suncertify.common;
 
-public interface ClientCallback<T> {
+import java.io.Serializable;
+
+public interface ClientCallback<T> extends Serializable {
 
     void onFailure(String message);
 

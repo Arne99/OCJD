@@ -157,7 +157,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService, Remote {
 
 	try {
 	    roomOfferDao.unlock(index, lock);
-	} catch (final SecurityException e) {
+	} catch (final suncertify.db.SecurityException e) {
 	    e.printStackTrace();
 	} catch (final RecordNotFoundException e) {
 	    e.printStackTrace();

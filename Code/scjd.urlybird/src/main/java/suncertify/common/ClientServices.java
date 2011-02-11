@@ -1,20 +1,11 @@
 package suncertify.common;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-import suncertify.db.DB;
-import suncertify.domain.UrlyBirdRoomOfferService;
+import suncertify.common.roomoffer.RoomOfferService;
 
-public final class ClientServices implements Remote {
+public interface ClientServices extends Remote {
 
-    private final DB database;
-
-    public ClientServices(final DB database) {
-	super();
-	this.database = database;
-    }
-
-    Remote getRoomOfferService() {
-	return new UrlyBirdRoomOfferService(database);
-    }
+    public RoomOfferService getRoomOfferService() throws RemoteException;
 }

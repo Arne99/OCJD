@@ -1,20 +1,24 @@
 package suncertify.common.roomoffer;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public final class FindRoomCommand {
+import suncertify.common.Command;
+import suncertify.domain.Criteria;
 
-    private final Map<String, String> criteria;
+public final class FindRoomCommand implements Command, Criteria<RoomOffer> {
 
-    public FindRoomCommand(final Map<String, String> criteria) {
+    private static final long serialVersionUID = 6794005890219300147L;
+
+    private final List<String> criteria;
+
+    public FindRoomCommand(final List<String> criteria) {
 	super();
-	this.criteria = new HashMap<String, String>(criteria);
+	this.criteria = new ArrayList<String>(criteria);
     }
 
-    public Map<String, String> getCriteria() {
-	return Collections.unmodifiableMap(criteria);
+    public List<String> getCriteria() {
+	return Collections.unmodifiableList(criteria);
     }
-
 }

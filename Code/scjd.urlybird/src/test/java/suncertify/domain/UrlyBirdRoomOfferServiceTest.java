@@ -242,7 +242,7 @@ public class UrlyBirdRoomOfferServiceTest {
     @Test
     public void shouldFindAllMatchingRoomsWithTheDaoAndReturnItToTheClientWithTheOnSuccessMethod() {
 
-	final HashMap<String, String> criteria = new HashMap<String, String>();
+	final ArrayList<String> criteria = Lists.newArrayList();
 	final FindRoomCommand command = new FindRoomCommand(criteria);
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
@@ -261,7 +261,7 @@ public class UrlyBirdRoomOfferServiceTest {
     @Test
     public void shouldInformTheClientWithTheOnFailureMethodIfTheFindCausesAnException() {
 
-	final HashMap<String, String> criteria = new HashMap<String, String>();
+	final ArrayList<String> criteria = Lists.newArrayList();
 	final FindRoomCommand command = new FindRoomCommand(criteria);
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
