@@ -3,16 +3,15 @@ package suncertify.admin.service;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.Naming;
-import java.rmi.Remote;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import suncertify.common.ClientCallback;
 import suncertify.common.ClientServices;
+import suncertify.common.roomoffer.CreateRoomCallback;
+import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.FindRoomCallback;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOffer;
@@ -21,7 +20,7 @@ import suncertify.common.roomoffer.RoomOfferService;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
-public final class AdministrationServiceTest {
+public final class AdministrationServiceIntegrationTest {
 
     File anyFile;
 
@@ -42,7 +41,7 @@ public final class AdministrationServiceTest {
     }
 
     @Test
-    public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresse()
+    public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanFindRooms()
 	    throws Exception {
 
 	final AdministrationService service = new AdministrationService();
@@ -53,24 +52,45 @@ public final class AdministrationServiceTest {
 
 	service.startStandAloneServer(serverConfig, dataConfig);
 
-	Thread.sleep(2000);
-
 	final ClientServices services = (ClientServices) Naming
 		.lookup(serverConfig.getClientServiceName());
 
 	final RoomOfferService roomOfferService = services
 		.getRoomOfferService();
 	roomOfferService.findRoomOffer(
-		new FindRoomCommand(Lists.<String> newArrayList()),
-		new Callback());
-
+		new FindRoomCommand(Lists.<String> newArrayList("Dew Drop Inn",
+			"Pleasantville", null, null, null, null, null, null)),
+		new FindCallback());
     }
 
-    private static final class Callback implements FindRoomCallback {
+    @Test
+    public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanCreateARoom()
+	    throws Exception {
+
+	final AdministrationService service = new AdministrationService();
+
+	final ServerConfiguration serverConfig = new ServerConfiguration();
+	final DatabaseConfiguration dataConfig = new DatabaseConfiguration(
+		anyFile);
+
+	service.startStandAloneServer(serverConfig, dataConfig);
+
+	final ClientServices services = (ClientServices) Naming
+		.lookup(serverConfig.getClientServiceName());
+
+	final RoomOfferService roomOfferService = services
+		.getRoomOfferService();
+	roomOfferService.createRoomOffer(
+		new CreateRoomCommand(Lists.newArrayList("MyHotel")),
+		new CreateCallback());
+    }
+
+    private static final class CreateCallback implements CreateRoomCallback {
 
 	@Override
 	public void onFailure(final String message) {
-	    System.out.println(message);
+	    // TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -80,8 +100,28 @@ public final class AdministrationServiceTest {
 	}
 
 	@Override
+	public void onSuccess(final RoomOffer result) {
+	    // TODO Auto-generated method stub
+
+	}
+
+    }
+
+    private static final class FindCallback implements FindRoomCallback {
+
+	@Override
+	public void onFailure(final String message) {
+	    throw new IllegalStateException();
+	}
+
+	@Override
+	public boolean onWarning(final String message) {
+	    throw new IllegalStateException();
+	}
+
+	@Override
 	public void onSuccess(final List<RoomOffer> result) {
-	    System.out.println(result);
+	    // expected
 	}
 
     }

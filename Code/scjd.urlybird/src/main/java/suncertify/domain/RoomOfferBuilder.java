@@ -1,6 +1,10 @@
 package suncertify.domain;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Currency;
 import java.util.Date;
+import java.util.Locale;
 
 import suncertify.common.Money;
 import suncertify.common.roomoffer.RoomOffer;
@@ -20,6 +24,9 @@ class RoomOfferBuilder {
     }
 
     private static class InnerBuilder implements DefaultBuilder {
+
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd",
+		Locale.US);
 
 	private String hotel;
 
@@ -63,7 +70,6 @@ class RoomOfferBuilder {
 
 	public InnerBuilder(final RoomOfferValidator roomOfferValidator) {
 	    validator = roomOfferValidator;
-
 	}
 
 	@Override
@@ -124,6 +130,86 @@ class RoomOfferBuilder {
 	    return roomOffer;
 	}
 
+	private Boolean convertStringToBoolean(final String string) {
+
+	    if (string == null) {
+		return null;
+	    }
+
+	    if (string.equals("Y")) {
+		return true;
+	    }
+	    if (string.equals("N")) {
+		return false;
+	    }
+	    throw new IllegalArgumentException();
+
+	}
+
+	private Date convertStringToDate(final String string) {
+
+	    if (string == null) {
+		return null;
+	    }
+
+	    try {
+		return dateFormat.parse(string);
+	    } catch (final ParseException e) {
+		throw new IllegalArgumentException(e);
+	    }
+	}
+
+	private Integer convertStringToInteger(final String string) {
+
+	    if (string == null) {
+		return null;
+	    }
+
+	    return Integer.valueOf(string);
+	}
+
+	private Money convertStringToMoney(final String string) {
+
+	    if (string == null) {
+		return null;
+	    }
+
+	    final Currency currency = Currency.getInstance(Locale.US);
+	    final int length = currency.getSymbol(Locale.US).length();
+	    final String amount = string.substring(length, string.length());
+	    return Money.create(amount, currency);
+	}
+
+	@Override
+	public DefaultBuilder ofSize(final String size) {
+	    this.roomSize = convertStringToInteger(size);
+	    return this;
+	}
+
+	@Override
+	public DefaultBuilder smokingAllowed(final String isSmokingAllowed) {
+	    this.smokingAllowed = convertStringToBoolean(isSmokingAllowed);
+	    return this;
+	}
+
+	@Override
+	public DefaultBuilder withPrice(final String price) {
+	    this.price = convertStringToMoney(price);
+	    return this;
+	}
+
+	@Override
+	public DefaultBuilder bookableAt(final String date) {
+	    this.bookableDate = convertStringToDate(date);
+	    return this;
+	}
+
+	@Override
+	public DefaultBuilder withIndex(final String index) {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
+
     }
 
     interface DefaultBuilder {
@@ -132,15 +218,25 @@ class RoomOfferBuilder {
 
 	DefaultBuilder ofSize(final int size);
 
+	DefaultBuilder ofSize(final String size);
+
 	DefaultBuilder smokingAllowed(boolean isSmokingAllowed);
+
+	DefaultBuilder smokingAllowed(String isSmokingAllowed);
 
 	DefaultBuilder fromCity(final String city);
 
 	DefaultBuilder withPrice(final Money price);
 
+	DefaultBuilder withPrice(final String price);
+
 	DefaultBuilder bookableAt(final Date date);
 
+	DefaultBuilder bookableAt(final String date);
+
 	DefaultBuilder withIndex(final int index);
+
+	DefaultBuilder withIndex(final String index);
 
 	DefaultBuilder bookedBy(final String customerId);
 

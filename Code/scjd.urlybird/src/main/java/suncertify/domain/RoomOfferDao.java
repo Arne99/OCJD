@@ -3,6 +3,7 @@ package suncertify.domain;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Date;
 import java.util.List;
@@ -17,17 +18,17 @@ import suncertify.db.SecurityException;
 public class RoomOfferDao implements Dao<RoomOffer> {
 
     private final DB database;
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd",
-	    Locale.US);
 
-    public RoomOfferDao(final DB database) {
+    private final RoomOfferBuilder builder;
+
+    public RoomOfferDao(final DB database, final RoomOfferBuilder builder) {
 	this.database = database;
+	this.builder = builder;
     }
 
     @Override
     public int create(final RoomOffer roomOffer) throws DuplicateKeyException {
-	final String[] values = convertRoomOfferToStringArray(roomOffer);
-	return database.create(values);
+	return database.create(roomOffer.toArray());
     }
 
     @Override
@@ -37,9 +38,17 @@ public class RoomOfferDao implements Dao<RoomOffer> {
     }
 
     @Override
-    public List<RoomOffer> find(final List<String> criteria) {
-	database.find(criteria.toArray(new String[] {}));
-	return null;
+    public List<RoomOffer> find(final List<String> criteria)
+	    throws RecordNotFoundException, ConstraintViolationException {
+	final int[] indices = database.find(criteria.toArray(new String[] {}));
+
+	final List<RoomOffer> matchingRooms = new ArrayList<RoomOffer>();
+	for (final int index : indices) {
+	    final RoomOffer roomOffer = read(index);
+	    matchingRooms.add(roomOffer);
+	}
+
+	return matchingRooms;
     }
 
     @Override
@@ -48,19 +57,15 @@ public class RoomOfferDao implements Dao<RoomOffer> {
     }
 
     @Override
-    public RoomOffer read(final int index) throws RecordNotFoundException {
+    public RoomOffer read(final int index) throws RecordNotFoundException,
+	    ConstraintViolationException {
 	final String[] values = database.read(index);
-	final String hotel = values[0];
-	final String city = values[1];
-	final Integer size = convertStringToInteger(values[2]);
-	final Boolean smokingAllowed = convertStringToBoolean(values[3]);
-	final Money price = convertStringToMoney(values[4]);
-	final Date date = convertStringToDate(values[5]);
-	final String customerId = values[6];
-	final Integer roomIndex = convertStringToInteger(values[7]);
+	final RoomOffer roomOffer = builder.newRoomOffer().fromHotel(values[0])
+		.fromCity(values[1]).ofSize(values[2])
+		.smokingAllowed(values[3]).withPrice(values[4])
+		.bookableAt(values[5]).bookedBy(values[6]).build();
 
-	return new RoomOffer(hotel, city, size, smokingAllowed, price, date,
-		customerId, roomIndex);
+	return roomOffer;
     }
 
     @Override
@@ -73,95 +78,6 @@ public class RoomOfferDao implements Dao<RoomOffer> {
     public void update(final RoomOffer roomOffer, final long lock)
 	    throws RecordNotFoundException, SecurityException {
 
-	final String[] values = convertRoomOfferToStringArray(roomOffer);
-	database.update(roomOffer.getIndex(), values, lock);
+	database.update(roomOffer.getIndex(), roomOffer.toArray(), lock);
     }
-
-    private String convertBooleanToPersistableString(
-	    final boolean smokingAllowed) {
-	return (smokingAllowed) ? "Y" : "N";
-    }
-
-    private String convertDateToPersistableString(final Date bookableDate) {
-
-	return dateFormat.format(bookableDate);
-    }
-
-    private String convertIntToPersistableString(final int roomSize) {
-	return "" + roomSize;
-    }
-
-    private String convertMoneyToPersistableString(final Money price) {
-	final String symbol = price.getCurreny().getSymbol();
-	final BigDecimal amount = price.getAmount();
-	final double doubleValue = amount.setScale(2).doubleValue();
-	return symbol + doubleValue;
-    }
-
-    private String[] convertRoomOfferToStringArray(final RoomOffer roomOffer) {
-
-	final String hotel = roomOffer.getHotel();
-	final String city = roomOffer.getCity();
-	final String roomSize = convertIntToPersistableString(roomOffer
-		.getRoomSize());
-	final String smokingAllowed = convertBooleanToPersistableString(roomOffer
-		.isSmokingAllowed());
-	final String price = convertMoneyToPersistableString(roomOffer
-		.getPrice());
-	final String date = convertDateToPersistableString(roomOffer
-		.getBookableDate());
-	final String customerId = roomOffer.getCustomerId();
-
-	return new String[] { hotel, city, roomSize, smokingAllowed, price,
-		date, customerId };
-    }
-
-    private Boolean convertStringToBoolean(final String string) {
-
-	if (string == null) {
-	    return null;
-	}
-
-	if (string.equals("Y")) {
-	    return true;
-	}
-	if (string.equals("N")) {
-	    return false;
-	}
-	throw new IllegalArgumentException();
-
-    }
-
-    private Date convertStringToDate(final String string) {
-
-	if (string == null) {
-	    return null;
-	}
-
-	try {
-	    return dateFormat.parse(string);
-	} catch (final ParseException e) {
-	    throw new IllegalArgumentException(e);
-	}
-    }
-
-    private Integer convertStringToInteger(final String string) {
-
-	if (string == null) {
-	    return null;
-	}
-
-	return Integer.valueOf(string);
-    }
-
-    private Money convertStringToMoney(final String string) {
-
-	if (string == null) {
-	    return null;
-	}
-
-	final Currency currency = Currency.getInstance(Locale.US);
-	return Money.create(string, currency);
-    }
-
 }

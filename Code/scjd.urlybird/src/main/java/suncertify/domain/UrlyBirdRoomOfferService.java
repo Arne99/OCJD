@@ -26,8 +26,9 @@ public class UrlyBirdRoomOfferService implements RoomOfferService, Remote {
     private final Dao<RoomOffer> roomOfferDao;
 
     public UrlyBirdRoomOfferService(final DB database) {
-	this(new RoomOfferDao(database), new RoomOfferBuilder(),
-		new IsRoomOccupancyIn48Hours(), new IsRoomBookable());
+	this(new RoomOfferDao(database, new RoomOfferBuilder()),
+		new RoomOfferBuilder(), new IsRoomOccupancyIn48Hours(),
+		new IsRoomBookable());
     }
 
     UrlyBirdRoomOfferService(final Dao<RoomOffer> roomOfferDao,
@@ -74,8 +75,10 @@ public class UrlyBirdRoomOfferService implements RoomOfferService, Remote {
 	checkNotNull(callback, "callback");
 
 	try {
-	    final RoomOffer roomOffer = builder.copyOf(command.getRoomOffer())
-		    .build();
+	    final List<String> values = command.getValues();
+	    final RoomOffer roomOffer = builder.newRoomOffer()
+		    .fromHotel(values.get(0)).fromCity(values.get(1))
+		    .ofSize(values.get(2)).build();
 	    if (!isOccupancyIn48Hours.isSatisfiedBy(roomOffer)
 		    && !callback.onWarning("!!!!!")) {
 		return;

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -73,7 +74,7 @@ public final class DataFileAccessTest {
 	final Record record = handler.readRecord(0);
 
 	final List<String> expectedReccord = Lists.newArrayList("Palace",
-		"Smallville", "2", "Y", "$150.00", "2005/07/27", "");
+		"Smallville", "2", "Y", "$150.00", "2005/07/27", "", "0");
 
 	assertThat(record.getAllBusinessValues(), is(equalTo(expectedReccord)));
     }
@@ -141,7 +142,7 @@ public final class DataFileAccessTest {
 	final Record record = handler.readRecord(9);
 
 	final List<String> expectedReccord = Lists.newArrayList("Dew Drop Inn",
-		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "");
+		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "", "9");
 	assertThat(record.getAllBusinessValues(), is(equalTo(expectedReccord)));
     }
 
@@ -216,7 +217,10 @@ public final class DataFileAccessTest {
 	handler.writeRecord(writeRecord, 100);
 
 	final Record readRecord = handler.readRecord(100);
-	assertThat(readRecord.getAllBusinessValues(), is(equalTo(writeRecord)));
+	final List<String> expectedRecord = Lists.newArrayList("TEST",
+		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "", "100");
+	assertThat(readRecord.getAllBusinessValues(),
+		is(equalTo(expectedRecord)));
     }
 
     @Test

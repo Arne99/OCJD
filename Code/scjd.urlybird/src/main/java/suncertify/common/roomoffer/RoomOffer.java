@@ -1,11 +1,17 @@
 package suncertify.common.roomoffer;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import suncertify.common.Money;
 import suncertify.common.PresentationObject;
 
 public final class RoomOffer implements PresentationObject {
+
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd",
+	    Locale.US);
 
     private static final long serialVersionUID = 6482035761421384445L;
 
@@ -111,5 +117,38 @@ public final class RoomOffer implements PresentationObject {
 		+ "; smokingAllowed = " + smokingAllowed + "; price = " + price
 		+ "; bookableDate = " + bookableDate + "; customerId = "
 		+ customerId + "; index = " + index + " ] ";
+    }
+
+    private String convertBooleanToPersistableString(
+	    final boolean smokingAllowed) {
+	return (smokingAllowed) ? "Y" : "N";
+    }
+
+    private String convertDateToPersistableString(final Date bookableDate) {
+
+	return dateFormat.format(bookableDate);
+    }
+
+    private String convertIntToPersistableString(final int roomSize) {
+	return "" + roomSize;
+    }
+
+    private String convertMoneyToPersistableString(final Money price) {
+	final String symbol = price.getCurreny().getSymbol();
+	final BigDecimal amount = price.getAmount();
+	final double doubleValue = amount.setScale(2).doubleValue();
+	return symbol + doubleValue;
+    }
+
+    @Override
+    public String[] toArray() {
+
+	final String roomSize = convertIntToPersistableString(this.roomSize);
+	final String smokingAllowed = convertBooleanToPersistableString(this.smokingAllowed);
+	final String price = convertMoneyToPersistableString(this.price);
+	final String date = convertDateToPersistableString(this.bookableDate);
+
+	return new String[] { hotel, city, roomSize, smokingAllowed, price,
+		date, customerId };
     }
 }

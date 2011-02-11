@@ -3,8 +3,8 @@ package suncertify.domain;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Before;
@@ -17,7 +17,6 @@ import suncertify.common.Money;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
-import suncertify.common.roomoffer.FindRoomCallback;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOffer;
 import suncertify.common.roomoffer.UpdateRoomCommand;
@@ -44,7 +43,16 @@ public class UrlyBirdRoomOfferServiceTest {
     @Before
     public void setUp() {
 	when(builder.copyOf(validRoomOffer)).thenReturn(defaultBuilder);
+	when(builder.newRoomOffer()).thenReturn(defaultBuilder);
 	when(defaultBuilder.bookedBy(anyString())).thenReturn(defaultBuilder);
+	when(defaultBuilder.bookableAt(anyString())).thenReturn(defaultBuilder);
+	when(defaultBuilder.withPrice(anyString())).thenReturn(defaultBuilder);
+	when(defaultBuilder.withIndex(anyString())).thenReturn(defaultBuilder);
+	when(defaultBuilder.fromHotel(anyString())).thenReturn(defaultBuilder);
+	when(defaultBuilder.fromCity(anyString())).thenReturn(defaultBuilder);
+	when(defaultBuilder.smokingAllowed(anyString())).thenReturn(
+		defaultBuilder);
+	when(defaultBuilder.ofSize(anyString())).thenReturn(defaultBuilder);
     }
 
     @Test
@@ -121,7 +129,8 @@ public class UrlyBirdRoomOfferServiceTest {
     public void shouldCreateAnValidRoomAndInformTheClientWithTheOnSuccessMethod()
 	    throws Exception {
 
-	final CreateRoomCommand command = new CreateRoomCommand(validRoomOffer);
+	final CreateRoomCommand command = new CreateRoomCommand(
+		Arrays.asList(validRoomOffer.toArray()));
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, isRoomBookable);
@@ -140,7 +149,8 @@ public class UrlyBirdRoomOfferServiceTest {
     public void shouldCallTheOnWarningCallbackMethodIfTheOccupanyIsNotIn48HoursAndCreateTheRoomIfTheCallbackReturnsTrue()
 	    throws Exception {
 
-	final CreateRoomCommand command = new CreateRoomCommand(validRoomOffer);
+	final CreateRoomCommand command = new CreateRoomCommand(
+		Arrays.asList(validRoomOffer.toArray()));
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, isRoomBookable);
@@ -161,7 +171,8 @@ public class UrlyBirdRoomOfferServiceTest {
     public void shouldCallTheOnWarningCallbackMethodIfTheOccupanyIsNotIn48HoursAndMustNotCrateARoomIfTheCallbackReturnsFalse()
 	    throws Exception {
 
-	final CreateRoomCommand command = new CreateRoomCommand(validRoomOffer);
+	final CreateRoomCommand command = new CreateRoomCommand(
+		Arrays.asList(validRoomOffer.toArray()));
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, isRoomBookable);
@@ -182,7 +193,8 @@ public class UrlyBirdRoomOfferServiceTest {
     public void shouldNotCreateTheRoomIfTheGivenRoomIsInvalidAndInformTheClientWithTheOnFailureMethod()
 	    throws Exception {
 
-	final CreateRoomCommand command = new CreateRoomCommand(validRoomOffer);
+	final CreateRoomCommand command = new CreateRoomCommand(
+		Arrays.asList(validRoomOffer.toArray()));
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, null);
@@ -240,7 +252,8 @@ public class UrlyBirdRoomOfferServiceTest {
     }
 
     @Test
-    public void shouldFindAllMatchingRoomsWithTheDaoAndReturnItToTheClientWithTheOnSuccessMethod() {
+    public void shouldFindAllMatchingRoomsWithTheDaoAndReturnItToTheClientWithTheOnSuccessMethod()
+	    throws RecordNotFoundException, ConstraintViolationException {
 
 	final ArrayList<String> criteria = Lists.newArrayList();
 	final FindRoomCommand command = new FindRoomCommand(criteria);
@@ -259,7 +272,8 @@ public class UrlyBirdRoomOfferServiceTest {
     }
 
     @Test
-    public void shouldInformTheClientWithTheOnFailureMethodIfTheFindCausesAnException() {
+    public void shouldInformTheClientWithTheOnFailureMethodIfTheFindCausesAnException()
+	    throws RecordNotFoundException, ConstraintViolationException {
 
 	final ArrayList<String> criteria = Lists.newArrayList();
 	final FindRoomCommand command = new FindRoomCommand(criteria);
