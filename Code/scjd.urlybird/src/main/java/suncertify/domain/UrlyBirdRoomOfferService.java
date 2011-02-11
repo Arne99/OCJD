@@ -2,19 +2,21 @@ package suncertify.domain;
 
 import static suncertify.util.DesignByContract.*;
 
+import java.rmi.Remote;
 import java.util.List;
 
 import suncertify.common.ClientCallback;
-import suncertify.common.RoomOfferService;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOffer;
+import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.common.roomoffer.UpdateRoomCommand;
+import suncertify.db.DB;
 import suncertify.db.RecordNotFoundException;
 
-class UrlyBirdRoomOfferService implements RoomOfferService {
+public class UrlyBirdRoomOfferService implements RoomOfferService, Remote {
 
     private static final int NOT_LOCKED = -1;
 
@@ -22,6 +24,11 @@ class UrlyBirdRoomOfferService implements RoomOfferService {
     private final BusinessRule<RoomOffer> isRoomBookable;
     private final RoomOfferBuilder builder;
     private final Dao<RoomOffer> roomOfferDao;
+
+    public UrlyBirdRoomOfferService(final DB database) {
+	this(new RoomOfferDao(database), new RoomOfferBuilder(),
+		new IsRoomOccupancyIn48Hours(), new IsRoomBookable());
+    }
 
     UrlyBirdRoomOfferService(final Dao<RoomOffer> roomOfferDao,
 	    final RoomOfferBuilder roomOfferBuilder,
@@ -113,8 +120,8 @@ class UrlyBirdRoomOfferService implements RoomOfferService {
 	final RoomOffer unproofedRoomOffer = command.getUpdatedRoomOffer();
 	final int updateIndex = unproofedRoomOffer.getIndex();
 	try {
-	    final RoomOffer proofedRoomOffer = builder.copyOf(unproofedRoomOffer)
-		    .build();
+	    final RoomOffer proofedRoomOffer = builder.copyOf(
+		    unproofedRoomOffer).build();
 	    lock = roomOfferDao.lock(updateIndex);
 	    roomOfferDao.update(proofedRoomOffer, lock);
 	    callback.onSuccess(proofedRoomOffer);

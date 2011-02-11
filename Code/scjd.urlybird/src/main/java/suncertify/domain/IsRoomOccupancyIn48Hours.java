@@ -1,12 +1,11 @@
 package suncertify.domain;
 
-import suncertify.common.roomoffer.CreateRoomCommand;
+import suncertify.common.roomoffer.RoomOffer;
 
-public class IsRoomOccupancyIn48Hours implements
-	BusinessRule<CreateRoomCommand> {
+public class IsRoomOccupancyIn48Hours implements BusinessRule<RoomOffer> {
 
     @Override
-    public boolean isSatisfiedBy(final CreateRoomCommand command) {
+    public boolean isSatisfiedBy(final RoomOffer roomOffer) {
 	// TODO Auto-generated method stub
 	return false;
     }

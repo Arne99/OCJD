@@ -2,6 +2,9 @@ package suncertify.common.roomoffer;
 
 import java.util.Date;
 
+import suncertify.common.Money;
+import suncertify.common.PresentationObject;
+
 public final class RoomOffer implements PresentationObject {
 
     private static final long serialVersionUID = 6482035761421384445L;

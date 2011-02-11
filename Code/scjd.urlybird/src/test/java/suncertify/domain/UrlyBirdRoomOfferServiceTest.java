@@ -13,12 +13,12 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 
 import suncertify.common.ClientCallback;
+import suncertify.common.Money;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
 import suncertify.common.roomoffer.FindRoomCallback;
 import suncertify.common.roomoffer.FindRoomCommand;
-import suncertify.common.roomoffer.Money;
 import suncertify.common.roomoffer.RoomOffer;
 import suncertify.common.roomoffer.UpdateRoomCommand;
 import suncertify.db.RecordNotFoundException;

@@ -5,14 +5,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
-
 public class Database implements DB {
 
     private final DatabaseHandler handler;
 
     private final RecordLocker locker;
 
-    private Database(final DatabaseHandler handler, final RecordLocker locker) {
+    Database(final DatabaseHandler handler, final RecordLocker locker) {
 	super();
 	this.handler = handler;
 	this.locker = locker;

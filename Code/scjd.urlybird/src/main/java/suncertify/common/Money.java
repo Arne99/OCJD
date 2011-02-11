@@ -1,4 +1,4 @@
-package suncertify.common.roomoffer;
+package suncertify.common;
 
 import java.math.BigDecimal;
 import java.util.Currency;

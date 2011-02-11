@@ -2,7 +2,7 @@ package suncertify.domain;
 
 import java.util.Date;
 
-import suncertify.common.roomoffer.Money;
+import suncertify.common.Money;
 import suncertify.common.roomoffer.RoomOffer;
 
 class RoomOfferBuilder {
