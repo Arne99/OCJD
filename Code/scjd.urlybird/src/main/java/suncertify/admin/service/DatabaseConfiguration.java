@@ -6,7 +6,7 @@ public class DatabaseConfiguration {
 
     private final File location;
 
-    DatabaseConfiguration(final File location) {
+    public DatabaseConfiguration(final File location) {
 	super();
 	this.location = location;
     }

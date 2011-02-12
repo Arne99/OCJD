@@ -6,42 +6,39 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Observable;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 
-public class ServerAdminGui extends Observable {
+public class ServerAdminGui implements ServerConsoleView {
 
     private static final long serialVersionUID = 4762410272117483890L;
 
     final JFrame mainFrame = new JFrame();
     final JPanel databasePanel = new JPanel();
     final JLabel databasePathLabel = new JLabel();
-    final JTextField dbPathTextField = new JTextField();
+    final JFormattedTextField dbPathTextField = new JFormattedTextField();
     final JButton dbPathButton = new JButton();
     final JPanel connectionPanel = new JPanel();
     final JLabel hostLabel = new JLabel();
-    final JTextField hostConnectionTextField = new JTextField();
+    final JFormattedTextField hostConnectionTextField = new JFormattedTextField();
     final JLabel portLabel = new JLabel();
-    final JTextField portTextField = new JTextField();
+    final JFormattedTextField portTextField = new JFormattedTextField();
     final JButton startServerButton = new JButton();
     final JLabel serverIsLabel = new JLabel();
     final JLabel serverStatusLabel = new JLabel();
+    final JFileChooser dbPathChooser = new JFileChooser();
 
+    @Override
     public void startGui() {
 
 	mainFrame.setTitle("Server Administration");
-	mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 	final Container contentPane = mainFrame.getContentPane();
 	contentPane.setLayout(new GridBagLayout());
@@ -169,30 +166,56 @@ public class ServerAdminGui extends Observable {
 	mainFrame.setResizable(false);
 	mainFrame.setVisible(true);
 
-	final JFileChooser dbPathChooser = new JFileChooser();
-	dbPathButton.addActionListener(new ActionListener() {
-
-	    @Override
-	    public void actionPerformed(final ActionEvent e) {
-		final int returnVal = dbPathChooser.showDialog(contentPane,
-			"Select");
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-		    dbPathTextField.setText(dbPathChooser.getSelectedFile()
-			    .getAbsolutePath());
-		}
-
-	    }
-	});
-
-    }
-
-    public static void main(final String[] args) {
 	SwingUtilities.invokeLater(new Runnable() {
 
 	    @Override
 	    public void run() {
-		new ServerAdminGui().startGui();
+		startGui();
 	    }
 	});
+    }
+
+    @Override
+    public JFrame getMainFrame() {
+	return mainFrame;
+    }
+
+    @Override
+    public JFormattedTextField getDbPathTextField() {
+	return dbPathTextField;
+    }
+
+    @Override
+    public JButton getDbPathButton() {
+	return dbPathButton;
+    }
+
+    @Override
+    public JFormattedTextField getHostConnectionTextField() {
+	return hostConnectionTextField;
+    }
+
+    @Override
+    public JFormattedTextField getPortTextField() {
+	return portTextField;
+    }
+
+    @Override
+    public JButton getStartServerButton() {
+	return startServerButton;
+    }
+
+    @Override
+    public JLabel getServerStatusLabel() {
+	return serverStatusLabel;
+    }
+
+    @Override
+    public JFileChooser getDbPathChooser() {
+	return dbPathChooser;
+    }
+
+    public static void main(final String[] args) {
+	new ServerAdminGui().startGui();
     }
 }
