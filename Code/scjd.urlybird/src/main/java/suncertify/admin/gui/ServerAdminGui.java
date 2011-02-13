@@ -14,29 +14,42 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class ServerAdminGui implements ServerConsoleView {
 
     private static final long serialVersionUID = 4762410272117483890L;
-
-    final JFrame mainFrame = new JFrame();
-    final JPanel databasePanel = new JPanel();
-    final JLabel databasePathLabel = new JLabel();
-    final JFormattedTextField dbPathTextField = new JFormattedTextField();
-    final JButton dbPathButton = new JButton();
-    final JPanel connectionPanel = new JPanel();
-    final JLabel hostLabel = new JLabel();
-    final JFormattedTextField hostConnectionTextField = new JFormattedTextField();
-    final JLabel portLabel = new JLabel();
-    final JFormattedTextField portTextField = new JFormattedTextField();
-    final JButton startServerButton = new JButton();
-    final JLabel serverIsLabel = new JLabel();
-    final JLabel serverStatusLabel = new JLabel();
-    final JFileChooser dbPathChooser = new JFileChooser();
+    private JFrame mainFrame;
+    private JPanel databasePanel;
+    private JLabel databasePathLabel;
+    private JFormattedTextField dbPathTextField;
+    private JButton dbPathButton;
+    private JPanel connectionPanel;
+    private JLabel hostLabel;
+    private JFormattedTextField hostConnectionTextField;
+    private JLabel portLabel;
+    private JFormattedTextField portTextField;
+    private JButton startServerButton;
+    private JLabel serverIsLabel;
+    private JLabel serverStatusLabel;
+    private JFileChooser dbPathChooser;
 
     @Override
     public void init() {
+
+	mainFrame = new JFrame();
+	databasePanel = new JPanel();
+	databasePathLabel = new JLabel();
+	dbPathTextField = new JFormattedTextField();
+	dbPathButton = new JButton();
+	connectionPanel = new JPanel();
+	hostLabel = new JLabel();
+	hostConnectionTextField = new JFormattedTextField();
+	portLabel = new JLabel();
+	portTextField = new JFormattedTextField();
+	startServerButton = new JButton();
+	serverIsLabel = new JLabel();
+	serverStatusLabel = new JLabel();
+	dbPathChooser = new JFileChooser();
 
 	mainFrame.setTitle("Server Administration");
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-
 class NullAlwaysMatches implements RecordMatchingSpecification {
 
     private final List<String> criteria;
@@ -32,6 +31,7 @@ class NullAlwaysMatches implements RecordMatchingSpecification {
 	    final String value = valueIter.next();
 	    final int previousIndex = valueIter.previousIndex();
 	    final String relevantCriteria = criteria.get(previousIndex);
+	    // TODO BUg hier muss ein regex hin
 	    if (relevantCriteria != null && !relevantCriteria.equals(value)) {
 		return false;
 	    }
