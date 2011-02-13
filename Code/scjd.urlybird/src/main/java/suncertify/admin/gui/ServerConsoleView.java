@@ -9,7 +9,9 @@ import javax.swing.JTextField;
 
 public interface ServerConsoleView {
 
-    void startGui();
+    void init();
+
+    void show();
 
     JFormattedTextField getDbPathTextField();
 

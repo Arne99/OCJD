@@ -36,7 +36,7 @@ public class ServerAdminGui implements ServerConsoleView {
     final JFileChooser dbPathChooser = new JFileChooser();
 
     @Override
-    public void startGui() {
+    public void init() {
 
 	mainFrame.setTitle("Server Administration");
 
@@ -150,7 +150,7 @@ public class ServerAdminGui implements ServerConsoleView {
 	contentPane.add(serverIsLabel, gridBagConstraints);
 
 	serverStatusLabel.setFont(new Font(Font.SANS_SERIF, 0, 24));
-	serverStatusLabel.setText("Running");
+	serverStatusLabel.setText("Stopped");
 	gridBagConstraints = new GridBagConstraints();
 	gridBagConstraints.gridx = 1;
 	gridBagConstraints.gridy = 0;
@@ -164,15 +164,7 @@ public class ServerAdminGui implements ServerConsoleView {
 	mainFrame.setMinimumSize(new Dimension(480, 580));
 	mainFrame.setLocationRelativeTo(null);
 	mainFrame.setResizable(false);
-	mainFrame.setVisible(true);
 
-	SwingUtilities.invokeLater(new Runnable() {
-
-	    @Override
-	    public void run() {
-		startGui();
-	    }
-	});
     }
 
     @Override
@@ -216,6 +208,11 @@ public class ServerAdminGui implements ServerConsoleView {
     }
 
     public static void main(final String[] args) {
-	new ServerAdminGui().startGui();
+	new ServerAdminGui().init();
+    }
+
+    @Override
+    public void show() {
+	mainFrame.setVisible(true);
     }
 }
