@@ -3,6 +3,7 @@ package suncertify.client;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class FindDialog {
 
@@ -22,13 +23,13 @@ public class FindDialog {
     public void showModalDialog(final JFrame mainFrame) {
 
 	final JDialog dialog = new JDialog(mainFrame, true);
-	initPanel();
+	init();
 	dialog.add(panel);
 	dialog.repaint();
 	dialog.setVisible(true);
     }
 
-    public void initPanel() {
+    public void init() {
 
 	jButton1 = new javax.swing.JButton();
 	jButton2 = new javax.swing.JButton();
@@ -159,4 +160,5 @@ public class FindDialog {
 	gridBagConstraints.insets = new java.awt.Insets(12, 29, 0, 0);
 	panel.add(jLabel3, gridBagConstraints);
     }
+
 }
