@@ -16,7 +16,7 @@ import suncertify.common.roomoffer.UpdateRoomCommand;
 import suncertify.db.DB;
 import suncertify.db.RecordNotFoundException;
 
-public class UrlyBirdRoomOfferService implements RoomOfferService, Remote {
+public class UrlyBirdRoomOfferService implements RoomOfferService {
 
     private static final int NOT_LOCKED = -1;
 

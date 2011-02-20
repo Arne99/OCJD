@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import suncertify.common.ClientServices;
-import suncertify.common.roomoffer.RemoteUrlyBirdRoomOfferService;
 import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.db.DB;
 import suncertify.domain.UrlyBirdRoomOfferService;
@@ -29,17 +28,17 @@ public final class ClientServicesImpl extends UnicastRemoteObject implements
     private static final long serialVersionUID = 1L;
 
     public void disableServices() {
-	ServiceAccessProxy.disableAccess();
+	RemoteRoomOfferServiceProxy.disableAccess();
     }
 
     public void enableServices() {
-	ServiceAccessProxy.enableAccess();
+	RemoteRoomOfferServiceProxy.enableAccess();
     }
 
     @Override
     public RoomOfferService getRoomOfferService() throws RemoteException {
 	final DB database = ServerState.instance().getDatabase();
-	return new ServiceAccessProxy(new RemoteUrlyBirdRoomOfferService(
-		new UrlyBirdRoomOfferService(database)));
+	return new RemoteRoomOfferServiceProxy(new UrlyBirdRoomOfferService(
+		database));
     }
 }

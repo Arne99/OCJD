@@ -12,7 +12,7 @@ import suncertify.common.roomoffer.RoomOffer;
 import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.common.roomoffer.UpdateRoomCommand;
 
-class ServiceAccessProxy extends UnicastRemoteObject implements
+class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
 	RoomOfferService {
 
     private static final long serialVersionUID = -1158034211648936653L;
@@ -21,7 +21,8 @@ class ServiceAccessProxy extends UnicastRemoteObject implements
 
     private static boolean accessible = true;
 
-    ServiceAccessProxy(final RoomOfferService delegate) throws RemoteException {
+    RemoteRoomOfferServiceProxy(final RoomOfferService delegate)
+	    throws RemoteException {
 	super();
 	this.delegate = delegate;
     }

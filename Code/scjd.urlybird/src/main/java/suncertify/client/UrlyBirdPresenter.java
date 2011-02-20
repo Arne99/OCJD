@@ -66,20 +66,24 @@ public class UrlyBirdPresenter {
 
 	// enable or disable
 
-	switch (mode) {
-	case CLIENT_SERVER: {
-
-	    break;
-	}
-	case LOCAL: {
-	    break;
-	}
-
-	}
+	// switch (mode) {
+	// case CLIENT_SERVER: {
+	//
+	// break;
+	// }
+	// case LOCAL: {
+	// break;
+	// }
+	//
+	// }
 
 	// addListener
 
 	// setVisible
 
+    }
+
+    public static void main(final String[] args) {
+	new UrlyBirdPresenter(new UrlyBirdView(), null, null, null);
     }
 }
