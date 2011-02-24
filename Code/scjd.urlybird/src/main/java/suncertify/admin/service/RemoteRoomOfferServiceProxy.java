@@ -8,9 +8,10 @@ import suncertify.common.ClientCallback;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
-import suncertify.common.roomoffer.RoomOffer;
 import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.common.roomoffer.UpdateRoomCommand;
+import suncertify.domain.RoomOffer;
+import suncertify.util.Pair;
 
 class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
 	RoomOfferService {

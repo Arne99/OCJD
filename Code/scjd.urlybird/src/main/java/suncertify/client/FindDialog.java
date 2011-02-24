@@ -5,14 +5,17 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-public class FindPanel extends JPanel {
+public class FindDialog extends JDialog {
 
     private static final long serialVersionUID = -4765527763438947184L;
 
@@ -27,13 +30,17 @@ public class FindPanel extends JPanel {
     private JRadioButton orRadioButton;
     private JTextField hotelTextField;
     private JTextField locationTextField;
+    private ButtonGroup buttonGroup;
+    private JPanel mainPanel;
 
-    public FindPanel() {
+    public FindDialog(final JFrame parentFrame) {
+	super(parentFrame, "Find Rooms", true);
 	init();
     }
 
     public void init() {
 
+	mainPanel = new JPanel();
 	findButton = new JButton();
 	discardButton = new JButton();
 	hotelLabel = new JLabel();
@@ -45,6 +52,7 @@ public class FindPanel extends JPanel {
 	anyHotelCheckBox = new JCheckBox();
 	anyLocationCheckBox = new JCheckBox();
 	findRoomsLabel = new JLabel();
+	buttonGroup = new ButtonGroup();
 
 	this.setLayout(new GridBagLayout());
 	GridBagConstraints gridBagConstraints;
@@ -56,7 +64,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 23;
 	gridBagConstraints.ipady = 15;
 	gridBagConstraints.insets = new Insets(43, 10, 0, 0);
-	this.add(findButton, gridBagConstraints);
+	mainPanel.add(findButton, gridBagConstraints);
 
 	discardButton.setText("Discard");
 	gridBagConstraints = new GridBagConstraints();
@@ -67,7 +75,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 9;
 	gridBagConstraints.ipady = 17;
 	gridBagConstraints.insets = new Insets(42, 15, 36, 0);
-	this.add(discardButton, gridBagConstraints);
+	mainPanel.add(discardButton, gridBagConstraints);
 
 	hotelLabel.setFont(new Font("Lucida Grande", 0, 24));
 	hotelLabel.setText("Hotel");
@@ -75,7 +83,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.gridx = 0;
 	gridBagConstraints.gridy = 1;
 	gridBagConstraints.insets = new Insets(34, 29, 0, 0);
-	this.add(hotelLabel, gridBagConstraints);
+	mainPanel.add(hotelLabel, gridBagConstraints);
 
 	locationLabel.setFont(new Font("Lucida Grande", 0, 24));
 	locationLabel.setText("Location");
@@ -84,7 +92,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.gridy = 6;
 	gridBagConstraints.gridwidth = 2;
 	gridBagConstraints.insets = new Insets(47, 20, 0, 0);
-	this.add(locationLabel, gridBagConstraints);
+	mainPanel.add(locationLabel, gridBagConstraints);
 
 	andRadioButton.setFont(new Font("Lucida Grande", 0, 18));
 	andRadioButton.setText("and");
@@ -95,7 +103,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 18;
 	gridBagConstraints.ipady = 10;
 	gridBagConstraints.insets = new Insets(18, 66, 0, 0);
-	this.add(andRadioButton, gridBagConstraints);
+	mainPanel.add(andRadioButton, gridBagConstraints);
 
 	orRadioButton.setFont(new Font("Lucida Grande", 0, 18));
 	orRadioButton.setText("or");
@@ -106,7 +114,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 15;
 	gridBagConstraints.ipady = 13;
 	gridBagConstraints.insets = new Insets(0, 66, 0, 0);
-	this.add(orRadioButton, gridBagConstraints);
+	mainPanel.add(orRadioButton, gridBagConstraints);
 
 	hotelTextField.setText("");
 	gridBagConstraints = new GridBagConstraints();
@@ -117,7 +125,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 157;
 	gridBagConstraints.ipady = 12;
 	gridBagConstraints.insets = new Insets(31, 10, 0, 0);
-	this.add(hotelTextField, gridBagConstraints);
+	mainPanel.add(hotelTextField, gridBagConstraints);
 
 	locationTextField.setText("");
 	gridBagConstraints = new GridBagConstraints();
@@ -128,7 +136,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 157;
 	gridBagConstraints.ipady = 14;
 	gridBagConstraints.insets = new Insets(42, 10, 0, 0);
-	this.add(locationTextField, gridBagConstraints);
+	mainPanel.add(locationTextField, gridBagConstraints);
 
 	anyHotelCheckBox.setFont(new Font("Lucida Grande", 0, 18));
 	anyHotelCheckBox.setText("any");
@@ -140,7 +148,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 44;
 	gridBagConstraints.ipady = 9;
 	gridBagConstraints.insets = new Insets(31, 6, 0, 0);
-	this.add(anyHotelCheckBox, gridBagConstraints);
+	mainPanel.add(anyHotelCheckBox, gridBagConstraints);
 
 	anyLocationCheckBox.setFont(new Font("Lucida Grande", 0, 18));
 	anyLocationCheckBox.setText("any");
@@ -152,7 +160,7 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 44;
 	gridBagConstraints.ipady = 11;
 	gridBagConstraints.insets = new Insets(42, 6, 0, 0);
-	this.add(anyLocationCheckBox, gridBagConstraints);
+	mainPanel.add(anyLocationCheckBox, gridBagConstraints);
 
 	findRoomsLabel.setFont(new Font("Lucida Grande", 0, 24));
 	findRoomsLabel.setText("Find Rooms from:");
@@ -163,7 +171,15 @@ public class FindPanel extends JPanel {
 	gridBagConstraints.ipadx = 190;
 	gridBagConstraints.ipady = 17;
 	gridBagConstraints.insets = new Insets(12, 29, 0, 0);
-	this.add(findRoomsLabel, gridBagConstraints);
+	mainPanel.add(findRoomsLabel, gridBagConstraints);
+
+	buttonGroup.add(andRadioButton);
+	buttonGroup.add(orRadioButton);
+
+	andRadioButton.setSelected(true);
+
+	this.add(mainPanel);
+	this.pack();
     }
 
     public JButton getFindButton() {

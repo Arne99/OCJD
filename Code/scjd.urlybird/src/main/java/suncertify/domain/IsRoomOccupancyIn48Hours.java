@@ -1,6 +1,5 @@
 package suncertify.domain;
 
-import suncertify.common.roomoffer.RoomOffer;
 
 public class IsRoomOccupancyIn48Hours implements BusinessRule<RoomOffer> {
 

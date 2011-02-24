@@ -6,11 +6,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class ServerConnectionPanel extends JPanel {
+public class ServerConnectionDialog extends JDialog {
 
     private static final long serialVersionUID = -6561677906315526844L;
 
@@ -19,25 +22,30 @@ public class ServerConnectionPanel extends JPanel {
     private JLabel connectLabel;
     private JLabel hostLabel;
     private JLabel portLabel;
-    private JTextField hostTextField;
-    private JTextField portTextField;
+    private JFormattedTextField hostTextField;
+    private JFormattedTextField portTextField;
 
-    public ServerConnectionPanel() {
+    private JPanel mainPanel;
+
+    public ServerConnectionDialog(final JFrame parentFrame) {
+	super(parentFrame, "Connection", true);
 	init();
     }
 
     private void init() {
 	GridBagConstraints gridBagConstraints;
 
+	mainPanel = new JPanel();
+
 	connectLabel = new JLabel();
 	hostLabel = new JLabel();
 	portLabel = new JLabel();
 	connectButton = new JButton();
 	discardButton = new JButton();
-	hostTextField = new JTextField();
-	portTextField = new JTextField();
+	hostTextField = new JFormattedTextField();
+	portTextField = new JFormattedTextField();
 
-	setLayout(new GridBagLayout());
+	mainPanel.setLayout(new GridBagLayout());
 
 	connectLabel.setFont(new Font("Lucida Grande", 0, 24));
 	connectLabel.setText("Connect to");
@@ -49,7 +57,7 @@ public class ServerConnectionPanel extends JPanel {
 	gridBagConstraints.ipady = 10;
 	gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
 	gridBagConstraints.insets = new Insets(33, 54, 0, 0);
-	add(connectLabel, gridBagConstraints);
+	mainPanel.add(connectLabel, gridBagConstraints);
 
 	hostLabel.setFont(new Font("Lucida Grande", 0, 14));
 	hostLabel.setText("Host");
@@ -58,7 +66,7 @@ public class ServerConnectionPanel extends JPanel {
 	gridBagConstraints.gridy = 1;
 	gridBagConstraints.gridwidth = 2;
 	gridBagConstraints.insets = new Insets(49, 54, 0, 0);
-	add(hostLabel, gridBagConstraints);
+	mainPanel.add(hostLabel, gridBagConstraints);
 
 	portLabel.setFont(new Font("Lucida Grande", 0, 14));
 	portLabel.setText("Port");
@@ -66,7 +74,7 @@ public class ServerConnectionPanel extends JPanel {
 	gridBagConstraints.gridx = 0;
 	gridBagConstraints.gridy = 3;
 	gridBagConstraints.insets = new Insets(34, 54, 0, 0);
-	add(portLabel, gridBagConstraints);
+	mainPanel.add(portLabel, gridBagConstraints);
 
 	connectButton.setText("Connect");
 	gridBagConstraints = new GridBagConstraints();
@@ -77,7 +85,7 @@ public class ServerConnectionPanel extends JPanel {
 	gridBagConstraints.ipady = 13;
 	gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
 	gridBagConstraints.insets = new Insets(77, 77, 25, 0);
-	add(connectButton, gridBagConstraints);
+	mainPanel.add(connectButton, gridBagConstraints);
 
 	discardButton.setText("Discard");
 	gridBagConstraints = new GridBagConstraints();
@@ -88,7 +96,7 @@ public class ServerConnectionPanel extends JPanel {
 	gridBagConstraints.ipady = 12;
 	gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
 	gridBagConstraints.insets = new Insets(78, 28, 25, 0);
-	add(discardButton, gridBagConstraints);
+	mainPanel.add(discardButton, gridBagConstraints);
 
 	hostTextField.setText("");
 	gridBagConstraints = new GridBagConstraints();
@@ -98,7 +106,7 @@ public class ServerConnectionPanel extends JPanel {
 	gridBagConstraints.gridheight = 2;
 	gridBagConstraints.ipadx = 242;
 	gridBagConstraints.insets = new Insets(44, 14, 0, 20);
-	add(hostTextField, gridBagConstraints);
+	mainPanel.add(hostTextField, gridBagConstraints);
 
 	portTextField.setText("");
 	gridBagConstraints = new GridBagConstraints();
@@ -108,7 +116,10 @@ public class ServerConnectionPanel extends JPanel {
 	gridBagConstraints.gridheight = 2;
 	gridBagConstraints.ipadx = 245;
 	gridBagConstraints.insets = new Insets(29, 11, 0, 20);
-	add(portTextField, gridBagConstraints);
+	mainPanel.add(portTextField, gridBagConstraints);
+
+	this.add(mainPanel);
+	this.pack();
     }
 
     public JButton getConnectButton() {
@@ -131,11 +142,11 @@ public class ServerConnectionPanel extends JPanel {
 	return portLabel;
     }
 
-    public JTextField getHostTextField() {
+    public JFormattedTextField getHostTextField() {
 	return hostTextField;
     }
 
-    public JTextField getPortTextField() {
+    public JFormattedTextField getPortTextField() {
 	return portTextField;
     }
 

@@ -3,18 +3,19 @@ package suncertify.common.roomoffer;
 import java.io.Serializable;
 
 import suncertify.common.Command;
+import suncertify.domain.RoomOffer;
 
-public final class BookRoomCommand implements Command, Serializable {
+public final class BookRoomCommand implements Command {
 
     private static final long serialVersionUID = -225024283571144227L;
 
-    private final int indexToBook;
-
     private final String customerId;
 
-    public BookRoomCommand(final int index, final String customerId) {
+    private final RoomOffer roomToBook;
+
+    public BookRoomCommand(final RoomOffer roomToBook, final String customerId) {
 	super();
-	this.indexToBook = index;
+	this.roomToBook = roomToBook;
 	this.customerId = customerId;
     }
 
@@ -22,8 +23,8 @@ public final class BookRoomCommand implements Command, Serializable {
 	return customerId;
     }
 
-    public int getRoomOfferIndex() {
-	return indexToBook;
+    public RoomOffer getRoomToBook() {
+	return roomToBook;
     }
 
 }

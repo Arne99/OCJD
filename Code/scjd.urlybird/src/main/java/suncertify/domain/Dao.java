@@ -3,7 +3,6 @@ package suncertify.domain;
 import java.util.List;
 import java.util.Map;
 
-import suncertify.common.roomoffer.RoomOffer;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;
 

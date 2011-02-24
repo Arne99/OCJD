@@ -166,8 +166,7 @@ public class UrlyBirdView {
 		{ null, null, null, null, null, null, null },
 		{ null, null, null, null, null, null, null },
 		{ null, null, null, null, null, null, null } }, new String[] {
-		"Hotel Name", "Location", "Room Size", "Smoking Allowed",
-		"Price", "Date", "Custumor ID" }));
+		"", "", "", "", "", "", "" }));
 	jScrollPane1.setViewportView(roomTable);
 
 	GridBagConstraints gridBagConstraints = new GridBagConstraints();

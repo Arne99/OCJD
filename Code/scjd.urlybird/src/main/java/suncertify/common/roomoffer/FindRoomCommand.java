@@ -1,24 +1,32 @@
 package suncertify.common.roomoffer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import suncertify.common.Command;
-import suncertify.domain.Criteria;
 
-public final class FindRoomCommand implements Command, Criteria<RoomOffer> {
+public final class FindRoomCommand implements Command {
 
     private static final long serialVersionUID = 6794005890219300147L;
+    private final String hotel;
+    private final String location;
+    private final boolean and;
 
-    private final List<String> criteria;
-
-    public FindRoomCommand(final List<String> criteria) {
+    public FindRoomCommand(final String hotel, final String location,
+	    final boolean and) {
 	super();
-	this.criteria = new ArrayList<String>(criteria);
+	this.hotel = hotel;
+	this.location = location;
+	this.and = and;
     }
 
-    public List<String> getCriteria() {
-	return Collections.unmodifiableList(criteria);
+    public String getHotel() {
+	return hotel;
     }
+
+    public String getLocation() {
+	return location;
+    }
+
+    public boolean isAnd() {
+	return and;
+    }
+
 }

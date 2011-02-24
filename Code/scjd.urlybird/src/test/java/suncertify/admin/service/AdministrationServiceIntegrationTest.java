@@ -9,13 +9,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import suncertify.common.ClientCallback;
 import suncertify.common.ClientServices;
-import suncertify.common.roomoffer.CreateRoomCallback;
 import suncertify.common.roomoffer.CreateRoomCommand;
-import suncertify.common.roomoffer.FindRoomCallback;
 import suncertify.common.roomoffer.FindRoomCommand;
-import suncertify.common.roomoffer.RoomOffer;
 import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.domain.RoomOffer;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
@@ -57,10 +56,8 @@ public final class AdministrationServiceIntegrationTest {
 
 	final RoomOfferService roomOfferService = services
 		.getRoomOfferService();
-	roomOfferService.findRoomOffer(
-		new FindRoomCommand(Lists.<String> newArrayList("Dew Drop Inn",
-			"Pleasantville", null, null, null, null, null, null)),
-		new FindCallback());
+	roomOfferService.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
+		"Pleasantville", true), new FindCallback());
 
 	service.stopServer();
     }
@@ -89,7 +86,8 @@ public final class AdministrationServiceIntegrationTest {
 	service.stopServer();
     }
 
-    private static final class CreateCallback implements CreateRoomCallback {
+    private static final class CreateCallback implements
+	    ClientCallback<RoomOffer> {
 
 	@Override
 	public void onFailure(final String message) {
@@ -111,7 +109,8 @@ public final class AdministrationServiceIntegrationTest {
 
     }
 
-    private static final class FindCallback implements FindRoomCallback {
+    private static final class FindCallback implements
+	    ClientCallback<List<RoomOffer>> {
 
 	@Override
 	public void onFailure(final String message) {

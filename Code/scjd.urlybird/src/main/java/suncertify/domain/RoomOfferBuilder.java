@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import suncertify.common.Money;
-import suncertify.common.roomoffer.RoomOffer;
 
 class RoomOfferBuilder {
 

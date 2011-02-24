@@ -1,4 +1,4 @@
-package suncertify.common.roomoffer;
+package suncertify.domain;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -147,8 +147,9 @@ public final class RoomOffer implements PresentationObject {
 	final String smokingAllowed = convertBooleanToPersistableString(this.smokingAllowed);
 	final String price = convertMoneyToPersistableString(this.price);
 	final String date = convertDateToPersistableString(this.bookableDate);
+	final String index = convertIntToPersistableString(getIndex());
 
 	return new String[] { hotel, city, roomSize, smokingAllowed, price,
-		date, customerId };
+		date, customerId, index };
     }
 }

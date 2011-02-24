@@ -1,6 +1,11 @@
 package suncertify.common.roomoffer;
 
-public final class DeleteRoomCommand {
+import suncertify.common.Command;
+import suncertify.domain.RoomOffer;
+
+public final class DeleteRoomCommand implements Command {
+
+    private static final long serialVersionUID = -5326172801204501197L;
 
     private final RoomOffer roomOfferToDelete;
 
@@ -9,8 +14,8 @@ public final class DeleteRoomCommand {
 	this.roomOfferToDelete = roomOfferToDelete;
     }
 
-    public int getRoomOfferIndexToDelete() {
-	return roomOfferToDelete.getIndex();
+    public RoomOffer getRoomOfferToDelete() {
+	return roomOfferToDelete;
     }
 
 }

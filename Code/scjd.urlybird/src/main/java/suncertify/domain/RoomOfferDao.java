@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import suncertify.common.Money;
-import suncertify.common.roomoffer.RoomOffer;
 import suncertify.db.DB;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;

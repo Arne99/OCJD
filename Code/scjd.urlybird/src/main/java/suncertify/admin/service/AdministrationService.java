@@ -71,8 +71,8 @@ public final class AdministrationService {
 	return !state.equals(RunningState.STOPPED);
     }
 
-    RoomOfferService startEmbeddedServer(final DatabaseConfiguration dataConfig)
-	    throws Exception {
+    public RoomOfferService startEmbeddedServer(
+	    final DatabaseConfiguration dataConfig) throws Exception {
 
 	if (isServerRunning()) {
 	    throw new IllegalStateException();

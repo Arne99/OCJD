@@ -1,16 +1,32 @@
 package suncertify.common.roomoffer;
 
-public final class UpdateRoomCommand {
+import java.util.ArrayList;
+import java.util.List;
 
-    private final RoomOffer updatedRoomOffer;
+import suncertify.common.Command;
+import suncertify.domain.RoomOffer;
 
-    public UpdateRoomCommand(final RoomOffer updatedRoomOffer) {
+public final class UpdateRoomCommand implements Command {
+
+    private static final long serialVersionUID = 1367931798192867975L;
+
+    private final List<String> newValues;
+
+    private final RoomOffer roomToUpdate;
+
+    public UpdateRoomCommand(final List<String> newValues,
+	    final RoomOffer roomToUpdate) {
 	super();
-	this.updatedRoomOffer = updatedRoomOffer;
+	this.newValues = new ArrayList<String>(newValues);
+	this.roomToUpdate = roomToUpdate;
     }
 
-    public RoomOffer getUpdatedRoomOffer() {
-	return updatedRoomOffer;
+    public List<String> getNewValues() {
+	return newValues;
+    }
+
+    public RoomOffer getRoomToUpdate() {
+	return roomToUpdate;
     }
 
 }
