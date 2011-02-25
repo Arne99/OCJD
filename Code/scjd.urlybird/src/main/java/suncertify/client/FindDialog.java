@@ -54,7 +54,7 @@ public class FindDialog extends JDialog {
 	findRoomsLabel = new JLabel();
 	buttonGroup = new ButtonGroup();
 
-	this.setLayout(new GridBagLayout());
+	mainPanel.setLayout(new GridBagLayout());
 	GridBagConstraints gridBagConstraints;
 
 	findButton.setText("Find");
