@@ -3,6 +3,7 @@ package suncertify.db;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.regex.Pattern;
 
 class NullAlwaysMatches implements RecordMatchingSpecification {
 
@@ -31,8 +32,8 @@ class NullAlwaysMatches implements RecordMatchingSpecification {
 	    final String value = valueIter.next();
 	    final int previousIndex = valueIter.previousIndex();
 	    final String relevantCriteria = criteria.get(previousIndex);
-	    // TODO BUg hier muss ein regex hin
-	    if (relevantCriteria != null && !relevantCriteria.equals(value)) {
+
+	    if (relevantCriteria != null && !value.startsWith(relevantCriteria)) {
 		return false;
 	    }
 	}

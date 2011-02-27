@@ -1,10 +1,13 @@
 package suncertify.common;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Locale;
 
-public final class Money {
+public final class Money implements Serializable, Comparable<Money> {
+
+    private static final long serialVersionUID = -579919526422533252L;
 
     private final BigDecimal amount;
 
@@ -60,6 +63,11 @@ public final class Money {
 
 	return getClass().getSimpleName() + " [ " + "amount = " + amount
 		+ "; currency = " + curreny + " ] ";
+    }
+
+    @Override
+    public int compareTo(final Money money) {
+	return this.amount.subtract(money.amount).intValue();
     }
 
 }

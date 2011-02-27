@@ -38,7 +38,7 @@ public class UrlyBirdView {
     private JMenuItem findMenuItem;
     private JMenuItem connectionMenuItem;
     private JMenuItem aboutMenuItem;
-    private JScrollPane jScrollPane1;
+    private JScrollPane tableScrollPane;
     private JTable roomTable;
 
     public JFrame getMainFrame() {
@@ -126,7 +126,7 @@ public class UrlyBirdView {
     }
 
     public JScrollPane getjScrollPane1() {
-	return jScrollPane1;
+	return tableScrollPane;
     }
 
     public JTable getRoomTable() {
@@ -135,7 +135,7 @@ public class UrlyBirdView {
 
     public void init() {
 	mainFrame = new JFrame("UrlyBird");
-	jScrollPane1 = new JScrollPane();
+	tableScrollPane = new JScrollPane();
 	roomTable = new JTable();
 	exitButton = new JButton();
 	findButton = new JButton();
@@ -161,13 +161,7 @@ public class UrlyBirdView {
 	final Container contentPane = mainFrame.getContentPane();
 	contentPane.setLayout(new GridBagLayout());
 
-	roomTable.setModel(new DefaultTableModel(new Object[][] {
-		{ null, null, null, null, null, null, null },
-		{ null, null, null, null, null, null, null },
-		{ null, null, null, null, null, null, null },
-		{ null, null, null, null, null, null, null } }, new String[] {
-		"", "", "", "", "", "", "" }));
-	jScrollPane1.setViewportView(roomTable);
+	tableScrollPane.setViewportView(roomTable);
 
 	GridBagConstraints gridBagConstraints = new GridBagConstraints();
 	gridBagConstraints.gridx = 0;
@@ -181,7 +175,7 @@ public class UrlyBirdView {
 	gridBagConstraints.weightx = 1.0;
 	gridBagConstraints.weighty = 1.0;
 	gridBagConstraints.insets = new Insets(18, 30, 30, 0);
-	contentPane.add(jScrollPane1, gridBagConstraints);
+	contentPane.add(tableScrollPane, gridBagConstraints);
 
 	exitButton.setText("Exit");
 	gridBagConstraints = new GridBagConstraints();

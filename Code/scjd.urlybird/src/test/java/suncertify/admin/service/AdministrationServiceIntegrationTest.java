@@ -57,7 +57,7 @@ public final class AdministrationServiceIntegrationTest {
 	final RoomOfferService roomOfferService = services
 		.getRoomOfferService();
 	roomOfferService.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
-		"Pleasantville", true), new FindCallback());
+		"Pleasantville", true));
 
 	service.stopServer();
     }
@@ -79,53 +79,10 @@ public final class AdministrationServiceIntegrationTest {
 
 	final RoomOfferService roomOfferService = services
 		.getRoomOfferService();
-	roomOfferService.createRoomOffer(
-		new CreateRoomCommand(Lists.newArrayList("MyHotel")),
-		new CreateCallback());
+	roomOfferService.createRoomOffer(new CreateRoomCommand(Lists
+		.newArrayList("MyHotel")));
 
 	service.stopServer();
     }
 
-    private static final class CreateCallback implements
-	    ClientCallback<RoomOffer> {
-
-	@Override
-	public void onFailure(final String message) {
-	    // TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean onWarning(final String message) {
-	    // TODO Auto-generated method stub
-	    return false;
-	}
-
-	@Override
-	public void onSuccess(final RoomOffer result) {
-	    // TODO Auto-generated method stub
-
-	}
-
-    }
-
-    private static final class FindCallback implements
-	    ClientCallback<List<RoomOffer>> {
-
-	@Override
-	public void onFailure(final String message) {
-	    throw new IllegalStateException();
-	}
-
-	@Override
-	public boolean onWarning(final String message) {
-	    throw new IllegalStateException();
-	}
-
-	@Override
-	public void onSuccess(final List<RoomOffer> result) {
-	    // expected
-	}
-
-    }
 }

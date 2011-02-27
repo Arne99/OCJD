@@ -4,43 +4,345 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.rmi.Naming;
-import java.rmi.RemoteException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 
 import suncertify.admin.gui.UrlyBirdProperties;
+import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
 import suncertify.admin.service.AdministrationService;
 import suncertify.admin.service.DatabaseConfiguration;
 import suncertify.admin.service.ServerConfiguration;
-import suncertify.common.ClientCallback;
 import suncertify.common.ClientServices;
+import suncertify.common.Money;
+import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.domain.RoomOffer;
 
 public final class UrlyBirdPresenter {
 
-    /**
-     * 
-     * @author arnelandwehr
-     * 
-     */
+    private final class ToggleBookButton implements DocumentListener {
+	private final BookDialog dialog;
+	private final JFormattedTextField customerIdTextField;
+
+	private ToggleBookButton(final BookDialog dialog,
+		final JFormattedTextField customerIdTextField) {
+	    this.dialog = dialog;
+	    this.customerIdTextField = customerIdTextField;
+	}
+
+	@Override
+	public void removeUpdate(final DocumentEvent e) {
+	    dialog.getBookButton().setEnabled(isCustomerIdComplete());
+	}
+
+	@Override
+	public void insertUpdate(final DocumentEvent e) {
+	    dialog.getBookButton().setEnabled(isCustomerIdComplete());
+	}
+
+	@Override
+	public void changedUpdate(final DocumentEvent e) {
+	    dialog.getBookButton().setEnabled(isCustomerIdComplete());
+	}
+
+	private boolean isCustomerIdComplete() {
+	    return !customerIdTextField.getText().trim().equals("");
+	}
+    }
+
+    private final class ExitApplication implements ActionListener {
+	@Override
+	public void actionPerformed(final ActionEvent e) {
+	    if (askForUserDecision(null, "Exit", "Do you really want to exit?")) {
+		System.exit(0);
+	    }
+
+	}
+    }
+
+    private final class FindAllRooms implements ActionListener {
+	@Override
+	public void actionPerformed(final ActionEvent arg0) {
+
+	    try {
+		final List<RoomOffer> rooms = service
+			.findRoomOffer(new FindRoomCommand(null, null, false));
+		tableModel.replaceAll(rooms);
+	    } catch (final Exception e) {
+		showUserTheError(view.getMainFrame(), e.getMessage());
+		e.printStackTrace();
+	    }
+	}
+    }
+
+    private final static class DateRenderer extends DefaultTableCellRenderer {
+
+	@Override
+	protected void setValue(final Object value) {
+	    final Date date = (Date) value;
+	    setText(convertDate(date));
+	}
+
+    }
+
+    private final static class MoneyRenderer extends DefaultTableCellRenderer {
+
+	@Override
+	protected void setValue(final Object value) {
+
+	    final Money money = (Money) value;
+	    setText(convertMoney(money));
+	}
+
+    }
+
+    private final static class BooleanRenderer extends DefaultTableCellRenderer {
+
+	@Override
+	protected void setValue(final Object value) {
+	    final Boolean bool = (Boolean) value;
+	    setText(convertSmokingBoolean(bool));
+	}
+
+    }
+
+    private final static String convertSmokingBoolean(final boolean smoking) {
+	return (smoking) ? "Y" : "N";
+    }
+
+    private final static String convertMoney(final Money money) {
+	return money.getCurreny().getSymbol(Locale.US) + " "
+		+ money.getAmount();
+    }
+
+    private final static String convertDate(final Date date) {
+	return new SimpleDateFormat("yyyy/MM/dd", Locale.US).format(date);
+    }
+
+    private static final class RoomTableModel extends AbstractTableModel {
+
+	private static final long serialVersionUID = 6497967946730643820L;
+
+	private enum COLUMN {
+
+	    ID(Integer.class, 0, "ID", new DefaultTableCellRenderer()), HOTEL(
+		    String.class, 1, "Hotel Name",
+		    new DefaultTableCellRenderer()), LOCATION(String.class, 2,
+		    "Location", new DefaultTableCellRenderer()), SIZE(
+		    Integer.class, 3, "Room Size",
+		    new DefaultTableCellRenderer()), SMOKING(Boolean.class, 4,
+		    "Smoking", new BooleanRenderer()), PRICE(Money.class, 5,
+		    "Price", new MoneyRenderer()), DATE(Date.class, 6, "Date",
+		    new DateRenderer()), CUSTOMER(String.class, 7,
+		    "Customer ID", new DefaultTableCellRenderer());
+
+	    private final Class<?> clazz;
+	    private final int position;
+	    private final String text;
+	    private final DefaultTableCellRenderer renderer;
+
+	    private COLUMN(final Class<?> clazz, final int position,
+		    final String text, final DefaultTableCellRenderer renderer) {
+		this.clazz = clazz;
+		this.position = position;
+		this.text = text;
+		this.renderer = renderer;
+
+	    }
+
+	}
+
+	private final Set<COLUMN> columns = EnumSet.allOf(COLUMN.class);
+	private final ArrayList<RoomOffer> rooms = new ArrayList<RoomOffer>();
+
+	RoomOffer getRoomAtIndex(final int index) {
+	    return rooms.get(index);
+	}
+
+	String getIdAtIndex(final int index) {
+	    return rooms.get(index).getIndex() + "";
+	}
+
+	String getHotelNameAtIndex(final int index) {
+	    return rooms.get(index).getHotel();
+	}
+
+	String getLocationAtIndex(final int index) {
+	    return rooms.get(index).getCity();
+	}
+
+	String getSmokingAtIndex(final int index) {
+	    return convertSmokingBoolean(rooms.get(index).isSmokingAllowed());
+	}
+
+	String getDateAtIndex(final int index) {
+	    return convertDate(rooms.get(index).getBookableDate());
+	}
+
+	String getPriceAtIndex(final int index) {
+	    return convertMoney(rooms.get(index).getPrice());
+	}
+
+	String getCustomerIdAtIndex(final int index) {
+	    return rooms.get(index).getCustomerId();
+	}
+
+	String getRoomSizeAtIndex(final int index) {
+	    return rooms.get(index).getRoomSize() + "";
+	}
+
+	public void replaceRoom(final RoomOffer changedRoom) {
+
+	    for (final RoomOffer room : rooms) {
+		if (room.getIndex() == changedRoom.getIndex()) {
+		    final int index = rooms.indexOf(room);
+		    rooms.remove(index);
+		    rooms.add(changedRoom);
+		    fireTableRowsUpdated(index, index);
+		    return;
+		}
+	    }
+	}
+
+	@Override
+	public Class<?> getColumnClass(final int columnIndex) {
+	    for (final COLUMN column : columns) {
+		if (column.position == columnIndex) {
+		    return column.clazz;
+		}
+	    }
+
+	    throw new IllegalStateException(
+		    "no column found for the given column index: "
+			    + columnIndex);
+	}
+
+	public void replaceAll(final List<RoomOffer> newRooms) {
+
+	    rooms.clear();
+	    rooms.addAll(newRooms);
+	    fireTableDataChanged();
+	}
+
+	@Override
+	public boolean isCellEditable(final int arg0, final int arg1) {
+	    return false;
+	}
+
+	@Override
+	public int getColumnCount() {
+	    return columns.size();
+	}
+
+	@Override
+	public int getRowCount() {
+	    return rooms.size();
+	}
+
+	public static RoomTableModel initTable(final JTable table) {
+
+	    final RoomTableModel model = new RoomTableModel();
+
+	    table.setModel(model);
+	    final List<TableColumn> columns = Collections.list(table
+		    .getColumnModel().getColumns());
+	    final EnumSet<COLUMN> columnData = EnumSet.allOf(COLUMN.class);
+	    for (final COLUMN data : columnData) {
+		final TableColumn columnForData = columns.get(data.position);
+		columnForData.setHeaderValue(data.text);
+		columnForData.setCellRenderer(data.renderer);
+		columnForData.setIdentifier(data.text);
+	    }
+
+	    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    table.setAutoCreateRowSorter(true);
+
+	    return model;
+	}
+
+	@Override
+	public Object getValueAt(final int row, final int column) {
+	    final RoomOffer roomOffer = rooms.get(row);
+
+	    switch (column) {
+	    case 0: {
+		return roomOffer.getIndex();
+	    }
+	    case 1: {
+		return roomOffer.getHotel();
+	    }
+	    case 2: {
+		return roomOffer.getCity();
+	    }
+	    case 3: {
+		return roomOffer.getRoomSize();
+	    }
+	    case 4: {
+		return (roomOffer.isSmokingAllowed());
+	    }
+	    case 5: {
+		return roomOffer.getPrice();
+	    }
+	    case 6: {
+		return roomOffer.getBookableDate();
+	    }
+	    case 7: {
+		return roomOffer.getCustomerId();
+	    }
+	    default: {
+		assert false : "" + column + " is not spezified!";
+		return null;
+	    }
+	    }
+	}
+
+    }
+
+    private final static class DisposeDialog implements ActionListener {
+	private final FindDialog dialog;
+
+	private DisposeDialog(final FindDialog dialog) {
+	    this.dialog = dialog;
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent arg0) {
+	    dialog.dispose();
+	}
+    }
+
     private final class StartFindDialog implements ActionListener {
 
 	private final class FindRooms implements ActionListener {
@@ -59,7 +361,7 @@ public final class UrlyBirdPresenter {
 
 		final JTextField locationTextField = dialog
 			.getLocationTextField();
-		final String locationCriteria = (locationTextField.isEnabled()) ? hotelTextField
+		final String locationCriteria = (locationTextField.isEnabled()) ? locationTextField
 			.getText().trim() : null;
 
 		final FindRoomCommand command = new FindRoomCommand(
@@ -67,11 +369,12 @@ public final class UrlyBirdPresenter {
 				.getAndRadioButton().isSelected());
 
 		try {
-		    service.findRoomOffer(command, new FindCallback());
-
-		} catch (final RemoteException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
+		    final List<RoomOffer> rooms = service
+			    .findRoomOffer(command);
+		    tableModel.replaceAll(rooms);
+		    dialog.dispose();
+		} catch (final Exception e) {
+		    showUserTheError(dialog, e.getMessage());
 		}
 	    }
 	}
@@ -116,36 +419,21 @@ public final class UrlyBirdPresenter {
 	}
     }
 
-    private final static class DisposeDialog implements ActionListener {
-	private final FindDialog dialog;
-
-	private DisposeDialog(final FindDialog dialog) {
-	    this.dialog = dialog;
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent arg0) {
-	    dialog.dispose();
-	}
-    }
-
-    private final static class ToggleButtonWhenTextChanges implements
+    public final static class ToggleButtonWhenTextChanges implements
 	    DocumentListener {
 
 	private final JButton buttonToToggle;
 	private final JTextField[] textFields;
 
-	private ToggleButtonWhenTextChanges(final JButton buttonToToggle,
+	ToggleButtonWhenTextChanges(final JButton buttonToToggle,
 		final JTextField... textFields) {
 	    this.buttonToToggle = buttonToToggle;
 	    this.textFields = textFields;
 	}
 
 	@Override
-	public void removeUpdate(final DocumentEvent arg0) {
-	    if (!isAllTextFilled()) {
-		buttonToToggle.setEnabled(false);
-	    }
+	public void changedUpdate(final DocumentEvent arg0) {
+	    // nothing to do
 	}
 
 	@Override
@@ -156,8 +444,10 @@ public final class UrlyBirdPresenter {
 	}
 
 	@Override
-	public void changedUpdate(final DocumentEvent arg0) {
-	    // nothing to do
+	public void removeUpdate(final DocumentEvent arg0) {
+	    if (!isAllTextFilled()) {
+		buttonToToggle.setEnabled(false);
+	    }
 	}
 
 	private boolean isAllTextFilled() {
@@ -169,99 +459,6 @@ public final class UrlyBirdPresenter {
 	    }
 	    return true;
 	}
-
-    }
-
-    private final UrlyBirdView view;
-
-    private final UrlyBirdProperties properties;
-
-    private RoomOfferService service;
-
-    private final ClientMode mode;
-
-    private UrlyBirdPresenter(final UrlyBirdView view,
-	    final UrlyBirdProperties properties, final ClientMode mode) {
-	this.view = view;
-	this.properties = properties;
-	this.mode = mode;
-
-    }
-
-    public void startGui() {
-
-	view.init();
-	if (service == null) {
-	    startConnectionDialogToFindService();
-	}
-
-	view.getFindButton().addActionListener(new StartFindDialog());
-
-	view.show();
-    }
-
-    private void startConnectionDialogToFindService() {
-
-	final ServerConnectionDialog dialog = new ServerConnectionDialog(
-		view.getMainFrame());
-
-	dialog.getConnectButton().setEnabled(false);
-	dialog.getDiscardButton().setEnabled(service != null);
-
-	MaskFormatter numericFormatter = null;
-	try {
-	    numericFormatter = new MaskFormatter("####");
-	} catch (final ParseException parseException) {
-	    throw new RuntimeException(parseException);
-	}
-	dialog.getPortTextField().setFormatterFactory(
-		new DefaultFormatterFactory(numericFormatter));
-
-	dialog.getHostTextField()
-		.getDocument()
-		.addDocumentListener(
-			new ToggleButtonWhenTextChanges(dialog
-				.getConnectButton(), dialog.getHostTextField(),
-				dialog.getPortTextField()));
-	dialog.getPortTextField()
-		.getDocument()
-		.addDocumentListener(
-			new ToggleButtonWhenTextChanges(dialog
-				.getConnectButton(), dialog.getHostTextField(),
-				dialog.getPortTextField()));
-
-	dialog.getConnectButton().addActionListener(new ActionListener() {
-
-	    @Override
-	    public void actionPerformed(final ActionEvent arg0) {
-
-		final String host = dialog.getHostTextField().getText().trim();
-		final int port = Integer.parseInt(dialog.getPortTextField()
-			.getText().trim());
-
-		final ServerConfiguration serverConfiguration = new ServerConfiguration(
-			port, host);
-		try {
-		    final ClientServices services = (ClientServices) Naming
-			    .lookup(serverConfiguration.getHostNameWithPort()
-				    + "/"
-				    + serverConfiguration
-					    .getClientServiceName());
-
-		    service = services.getRoomOfferService();
-
-		} catch (final Exception e) {
-		    e.printStackTrace();
-		    JOptionPane.showMessageDialog(dialog, e.getCause());
-		    return;
-		}
-
-		dialog.dispose();
-	    }
-	});
-
-	dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-	dialog.setVisible(true);
 
     }
 
@@ -315,52 +512,6 @@ public final class UrlyBirdPresenter {
 	}
     }
 
-    private final static boolean askForUserDecision(final Component frame,
-	    final String title, final String message) {
-	// TODO SwingWorker
-	final int result = JOptionPane.showInternalConfirmDialog(frame,
-		message, title, JOptionPane.YES_NO_OPTION,
-		JOptionPane.INFORMATION_MESSAGE);
-	return result == JOptionPane.OK_OPTION;
-    }
-
-    private final static void showUserTheError(final Component parent,
-	    final String message) {
-
-	SwingUtilities.invokeLater(new Runnable() {
-
-	    @Override
-	    public void run() {
-		JOptionPane.showMessageDialog(parent, message, "Error",
-			JOptionPane.ERROR_MESSAGE);
-	    }
-	});
-    }
-
-    public static void main(final String[] args) throws Exception {
-
-	final File anyFile = new File(
-		"/Users/arnelandwehr/Coden/Sun Certified Java Developer/Project/Code/scjd.urlybird/src/test/ressources/db-1x1.db");
-
-	final AdministrationService service = new AdministrationService();
-
-	final ServerConfiguration serverConfig = new ServerConfiguration();
-	final DatabaseConfiguration dataConfig = new DatabaseConfiguration(
-		anyFile);
-
-	service.startStandAloneServer(serverConfig, dataConfig);
-
-	final UrlyBirdPresenter urlyBirdPresenter = new UrlyBirdPresenter(
-		new UrlyBirdView(), null, null);
-	SwingUtilities.invokeAndWait(new Runnable() {
-
-	    @Override
-	    public void run() {
-		urlyBirdPresenter.startGui();
-	    }
-	});
-    }
-
     private final static class ToggleTextFieldIfCheckBoxIsSelected implements
 	    ChangeListener {
 
@@ -380,31 +531,168 @@ public final class UrlyBirdPresenter {
 	}
     }
 
-    private final static class FindCallback implements
-	    ClientCallback<List<RoomOffer>> {
+    private final static boolean askForUserDecision(final Component frame,
+	    final String title, final String message) {
+	final int result = JOptionPane.showConfirmDialog(frame, message, title,
+		JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+	return result == JOptionPane.OK_OPTION;
+    }
 
-	private List<RoomOffer> rooms;
+    private final static void showUserTheError(final Component parent,
+	    final String message) {
 
-	@Override
-	public boolean onWarning(final String message) {
-	    return askForUserDecision(null, "", message);
-	}
+	SwingUtilities.invokeLater(new Runnable() {
 
-	@Override
-	public void onSuccess(final List<RoomOffer> result) {
+	    @Override
+	    public void run() {
+		JOptionPane.showMessageDialog(parent, message, "Error",
+			JOptionPane.ERROR_MESSAGE);
+	    }
+	});
+    }
 
-	    rooms = new ArrayList<RoomOffer>(result);
-	}
+    private final UrlyBirdView view;
 
-	@Override
-	public void onFailure(final String message) {
-	    showUserTheError(null, message);
-	}
+    private final UrlyBirdProperties properties;
 
-	public List<RoomOffer> getRooms() {
-	    return rooms;
-	}
+    private final RoomOfferService service;
 
+    private RoomTableModel tableModel;
+
+    public UrlyBirdPresenter(final UrlyBirdView view,
+	    final UrlyBirdProperties properties, final RoomOfferService service) {
+	this.view = view;
+	this.properties = properties;
+	this.service = service;
+	tableModel = new RoomTableModel();
+
+    }
+
+    public void startGui() {
+
+	view.init();
+
+	final JTable roomTable = view.getRoomTable();
+	tableModel = RoomTableModel.initTable(roomTable);
+
+	view.getChangeButton().setEnabled(false);
+	view.getBookButton().setEnabled(false);
+	view.getNewButton().setEnabled(false);
+	view.getDeleteButton().setEnabled(false);
+
+	view.getFindButton().addActionListener(new StartFindDialog());
+	view.getAllButton().addActionListener(new FindAllRooms());
+	view.getExitButton().addActionListener(new ExitApplication());
+	view.getRoomTable().getSelectionModel()
+		.addListSelectionListener(new ListSelectionListener() {
+
+		    @Override
+		    public void valueChanged(final ListSelectionEvent e) {
+			view.getBookButton().setEnabled(
+				view.getRoomTable().getSelectedRow() != -1);
+		    }
+		});
+
+	view.getBookButton().addActionListener(new ActionListener() {
+
+	    @Override
+	    public void actionPerformed(final ActionEvent arg0) {
+
+		final int selectedViewRow = view.getRoomTable()
+			.getSelectedRow();
+		final int selectedModelRow = view.getRoomTable()
+			.convertRowIndexToModel(selectedViewRow);
+
+		final BookDialog dialog = new BookDialog(view.getMainFrame());
+
+		final JTextField hotelTextField = dialog.getHotelTextField();
+		hotelTextField.setEnabled(false);
+		hotelTextField.setText(tableModel
+			.getHotelNameAtIndex(selectedModelRow));
+
+		final JTextField locationTextField = dialog
+			.getLocationTextField();
+		locationTextField.setEnabled(false);
+		locationTextField.setText(tableModel
+			.getLocationAtIndex(selectedModelRow));
+
+		final JTextField smokingTextField = dialog
+			.getSmokingTextField();
+		smokingTextField.setEnabled(false);
+		smokingTextField.setText(tableModel
+			.getSmokingAtIndex(selectedModelRow));
+
+		final JTextField dateTextField = dialog.getDateTextField();
+		dateTextField.setEnabled(false);
+		dateTextField.setText(tableModel
+			.getDateAtIndex(selectedModelRow));
+
+		final JTextField priceTextField = dialog.getPriceTextField();
+		priceTextField.setEnabled(false);
+		priceTextField.setText(tableModel
+			.getPriceAtIndex(selectedModelRow));
+
+		final JTextField idTextField = dialog.getIdTextField();
+		idTextField.setEnabled(false);
+		idTextField.setText(tableModel.getIdAtIndex(selectedModelRow));
+
+		final JTextField sizeTextField = dialog.getSizeTextField();
+		sizeTextField.setEnabled(false);
+		sizeTextField.setText(tableModel
+			.getRoomSizeAtIndex(selectedModelRow));
+
+		MaskFormatter numericFormatter = null;
+		try {
+		    numericFormatter = new MaskFormatter("########");
+		} catch (final ParseException parseException) {
+		    throw new RuntimeException(parseException);
+		}
+
+		final JFormattedTextField customerIdTextField1 = dialog
+			.getCustomerIdTextField1();
+		customerIdTextField1
+			.setFormatterFactory(new DefaultFormatterFactory(
+				numericFormatter));
+
+		final ToggleBookButton toggleBookButton = new ToggleBookButton(
+			dialog, customerIdTextField1);
+
+		customerIdTextField1.getDocument().addDocumentListener(
+			toggleBookButton);
+
+		dialog.getBookButton().addActionListener(new ActionListener() {
+
+		    @Override
+		    public void actionPerformed(final ActionEvent arg0) {
+
+			final int selectedViewIndex = roomTable
+				.getSelectedRow();
+			final int modelIndex = roomTable
+				.convertRowIndexToModel(selectedViewIndex);
+			final RoomOffer roomToBook = tableModel
+				.getRoomAtIndex(modelIndex);
+
+			try {
+			    final RoomOffer bookedRoomOffer = service
+				    .bookRoomOffer(new BookRoomCommand(
+					    roomToBook, dialog
+						    .getCustomerIdTextField1()
+						    .getText().trim()));
+			    tableModel.replaceRoom(bookedRoomOffer);
+			    dialog.dispose();
+			} catch (final Exception e) {
+			    showUserTheError(null, e.getMessage());
+			    e.printStackTrace();
+			}
+		    }
+		});
+
+		dialog.setVisible(true);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	    }
+	});
+
+	view.show();
     }
 
 }

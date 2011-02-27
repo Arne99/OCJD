@@ -46,6 +46,7 @@ public final class AdministrationService {
 			+ serverConfig.getClientServiceName(),
 		ClientServicesImpl.instance());
 	state = RunningState.RUNNING;
+	ClientServicesImpl.instance().enableServices();
     }
 
     private DB connectToDatabase(final DatabaseConfiguration dataConfig)
@@ -65,6 +66,7 @@ public final class AdministrationService {
 	Naming.unbind(config.getHostNameWithPort() + "/"
 		+ config.getClientServiceName());
 	state = RunningState.STOPPED;
+	ClientServicesImpl.instance().disableServices();
     }
 
     public boolean isServerRunning() {

@@ -10,18 +10,33 @@ import java.util.Properties;
 
 public class UrlyBirdProperties {
 
+    private static UrlyBirdProperties INSTANCE = new UrlyBirdProperties();
+
+    public static UrlyBirdProperties getInstance() {
+	return INSTANCE;
+    }
+
     private static final String PROPERTY_NAME = "suncertify.properties";
     private static final String PROPERTY_DIR = "user.dir";
 
     public enum PropertyName {
-	HOST, PORT, DB_PATH
+	ADMIN_GUI_HOST,
+	ADMIN_GUI_PORT,
+	ADMIN_GUI_DB_PATH,
+	CLIENT_CONNECTION_GUI_HOST,
+	CLIENT_CONNECTION_GUI_PORT,
+	CLIENT_DATABASE_GUI_PATH
     }
 
-    public UrlyBirdProperties() throws IOException {
+    private UrlyBirdProperties() {
 
 	final File propertyFile = getPropertyFile();
 	if (!propertyFile.exists()) {
-	    propertyFile.createNewFile();
+	    try {
+		propertyFile.createNewFile();
+	    } catch (final IOException e) {
+		e.printStackTrace();
+	    }
 	}
     }
 

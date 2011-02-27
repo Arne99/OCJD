@@ -205,8 +205,8 @@ class RoomOfferBuilder {
 
 	@Override
 	public DefaultBuilder withIndex(final String index) {
-	    // TODO Auto-generated method stub
-	    return null;
+	    this.index = convertStringToInteger(index);
+	    return this;
 	}
 
     }

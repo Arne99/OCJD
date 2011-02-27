@@ -62,7 +62,7 @@ public final class ServerAdminPresenter {
     private final AdministrationService service;
     private final UrlyBirdProperties properties;
 
-    private ServerAdminPresenter(final ServerConsoleView view,
+    public ServerAdminPresenter(final ServerConsoleView view,
 	    final AdministrationService service,
 	    final UrlyBirdProperties properties) {
 	super();
@@ -73,6 +73,32 @@ public final class ServerAdminPresenter {
 
     public void startGui() {
 
+	SwingUtilities.invokeLater(new Runnable() {
+
+	    @Override
+	    public void run() {
+		view.init();
+		initView();
+
+		try {
+		    view.getDbPathTextField().setText(
+			    properties.getProperty(PropertyName.ADMIN_GUI_DB_PATH));
+		    view.getPortTextField().setText(
+			    properties.getProperty(PropertyName.ADMIN_GUI_PORT));
+		    view.getHostConnectionTextField().setText(
+			    properties.getProperty(PropertyName.ADMIN_GUI_HOST));
+		} catch (final IOException e) {
+		    JOptionPane.showMessageDialog(
+			    view.getMainFrame(),
+			    "The default values could not be loaded! \n"
+				    + e.getCause(), "", ImageObserver.ERROR);
+		}
+		view.show();
+	    }
+	});
+    }
+
+    private void initView() {
 	view.getStartServerButton().setEnabled(false);
 	view.getDbPathTextField().setEnabled(false);
 
@@ -110,11 +136,11 @@ public final class ServerAdminPresenter {
 			    view.getMainFrame().dispose();
 			}
 		    }
-		    properties.setProperty(PropertyName.DB_PATH, view
+		    properties.setProperty(PropertyName.ADMIN_GUI_DB_PATH, view
 			    .getDbPathTextField().getText().trim());
-		    properties.setProperty(PropertyName.HOST, view
+		    properties.setProperty(PropertyName.ADMIN_GUI_HOST, view
 			    .getHostConnectionTextField().getText().trim());
-		    properties.setProperty(PropertyName.PORT, view
+		    properties.setProperty(PropertyName.ADMIN_GUI_PORT, view
 			    .getPortTextField().getText().trim());
 		} catch (final Exception exception) {
 		    exception.printStackTrace();
@@ -190,29 +216,6 @@ public final class ServerAdminPresenter {
 		}
 	    }
 	});
-
-	SwingUtilities.invokeLater(new Runnable() {
-
-	    @Override
-	    public void run() {
-		view.init();
-
-		try {
-		    view.getDbPathTextField().setText(
-			    properties.getProperty(PropertyName.DB_PATH));
-		    view.getPortTextField().setText(
-			    properties.getProperty(PropertyName.PORT));
-		    view.getHostConnectionTextField().setText(
-			    properties.getProperty(PropertyName.HOST));
-		} catch (final IOException e) {
-		    JOptionPane.showMessageDialog(
-			    view.getMainFrame(),
-			    "The default values could not be loaded! \n"
-				    + e.getCause(), "", ImageObserver.ERROR);
-		}
-		view.show();
-	    }
-	});
     }
 
     private void showError(final String message) {
@@ -220,11 +223,4 @@ public final class ServerAdminPresenter {
 		JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void main(final String[] args) throws IOException {
-	final ServerAdminPresenter presenter = new ServerAdminPresenter(
-		new ServerAdminGui(), new AdministrationService(),
-		new UrlyBirdProperties());
-
-	presenter.startGui();
-    }
 }

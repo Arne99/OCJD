@@ -10,15 +10,14 @@ import suncertify.util.Pair;
 
 public interface RoomOfferService extends Remote {
 
-    void createRoomOffer(CreateRoomCommand command,
-	    ClientCallback<RoomOffer> callback) throws RemoteException;
+    RoomOffer createRoomOffer(CreateRoomCommand command) throws Exception;
 
-    void deleteRoomOffer(DeleteRoomCommand command,
-	    ClientCallback<Integer> callback) throws RemoteException;
+    RoomOffer bookRoomOffer(BookRoomCommand command) throws Exception;
 
-    void updateRoomOffer(UpdateRoomCommand command,
-	    ClientCallback<RoomOffer> callback) throws RemoteException;
+    int deleteRoomOffer(DeleteRoomCommand command) throws Exception;
 
-    void findRoomOffer(final FindRoomCommand command,
-	    ClientCallback<List<RoomOffer>> callback) throws RemoteException;
+    RoomOffer updateRoomOffer(UpdateRoomCommand command) throws Exception;
+
+    List<RoomOffer> findRoomOffer(final FindRoomCommand command)
+	    throws Exception;
 }

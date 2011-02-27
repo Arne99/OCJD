@@ -1,14 +1,7 @@
 package suncertify.domain;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import suncertify.common.Money;
 import suncertify.db.DB;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;
@@ -62,7 +55,8 @@ public class RoomOfferDao implements Dao<RoomOffer> {
 	final RoomOffer roomOffer = builder.newRoomOffer().fromHotel(values[0])
 		.fromCity(values[1]).ofSize(values[2])
 		.smokingAllowed(values[3]).withPrice(values[4])
-		.bookableAt(values[5]).bookedBy(values[6]).build();
+		.bookableAt(values[5]).bookedBy(values[6]).withIndex(values[7])
+		.build();
 
 	return roomOffer;
     }

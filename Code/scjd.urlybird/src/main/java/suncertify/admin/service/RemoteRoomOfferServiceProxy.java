@@ -5,6 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 import suncertify.common.ClientCallback;
+import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
@@ -29,51 +30,42 @@ class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
     }
 
     @Override
-    public void createRoomOffer(final CreateRoomCommand command,
-	    final ClientCallback<RoomOffer> callback) throws RemoteException {
+    public RoomOffer createRoomOffer(final CreateRoomCommand command)
+	    throws Exception {
 
-	if (!accessible) {
-	    callback.onFailure("");
-	    return;
-	}
-	delegate.createRoomOffer(command, callback);
+	checkAccessibility();
+	return delegate.createRoomOffer(command);
     }
 
-    @Override
-    public void deleteRoomOffer(final DeleteRoomCommand command,
-	    final ClientCallback<Integer> callback) throws RemoteException {
-
+    private void checkAccessibility() throws Exception {
 	if (!accessible) {
-	    callback.onFailure("");
-	    return;
+	    throw new Exception("");
 	}
-	delegate.deleteRoomOffer(command, callback);
 
     }
 
     @Override
-    public void findRoomOffer(final FindRoomCommand command,
-	    final ClientCallback<List<RoomOffer>> callback)
-	    throws RemoteException {
+    public int deleteRoomOffer(final DeleteRoomCommand command)
+	    throws Exception {
 
-	if (!accessible) {
-	    callback.onFailure("");
-	    return;
-	}
-	delegate.findRoomOffer(command, callback);
-
+	checkAccessibility();
+	return delegate.deleteRoomOffer(command);
     }
 
     @Override
-    public void updateRoomOffer(final UpdateRoomCommand command,
-	    final ClientCallback<RoomOffer> callback) throws RemoteException {
+    public List<RoomOffer> findRoomOffer(final FindRoomCommand command)
+	    throws Exception {
 
-	if (!accessible) {
-	    callback.onFailure("");
-	    return;
-	}
-	delegate.updateRoomOffer(command, callback);
+	checkAccessibility();
+	return delegate.findRoomOffer(command);
+    }
 
+    @Override
+    public RoomOffer updateRoomOffer(final UpdateRoomCommand command)
+	    throws Exception {
+
+	checkAccessibility();
+	return delegate.updateRoomOffer(command);
     }
 
     static void disableAccess() {
@@ -82,6 +74,13 @@ class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
 
     static void enableAccess() {
 	accessible = true;
+    }
+
+    @Override
+    public RoomOffer bookRoomOffer(final BookRoomCommand command) throws Exception {
+
+	checkAccessibility();
+	return delegate.bookRoomOffer(command);
     }
 
 }

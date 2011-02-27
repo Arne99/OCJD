@@ -134,7 +134,7 @@ public final class RoomOffer implements PresentationObject {
     }
 
     private String convertMoneyToPersistableString(final Money price) {
-	final String symbol = price.getCurreny().getSymbol();
+	final String symbol = price.getCurreny().getSymbol(Locale.US);
 	final BigDecimal amount = price.getAmount();
 	final double doubleValue = amount.setScale(2).doubleValue();
 	return symbol + doubleValue;
@@ -147,9 +147,8 @@ public final class RoomOffer implements PresentationObject {
 	final String smokingAllowed = convertBooleanToPersistableString(this.smokingAllowed);
 	final String price = convertMoneyToPersistableString(this.price);
 	final String date = convertDateToPersistableString(this.bookableDate);
-	final String index = convertIntToPersistableString(getIndex());
 
 	return new String[] { hotel, city, roomSize, smokingAllowed, price,
-		date, customerId, index };
+		date, customerId };
     }
 }

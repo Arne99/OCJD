@@ -1,7 +1,9 @@
 package suncertify.client;
 
+import suncertify.common.roomoffer.RoomOfferService;
+
 public interface ServiceProvider {
 
-    void getRoomOfferService() throws ConnectionException;
+    RoomOfferService getRoomOfferService();
 
 }

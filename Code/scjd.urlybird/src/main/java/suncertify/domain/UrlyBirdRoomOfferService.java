@@ -1,13 +1,15 @@
 package suncertify.domain;
 
-import static suncertify.util.DesignByContract.*;
+import static suncertify.util.DesignByContract.checkNotNull;
 
-import java.rmi.Remote;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import suncertify.common.ClientCallback;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
@@ -16,7 +18,6 @@ import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.common.roomoffer.UpdateRoomCommand;
 import suncertify.db.DB;
 import suncertify.db.RecordNotFoundException;
-import suncertify.util.Pair;
 
 public class UrlyBirdRoomOfferService implements RoomOfferService {
 
@@ -52,11 +53,11 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	this.isRoomBookable = isRoomBookable;
     }
 
-    public void bookRoomOffer(final BookRoomCommand command,
-	    final ClientCallback<RoomOffer> callback) {
+    @Override
+    public RoomOffer bookRoomOffer(final BookRoomCommand command)
+	    throws Exception {
 
 	checkNotNull(command, "command");
-	checkNotNull(callback, "callback");
 
 	final RoomOffer clientRoomToBook = command.getRoomToBook();
 	final int roomOfferIndex = clientRoomToBook.getIndex();
@@ -68,48 +69,47 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    checkStaleRoomData(clientRoomToBook, dbRoomToBook);
 
 	    if (!isRoomBookable.isSatisfiedBy(dbRoomToBook)) {
-		callback.onFailure("");
+		throw new Exception();
 	    }
 	    final RoomOffer bookedRoomOffer = builder.copyOf(dbRoomToBook)
 		    .bookedBy(command.getCustomerId()).build();
 	    roomOfferDao.update(bookedRoomOffer, lock);
-	    callback.onSuccess(bookedRoomOffer);
+	    return bookedRoomOffer;
 	} catch (final Exception e) {
-	    callback.onFailure(e.getMessage());
+	    e.printStackTrace();
+	    throw new Exception(e);
 	} finally {
 	    unlockQuietly(roomOfferIndex, lock);
 	}
     }
 
     @Override
-    public void createRoomOffer(final CreateRoomCommand command,
-	    final ClientCallback<RoomOffer> callback) {
+    public RoomOffer createRoomOffer(final CreateRoomCommand command)
+	    throws Exception {
 
 	checkNotNull(command, "command");
-	checkNotNull(callback, "callback");
 
-	try {
-	    final List<String> values = command.getValues();
-	    final RoomOffer roomOffer = buildRoomOffer(values);
+	final List<String> values = command.getValues();
+	final RoomOffer roomOffer = buildRoomOffer(values);
 
-	    if (!isOccupancyIn48Hours.isSatisfiedBy(roomOffer)
-		    && !callback.onWarning("!!!!!")) {
-		return;
-	    }
-	    roomOfferDao.create(roomOffer);
-	    callback.onSuccess(roomOffer);
-	} catch (final Exception e) {
-	    callback.onFailure(e.getMessage());
+	if (!isOccupancyIn48Hours.isSatisfiedBy(roomOffer)) {
+	    throw new Exception();
 	}
+	try {
+	    roomOfferDao.create(roomOffer);
+	} catch (final Exception e) {
+	    e.printStackTrace();
+	    throw new Exception(e);
+	}
+	return roomOffer;
 
     }
 
     @Override
-    public void deleteRoomOffer(final DeleteRoomCommand command,
-	    final ClientCallback<Integer> callback) {
+    public int deleteRoomOffer(final DeleteRoomCommand command)
+	    throws Exception {
 
 	checkNotNull(command, "command");
-	checkNotNull(callback, "callback");
 
 	final RoomOffer clientRoomToDelete = command.getRoomOfferToDelete();
 	final int index = clientRoomToDelete.getIndex();
@@ -121,9 +121,10 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    checkStaleRoomData(clientRoomToDelete, dbRoomToDelete);
 
 	    roomOfferDao.delete(index, lock);
-	    callback.onSuccess(index);
+	    return index;
 	} catch (final Exception e) {
-	    callback.onFailure(e.getMessage());
+	    e.printStackTrace();
+	    throw new Exception(e);
 	} finally {
 	    unlockQuietly(index, lock);
 	}
@@ -131,11 +132,10 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
     }
 
     @Override
-    public void updateRoomOffer(final UpdateRoomCommand command,
-	    final ClientCallback<RoomOffer> callback) {
+    public RoomOffer updateRoomOffer(final UpdateRoomCommand command)
+	    throws Exception {
 
 	checkNotNull(command, "command");
-	checkNotNull(callback, "callback");
 
 	long lock = NOT_LOCKED;
 	final List<String> newValues = command.getNewValues();
@@ -150,31 +150,45 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    final RoomOffer updatedRoomOffer = buildRoomOffer(newValues);
 
 	    roomOfferDao.update(updatedRoomOffer, lock);
-	    callback.onSuccess(updatedRoomOffer);
+	    return updatedRoomOffer;
 	} catch (final Exception e) {
-	    callback.onFailure(e.getMessage());
+	    e.printStackTrace();
+	    throw new Exception(e);
 	} finally {
 	    unlockQuietly(index, lock);
 	}
     }
 
     @Override
-    public void findRoomOffer(final FindRoomCommand command,
-	    final ClientCallback<List<RoomOffer>> callback) {
+    public List<RoomOffer> findRoomOffer(final FindRoomCommand command)
+	    throws Exception {
 
 	checkNotNull(command, "command");
-	checkNotNull(callback, "callback");
 
 	try {
-	    final List<RoomOffer> matchingRoomOffers = roomOfferDao.find(Arrays
-		    .asList(command.getHotel(), command.getLocation(), null,
-			    null, null, null, null, null));
+	    if (command.isAnd()) {
+		return new ArrayList<RoomOffer>(roomOfferDao.find(Arrays
+			.asList(command.getHotel(), command.getLocation(),
+				null, null, null, null, null, null)));
 
-	    callback.onSuccess(matchingRoomOffers);
+	    } else {
+		final ArrayList<RoomOffer> matchingHotels = new ArrayList<RoomOffer>(
+			roomOfferDao.find(Arrays.asList(command.getHotel(),
+				null, null, null, null, null, null, null)));
+		final ArrayList<RoomOffer> matchingLocations = new ArrayList<RoomOffer>(
+			roomOfferDao.find(Arrays.asList(null,
+				command.getLocation(), null, null, null, null,
+				null, null)));
+
+		final Set<RoomOffer> union = new HashSet<RoomOffer>();
+		union.addAll(matchingHotels);
+		union.addAll(matchingLocations);
+		return new ArrayList<RoomOffer>(union);
+	    }
 	} catch (final Exception e) {
-	    callback.onFailure(e.getMessage());
+	    e.printStackTrace();
+	    throw new Exception(e);
 	}
-
     }
 
     private void unlockQuietly(final int index, final long lock) {
