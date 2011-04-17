@@ -137,6 +137,7 @@ public class DatabaseConnectionPresenter implements ConnectionPresenter {
 		try {
 		    database = databaseService
 			    .connectToDatabase(databaseConfiguration);
+		    roomOfferService = new UrlyBirdRoomOfferService(database);
 		} catch (final DatabaseConnectionException connectionException) {
 		    JOptionPane.showMessageDialog(null,
 			    connectionException.getMessage(),

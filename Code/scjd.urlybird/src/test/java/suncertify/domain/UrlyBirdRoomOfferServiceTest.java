@@ -1,14 +1,18 @@
 package suncertify.domain;
 
 import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Categories.ExcludeCategory;
 
 import com.google.common.collect.Lists;
 
@@ -55,8 +59,7 @@ public class UrlyBirdRoomOfferServiceTest {
     }
 
     @Test
-    public void shouldBookAnValidRoomAndInformTheClientWithTheOnSuccessMethod()
-	    throws Exception {
+    public void shouldBookAnValidRoomAndPersistTheChanges() throws Exception {
 
 	final String customerId = "1234";
 	final RoomOffer expectedRoomOffer = new RoomOffer(
@@ -76,18 +79,19 @@ public class UrlyBirdRoomOfferServiceTest {
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, isRoomBookable);
 
-	roomOfferService.bookRoomOffer(bookRoomCommand, clientCallback);
+	final RoomOffer bookedRoom = roomOfferService
+		.bookRoomOffer(bookRoomCommand);
 
 	verify(isRoomBookable).isSatisfiedBy(validRoomOffer);
 	verify(dao).lock(validRoomOffer.getIndex());
 	verify(dao).read(validRoomOffer.getIndex());
 	verify(dao).update(eq(expectedRoomOffer), anyLong());
 	verify(dao).unlock(eq(validRoomOffer.getIndex()), anyLong());
-	verify(clientCallback).onSuccess(expectedRoomOffer);
+	assertThat(bookedRoom, is(equalTo(expectedRoomOffer)));
     }
 
-    @Test
-    public void shouldNotBookAnAlreadyBookedRoomAndInformTheClientWithTheOnFailureMethod()
+    @Test(expected = Exception.class)
+    public void shouldNotBookAnAlreadyBookedRoomAndInformTheClientWithTheAnException()
 	    throws Exception {
 
 	final int index = 1;
@@ -99,13 +103,11 @@ public class UrlyBirdRoomOfferServiceTest {
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, isRoomBookable);
 
-	roomOfferService.bookRoomOffer(command, clientCallback);
-
-	verify(clientCallback).onFailure(anyString());
+	roomOfferService.bookRoomOffer(command);
     }
 
-    @Test
-    public void shouldNotBookAnInvalidRoomAndInformTheClientWithTheOnFailureMethod()
+    @Test(expected = Exception.class)
+    public void shouldNotBookAnInvalidRoomAndInformTheClientWithAnException()
 	    throws Exception {
 
 	final int index = 1;
@@ -121,14 +123,11 @@ public class UrlyBirdRoomOfferServiceTest {
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, isRoomBookable);
 
-	roomOfferService.bookRoomOffer(command, clientCallback);
-
-	verify(clientCallback).onFailure(anyString());
+	roomOfferService.bookRoomOffer(command);
     }
 
     @Test
-    public void shouldCreateAnValidRoomAndInformTheClientWithTheOnSuccessMethod()
-	    throws Exception {
+    public void shouldCreateAnValidRoomAndPersistIt() throws Exception {
 
 	final CreateRoomCommand command = new CreateRoomCommand(
 		Arrays.asList(validRoomOffer.toArray()));
@@ -140,14 +139,15 @@ public class UrlyBirdRoomOfferServiceTest {
 	when(isOccupancyIn48Hours.isSatisfiedBy(validRoomOffer)).thenReturn(
 		true);
 
-	roomOfferService.createRoomOffer(command, clientCallback);
+	final RoomOffer createdRoomOffer = roomOfferService
+		.createRoomOffer(command);
 
 	verify(dao).create(validRoomOffer);
-	verify(clientCallback).onSuccess(validRoomOffer);
+	assertThat(createdRoomOffer, is(equalTo(validRoomOffer)));
     }
 
-    @Test
-    public void shouldCallTheOnWarningCallbackMethodIfTheOccupanyIsNotIn48HoursAndCreateTheRoomIfTheCallbackReturnsTrue()
+    @Test(expected = Exception.class)
+    public void shouldThrowAnExceptionIfTheOccupanyIsNotIn48Hours()
 	    throws Exception {
 
 	final CreateRoomCommand command = new CreateRoomCommand(
@@ -161,37 +161,13 @@ public class UrlyBirdRoomOfferServiceTest {
 		false);
 	when(clientCallback.onWarning(anyString())).thenReturn(true);
 
-	roomOfferService.createRoomOffer(command, clientCallback);
-
-	verify(dao).create(validRoomOffer);
-	verify(clientCallback).onWarning(anyString());
-	verify(clientCallback).onSuccess(validRoomOffer);
-    }
-
-    @Test
-    public void shouldCallTheOnWarningCallbackMethodIfTheOccupanyIsNotIn48HoursAndMustNotCrateARoomIfTheCallbackReturnsFalse()
-	    throws Exception {
-
-	final CreateRoomCommand command = new CreateRoomCommand(
-		Arrays.asList(validRoomOffer.toArray()));
-
-	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
-		dao, builder, isOccupancyIn48Hours, isRoomBookable);
-
-	when(defaultBuilder.build()).thenReturn(validRoomOffer);
-	when(isOccupancyIn48Hours.isSatisfiedBy(validRoomOffer)).thenReturn(
-		false);
-	when(clientCallback.onWarning(anyString())).thenReturn(false);
-
-	roomOfferService.createRoomOffer(command, clientCallback);
+	roomOfferService.createRoomOffer(command);
 
 	verify(dao, never()).create(validRoomOffer);
-	verify(clientCallback).onWarning(anyString());
-	verify(clientCallback, never()).onSuccess(validRoomOffer);
     }
 
-    @Test
-    public void shouldNotCreateTheRoomIfTheGivenRoomIsInvalidAndInformTheClientWithTheOnFailureMethod()
+    @Test(expected = Exception.class)
+    public void shouldNotCreateTheRoomIfTheGivenRoomIsInvalidAndThrowAnException()
 	    throws Exception {
 
 	final CreateRoomCommand command = new CreateRoomCommand(
@@ -205,11 +181,9 @@ public class UrlyBirdRoomOfferServiceTest {
 	when(isOccupancyIn48Hours.isSatisfiedBy(validRoomOffer)).thenReturn(
 		true);
 
-	roomOfferService.createRoomOffer(command, clientCallback);
+	roomOfferService.createRoomOffer(command);
 
 	verify(dao, never()).create(validRoomOffer);
-	verify(clientCallback, never()).onSuccess(validRoomOffer);
-	verify(clientCallback).onFailure(anyString());
     }
 
     @Test
@@ -220,21 +194,19 @@ public class UrlyBirdRoomOfferServiceTest {
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, null);
-	@SuppressWarnings("unchecked")
-	final ClientCallback<Integer> deleteCallback = mock(ClientCallback.class);
 
 	when(dao.read(validRoomOffer.getIndex())).thenReturn(validRoomOffer);
 
-	roomOfferService.deleteRoomOffer(command, deleteCallback);
+	final int deletedRoomIndex = roomOfferService.deleteRoomOffer(command);
 
 	verify(dao).lock(anyInt());
 	verify(dao).unlock(anyInt(), anyLong());
 	verify(dao).delete(eq(validRoomOffer.getIndex()), anyLong());
-	verify(deleteCallback).onSuccess(validRoomOffer.getIndex());
+	assertThat(deletedRoomIndex, is(equalTo(deletedRoomIndex)));
     }
 
-    @Test
-    public void shouldNotDeleteTheRoomIfTheIndexIsNotFoundInTheDatabaseAndInformTheClientWithTheOnFailureMethod()
+    @Test(expected = Exception.class)
+    public void shouldNotDeleteTheRoomIfTheIndexIsNotFoundInTheDatabaseAndThorwAnException()
 	    throws Exception {
 
 	final DeleteRoomCommand command = new DeleteRoomCommand(validRoomOffer);
@@ -247,17 +219,16 @@ public class UrlyBirdRoomOfferServiceTest {
 		anyLong());
 	when(dao.read(validRoomOffer.getIndex())).thenReturn(validRoomOffer);
 
-	roomOfferService.deleteRoomOffer(command, deleteCallback);
+	roomOfferService.deleteRoomOffer(command);
 
 	verify(dao).lock(anyInt());
 	verify(dao).unlock(anyInt(), anyLong());
 	verify(dao).delete(eq(validRoomOffer.getIndex()), anyLong());
-	verify(deleteCallback).onFailure(anyString());
     }
 
     @Test
-    public void shouldFindAllMatchingRoomsWithTheDaoAndReturnItToTheClientWithTheOnSuccessMethod()
-	    throws RecordNotFoundException, ConstraintViolationException {
+    public void shouldFindAllMatchingRoomsWithTheDaoAndReturnItToTheClient()
+	    throws Exception {
 
 	final ArrayList<String> criteria = Lists.newArrayList(null, null, null,
 		null, null, null, null, null);
@@ -266,20 +237,19 @@ public class UrlyBirdRoomOfferServiceTest {
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, null, null, null);
-	@SuppressWarnings("unchecked")
-	final ClientCallback<List<RoomOffer>> callback = mock(ClientCallback.class);
 
-	final ArrayList<RoomOffer> result = Lists.newArrayList(validRoomOffer);
+	final List<RoomOffer> result = Lists.newArrayList(validRoomOffer);
 	when(dao.find(criteria)).thenReturn(result);
 
-	roomOfferService.findRoomOffer(command, callback);
+	final List<RoomOffer> foundRooms = roomOfferService
+		.findRoomOffer(command);
 
-	verify(callback).onSuccess(result);
+	assertThat(foundRooms, is(equalTo(result)));
     }
 
-    @Test
-    public void shouldInformTheClientWithTheOnFailureMethodIfTheFindCausesAnException()
-	    throws RecordNotFoundException, ConstraintViolationException {
+    @Test(expected = Exception.class)
+    public void shouldInformTheClientWithAnExceptionIfTheFindCausesAnException()
+	    throws Exception {
 
 	final ArrayList<String> criteria = Lists.newArrayList(null, null, null,
 		null, null, null, null, null);
@@ -288,18 +258,14 @@ public class UrlyBirdRoomOfferServiceTest {
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, null, null, null);
-	@SuppressWarnings("unchecked")
-	final ClientCallback<List<RoomOffer>> callback = mock(ClientCallback.class);
 
 	doThrow(new RuntimeException()).when(dao).find(criteria);
 
-	roomOfferService.findRoomOffer(command, callback);
-
-	verify(callback).onFailure(anyString());
+	roomOfferService.findRoomOffer(command);
     }
 
     @Test
-    public void shouldUpdateTheSpezifiedValidRoomAndInformTheClientWithTheOnSuccessMethod()
+    public void shouldUpdateTheSpezifiedValidRoomAndPersistTheChanges()
 	    throws Exception {
 
 	final ArrayList<String> newValidValues = Lists.newArrayList("Hilton",
@@ -313,16 +279,17 @@ public class UrlyBirdRoomOfferServiceTest {
 	when(defaultBuilder.build()).thenReturn(validRoomOffer);
 	when(dao.read(validRoomOffer.getIndex())).thenReturn(validRoomOffer);
 
-	roomOfferService.updateRoomOffer(command, clientCallback);
+	final RoomOffer updatedRoomOffer = roomOfferService
+		.updateRoomOffer(command);
 
 	verify(dao).lock(validRoomOffer.getIndex());
 	verify(dao).unlock(eq(validRoomOffer.getIndex()), anyLong());
 	verify(dao).update(eq(validRoomOffer), anyLong());
-	verify(clientCallback).onSuccess(validRoomOffer);
+	assertThat(updatedRoomOffer, is(equalTo(validRoomOffer)));
     }
 
-    @Test
-    public void shouldInformTheClientWithTheOnFailureMethodIfTheUpdateCausesAnException()
+    @Test(expected = Exception.class)
+    public void shouldInformTheClientWithAnExceptionIfTheUpdateCausesAnException()
 	    throws Exception {
 
 	final ArrayList<String> newValidValues = Lists.newArrayList("Hilton",
@@ -338,16 +305,15 @@ public class UrlyBirdRoomOfferServiceTest {
 	doThrow(new RuntimeException()).when(dao).update(eq(validRoomOffer),
 		anyLong());
 
-	roomOfferService.updateRoomOffer(command, clientCallback);
+	roomOfferService.updateRoomOffer(command);
 
 	verify(dao).lock(validRoomOffer.getIndex());
 	verify(dao).unlock(eq(validRoomOffer.getIndex()), anyLong());
 	verify(dao).update(eq(validRoomOffer), anyLong());
-	verify(clientCallback).onFailure(anyString());
     }
 
-    @Test
-    public void shouldInformTheClientWithTheOnFailureMethodIfTheGivenRoomToUpdateIsNotValid()
+    @Test(expected = Exception.class)
+    public void shouldInformTheClientWithAnExceptionIfTheGivenRoomToUpdateIsNotValid()
 	    throws Exception {
 
 	final ArrayList<String> newInvalidValues = Lists.newArrayList("Hilton",
@@ -362,8 +328,6 @@ public class UrlyBirdRoomOfferServiceTest {
 	when(defaultBuilder.build()).thenThrow(
 		new ConstraintViolationException("Test"));
 
-	roomOfferService.updateRoomOffer(command, clientCallback);
-
-	verify(clientCallback).onFailure(anyString());
+	roomOfferService.updateRoomOffer(command);
     }
 }

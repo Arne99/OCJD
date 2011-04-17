@@ -90,10 +90,14 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	checkNotNull(command, "command");
 
 	final List<String> values = command.getValues();
-	final RoomOffer roomOffer = buildRoomOffer(values);
+	final RoomOffer roomOffer = builder.newRoomOffer()
+		.fromHotel(values.get(HOTEL)).fromCity(values.get(CITY))
+		.ofSize(values.get(SIZE)).smokingAllowed(values.get(SMOKING))
+		.bookedBy(values.get(CUSTOMER)).bookableAt(values.get(DATE))
+		.withPrice(values.get(PRICE)).build();
 
 	if (!isOccupancyIn48Hours.isSatisfiedBy(roomOffer)) {
-	    throw new Exception();
+	    throw new Exception("room occupancy is not in the next 48 hours!");
 	}
 	try {
 	    roomOfferDao.create(roomOffer);
@@ -138,7 +142,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	checkNotNull(command, "command");
 
 	long lock = NOT_LOCKED;
-	final List<String> newValues = command.getNewValues();
+	final List<String> values = command.getNewValues();
 	final RoomOffer clientRoomToUpdate = command.getRoomToUpdate();
 	final int index = clientRoomToUpdate.getIndex();
 	try {
@@ -147,7 +151,14 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    final RoomOffer dbRoomToUpdate = roomOfferDao.read(index);
 	    checkStaleRoomData(clientRoomToUpdate, dbRoomToUpdate);
 
-	    final RoomOffer updatedRoomOffer = buildRoomOffer(newValues);
+	    final RoomOffer updatedRoomOffer = builder.newRoomOffer()
+		    .fromHotel(values.get(HOTEL)).fromCity(values.get(CITY))
+		    .ofSize(values.get(SIZE))
+		    .smokingAllowed(values.get(SMOKING))
+		    .withIndex(values.get(INDEX))
+		    .bookedBy(values.get(CUSTOMER))
+		    .bookableAt(values.get(DATE)).withPrice(values.get(PRICE))
+		    .build();
 
 	    roomOfferDao.update(updatedRoomOffer, lock);
 	    return updatedRoomOffer;
@@ -205,16 +216,6 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    e.printStackTrace();
 	}
 
-    }
-
-    private final RoomOffer buildRoomOffer(final List<String> values)
-	    throws ConstraintViolationException {
-	return builder.newRoomOffer().fromHotel(values.get(HOTEL))
-		.fromCity(values.get(CITY)).ofSize(values.get(SIZE))
-		.smokingAllowed(values.get(SMOKING))
-		.withIndex(values.get(INDEX)).bookedBy(values.get(CUSTOMER))
-		.bookableAt(values.get(DATE)).withPrice(values.get(PRICE))
-		.build();
     }
 
     private final void checkStaleRoomData(final RoomOffer clientRoom,
