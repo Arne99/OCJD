@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -289,7 +290,19 @@ public class UrlyBirdView {
 
 	mainFrame.setJMenuBar(menuBar);
 	mainFrame.pack();
-	mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+	exitButton.setMnemonic(KeyEvent.VK_E);
+	findButton.setMnemonic(KeyEvent.VK_F);
+	bookButton.setMnemonic(KeyEvent.VK_B);
+	newButton.setMnemonic(KeyEvent.VK_N);
+	deleteButton.setMnemonic(KeyEvent.VK_D);
+	changeButton.setMnemonic(KeyEvent.VK_C);
+	allButton.setMnemonic(KeyEvent.VK_A);
+	urlyBirdMenu.setMnemonic(KeyEvent.VK_U);
+	editMenu.setMnemonic(KeyEvent.VK_I);
+	helpMenu.setMnemonic(KeyEvent.VK_H);
+	viewMenu.setMnemonic(KeyEvent.VK_V);
 
     }
 
@@ -297,15 +310,4 @@ public class UrlyBirdView {
 	mainFrame.setVisible(true);
     }
 
-    public static void main(final String[] args) {
-	SwingUtilities.invokeLater(new Runnable() {
-
-	    @Override
-	    public void run() {
-		final UrlyBirdView urlyBirdGui = new UrlyBirdView();
-		urlyBirdGui.init();
-		urlyBirdGui.show();
-	    }
-	});
-    }
 }

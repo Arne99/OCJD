@@ -1,19 +1,17 @@
 package suncertify.client;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-public class ServerConnectionDialog extends JDialog {
+public class ServerConnectionPanel extends JPanel {
 
     private static final long serialVersionUID = -6561677906315526844L;
 
@@ -25,17 +23,12 @@ public class ServerConnectionDialog extends JDialog {
     private JFormattedTextField hostTextField;
     private JFormattedTextField portTextField;
 
-    private JPanel mainPanel;
-
-    public ServerConnectionDialog(final JFrame parentFrame) {
-	super(parentFrame, "Connection", true);
+    public ServerConnectionPanel() {
 	init();
     }
 
     private void init() {
 	GridBagConstraints gridBagConstraints;
-
-	mainPanel = new JPanel();
 
 	connectLabel = new JLabel();
 	hostLabel = new JLabel();
@@ -45,7 +38,7 @@ public class ServerConnectionDialog extends JDialog {
 	hostTextField = new JFormattedTextField();
 	portTextField = new JFormattedTextField();
 
-	mainPanel.setLayout(new GridBagLayout());
+	this.setLayout(new GridBagLayout());
 
 	connectLabel.setFont(new Font("Lucida Grande", 0, 24));
 	connectLabel.setText("Connect to");
@@ -57,7 +50,7 @@ public class ServerConnectionDialog extends JDialog {
 	gridBagConstraints.ipady = 10;
 	gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
 	gridBagConstraints.insets = new Insets(33, 54, 0, 0);
-	mainPanel.add(connectLabel, gridBagConstraints);
+	this.add(connectLabel, gridBagConstraints);
 
 	hostLabel.setFont(new Font("Lucida Grande", 0, 14));
 	hostLabel.setText("Host");
@@ -66,7 +59,7 @@ public class ServerConnectionDialog extends JDialog {
 	gridBagConstraints.gridy = 1;
 	gridBagConstraints.gridwidth = 2;
 	gridBagConstraints.insets = new Insets(49, 54, 0, 0);
-	mainPanel.add(hostLabel, gridBagConstraints);
+	this.add(hostLabel, gridBagConstraints);
 
 	portLabel.setFont(new Font("Lucida Grande", 0, 14));
 	portLabel.setText("Port");
@@ -74,7 +67,7 @@ public class ServerConnectionDialog extends JDialog {
 	gridBagConstraints.gridx = 0;
 	gridBagConstraints.gridy = 3;
 	gridBagConstraints.insets = new Insets(34, 54, 0, 0);
-	mainPanel.add(portLabel, gridBagConstraints);
+	this.add(portLabel, gridBagConstraints);
 
 	connectButton.setText("Connect");
 	gridBagConstraints = new GridBagConstraints();
@@ -85,7 +78,7 @@ public class ServerConnectionDialog extends JDialog {
 	gridBagConstraints.ipady = 13;
 	gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
 	gridBagConstraints.insets = new Insets(77, 77, 25, 0);
-	mainPanel.add(connectButton, gridBagConstraints);
+	this.add(connectButton, gridBagConstraints);
 
 	discardButton.setText("Discard");
 	gridBagConstraints = new GridBagConstraints();
@@ -96,7 +89,7 @@ public class ServerConnectionDialog extends JDialog {
 	gridBagConstraints.ipady = 12;
 	gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
 	gridBagConstraints.insets = new Insets(78, 28, 25, 0);
-	mainPanel.add(discardButton, gridBagConstraints);
+	this.add(discardButton, gridBagConstraints);
 
 	hostTextField.setText("");
 	gridBagConstraints = new GridBagConstraints();
@@ -106,7 +99,7 @@ public class ServerConnectionDialog extends JDialog {
 	gridBagConstraints.gridheight = 2;
 	gridBagConstraints.ipadx = 242;
 	gridBagConstraints.insets = new Insets(44, 14, 0, 20);
-	mainPanel.add(hostTextField, gridBagConstraints);
+	this.add(hostTextField, gridBagConstraints);
 
 	portTextField.setText("");
 	gridBagConstraints = new GridBagConstraints();
@@ -116,10 +109,10 @@ public class ServerConnectionDialog extends JDialog {
 	gridBagConstraints.gridheight = 2;
 	gridBagConstraints.ipadx = 245;
 	gridBagConstraints.insets = new Insets(29, 11, 0, 20);
-	mainPanel.add(portTextField, gridBagConstraints);
+	this.add(portTextField, gridBagConstraints);
 
-	this.add(mainPanel);
-	this.pack();
+	setPreferredSize(new Dimension(400, 400));
+
     }
 
     public JButton getConnectButton() {

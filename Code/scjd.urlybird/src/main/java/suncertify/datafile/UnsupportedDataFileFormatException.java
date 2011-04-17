@@ -8,7 +8,7 @@ package suncertify.datafile;
  * @author arnelandwehr
  * 
  */
-class UnsupportedDataFileFormatException extends Exception {
+public class UnsupportedDataFileFormatException extends Exception {
 
     /**
      * Random SerialVersionUid.

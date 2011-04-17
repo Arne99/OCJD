@@ -13,7 +13,8 @@ final class UnsupportedDataFileFormat implements SchemaBuilder {
 
 	checkNotNull(file, "file");
 
-	throw new UnsupportedDataFileFormatException("");
+	throw new UnsupportedDataFileFormatException(
+		"The specified file is no supported UrlyBird-DataFile. Please choose an valid UrlyBird-DataFile");
     }
 
 }

@@ -3,13 +3,23 @@ package suncertify.client;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.Naming;
 import java.text.ParseException;
+import java.util.regex.Pattern;
 
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.WindowConstants;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
+import javax.swing.text.PlainDocument;
 
 import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
@@ -18,104 +28,143 @@ import suncertify.client.UrlyBirdPresenter.ToggleButtonWhenTextChanges;
 import suncertify.common.ClientServices;
 import suncertify.common.roomoffer.RoomOfferService;
 
-public class ServerConnectionPresenter {
+public class ServerConnectionPresenter implements ConnectionPresenter {
 
     private final UrlyBirdProperties properties = UrlyBirdProperties
 	    .getInstance();
 
     private RoomOfferService service = null;
 
-    public RoomOfferService startInitialConnectionDialogToFindService() {
+    public RoomOfferService startInitialConnectionDialogToFindService(
+	    final JFrame frame) {
 
-	// SwingUtils
-	final ServerConnectionDialog dialog = new ServerConnectionDialog(null);
-
-	dialog.getConnectButton().setEnabled(false);
-
-	MaskFormatter numericFormatter = null;
 	try {
-	    numericFormatter = new MaskFormatter("####");
-	} catch (final ParseException parseException) {
-	    throw new RuntimeException(parseException);
+	    SwingUtilities.invokeAndWait(new Runnable() {
+
+		@Override
+		public void run() {
+		    final JDialog dialog = new JDialog(frame, true);
+		    initDialog(dialog, frame, new ExitApplication());
+		}
+	    });
+	} catch (final InterruptedException e) {
+	    e.printStackTrace();
+	} catch (final InvocationTargetException e) {
+	    e.printStackTrace();
 	}
-	dialog.getPortTextField().setFormatterFactory(
-		new DefaultFormatterFactory(numericFormatter));
+	return service;
+    }
 
-	dialog.getHostTextField()
-		.getDocument()
-		.addDocumentListener(
-			new ToggleButtonWhenTextChanges(dialog
-				.getConnectButton(), dialog.getHostTextField(),
-				dialog.getPortTextField()));
-	dialog.getPortTextField()
-		.getDocument()
-		.addDocumentListener(
-			new ToggleButtonWhenTextChanges(dialog
-				.getConnectButton(), dialog.getHostTextField(),
-				dialog.getPortTextField()));
+    private RoomOfferService initDialog(final JDialog dialog,
+	    final JFrame frame, final ExitDialogAdapter exitDialog) {
+	final ServerConnectionPanel connectionPanel = new ServerConnectionPanel();
+	dialog.add(connectionPanel);
+	dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+	dialog.setLocationRelativeTo(frame);
+	dialog.pack();
 
-	dialog.getConnectButton().addActionListener(new ActionListener() {
+	connectionPanel.getConnectButton().setEnabled(false);
+
+	connectionPanel.getPortTextField().setDocument(new PlainDocument() {
 
 	    @Override
-	    public void actionPerformed(final ActionEvent arg0) {
-
-		final String host = dialog.getHostTextField().getText().trim();
-		final int port = Integer.parseInt(dialog.getPortTextField()
-			.getText().trim());
-
-		final ServerConfiguration serverConfiguration = new ServerConfiguration(
-			port, host);
-		try {
-		    final ClientServices services = (ClientServices) Naming
-			    .lookup(serverConfiguration.getHostNameWithPort()
-				    + "/"
-				    + serverConfiguration
-					    .getClientServiceName());
-
-		    service = services.getRoomOfferService();
-
-		} catch (final Exception e) {
-		    e.printStackTrace();
-		    JOptionPane.showMessageDialog(null, e.getCause());
+	    public void insertString(final int arg0, final String arg1,
+		    final AttributeSet arg2) throws BadLocationException {
+		if (!Pattern.matches("\\d*", arg1)) {
 		    return;
 		}
 
-		try {
-		    properties.setProperty(
-			    PropertyName.CLIENT_CONNECTION_GUI_HOST, host);
-		    properties.setProperty(
-			    PropertyName.CLIENT_CONNECTION_GUI_PORT, port + "");
-		} catch (final IOException e) {
-		    e.printStackTrace();
-		}
-		dialog.dispose();
+		super.insertString(arg0, arg1, arg2);
 	    }
+
 	});
+
+	connectionPanel
+		.getHostTextField()
+		.getDocument()
+		.addDocumentListener(
+			new ToggleButtonWhenTextChanges(connectionPanel
+				.getConnectButton(), connectionPanel
+				.getHostTextField(), connectionPanel
+				.getPortTextField()));
+	connectionPanel
+		.getPortTextField()
+		.getDocument()
+		.addDocumentListener(
+			new ToggleButtonWhenTextChanges(connectionPanel
+				.getConnectButton(), connectionPanel
+				.getHostTextField(), connectionPanel
+				.getPortTextField()));
+
+	connectionPanel.getConnectButton().addActionListener(
+		new ActionListener() {
+
+		    @Override
+		    public void actionPerformed(final ActionEvent arg0) {
+
+			final String host = connectionPanel.getHostTextField()
+				.getText().trim();
+			final int port = Integer.parseInt(connectionPanel
+				.getPortTextField().getText().trim());
+
+			final ServerConfiguration serverConfiguration = new ServerConfiguration(
+				port, host);
+			try {
+			    final ClientServices services = (ClientServices) Naming
+				    .lookup(serverConfiguration
+					    .getHostNameWithPort()
+					    + "/"
+					    + serverConfiguration
+						    .getClientServiceName());
+
+			    service = services.getRoomOfferService();
+
+			} catch (final Exception e) {
+			    e.printStackTrace();
+			    JOptionPane.showMessageDialog(null, e.getCause());
+			    return;
+			}
+
+			try {
+			    properties.setProperty(
+				    PropertyName.CLIENT_CONNECTION_GUI_HOST,
+				    host);
+			    properties.setProperty(
+				    PropertyName.CLIENT_CONNECTION_GUI_PORT,
+				    port + "");
+			} catch (final IOException e) {
+			    e.printStackTrace();
+			}
+			dialog.dispose();
+		    }
+		});
 
 	try {
 	    final String host = properties
 		    .getProperty(PropertyName.CLIENT_CONNECTION_GUI_HOST);
-	    dialog.getHostTextField().setText(host);
+	    connectionPanel.getHostTextField().setText(host);
 	    final String port = properties
 		    .getProperty(PropertyName.CLIENT_CONNECTION_GUI_PORT);
-	    dialog.getPortTextField().setText(port);
+	    connectionPanel.getPortTextField().setText(port);
 	} catch (final IOException e1) {
 	    e1.printStackTrace();
 	}
 
-	dialog.setLocationRelativeTo(null);
+	connectionPanel.getDiscardButton().addActionListener(exitDialog);
+	dialog.addWindowListener(exitDialog);
+
 	dialog.setVisible(true);
 
-	// TODO Das mist
-	while (service == null) {
-	    try {
-		Thread.sleep(10);
-	    } catch (final InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	}
+	return service;
+    }
 
+    @Override
+    public RoomOfferService startConnectionDialog(final JFrame frame,
+	    final RoomOfferService service) {
+
+	this.service = service;
+	final JDialog dialog = new JDialog(frame, true);
+	initDialog(dialog, frame, new ExitDialog(dialog));
 	return service;
     }
 

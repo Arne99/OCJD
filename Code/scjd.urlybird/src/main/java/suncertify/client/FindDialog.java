@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -180,6 +181,9 @@ public class FindDialog extends JDialog {
 
 	this.add(mainPanel);
 	this.pack();
+
+	findButton.setMnemonic(KeyEvent.VK_F);
+	discardButton.setMnemonic(KeyEvent.VK_D);
     }
 
     public JButton getFindButton() {

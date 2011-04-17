@@ -1,6 +1,9 @@
 package suncertify;
 
 import java.io.IOException;
+
+import javax.swing.JFrame;
+
 import suncertify.admin.gui.ServerAdminGui;
 import suncertify.admin.gui.ServerAdminPresenter;
 import suncertify.admin.gui.UrlyBirdProperties;
@@ -12,44 +15,46 @@ import suncertify.client.ServerConnectionPresenter;
 import suncertify.client.UrlyBirdPresenter;
 import suncertify.client.UrlyBirdView;
 import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.db.DB;
+import suncertify.db.DatabaseService;
+import suncertify.domain.UrlyBirdRoomOfferService;
 
 public class ApplicationStarter {
 
     private static final String STAND_ALONE_SERVER = "server";
-    private static final String EMBEDDED_SERVER = "alone";
+    private static final String STAND_ALONE_CLIENT = "alone";
 
     public static void main(final String[] args) throws IOException {
-
-	final AdministrationService administrationService = new AdministrationService();
 
 	if (args.length == 0) {
 
 	    final ServerConnectionPresenter serverConnectionPresenter = new ServerConnectionPresenter();
+	    final JFrame frame = new JFrame();
 	    final RoomOfferService service = serverConnectionPresenter
-		    .startInitialConnectionDialogToFindService();
+		    .startInitialConnectionDialogToFindService(frame);
+	    frame.dispose();
 
 	    new UrlyBirdPresenter(new UrlyBirdView(),
-		    UrlyBirdProperties.getInstance(), service).startGui();
+		    UrlyBirdProperties.getInstance(), service,
+		    new ServerConnectionPresenter()).startGui();
 
 	}
 	if (args.length == 1) {
-	    if (args[0].equals(EMBEDDED_SERVER)) {
+	    if (args[0].equals(STAND_ALONE_CLIENT)) {
 
 		final DatabaseConnectionPresenter databaseConnectionPresenter = new DatabaseConnectionPresenter(
-			new DatabaseConnectionPanel(), administrationService);
-		final DatabaseConfiguration databaseConfiguration = databaseConnectionPresenter
-			.askUserForInitialDatabaseConfiguration();
+			new DatabaseConnectionPanel(),
+			DatabaseService.instance());
+		final JFrame frame = new JFrame();
+		final RoomOfferService roomOfferService = databaseConnectionPresenter
+			.connectToDatabaseWithDialog(frame);
+		frame.dispose();
 
-		RoomOfferService roomOfferService = null;
-		try {
-		    roomOfferService = administrationService
-			    .startEmbeddedServer(databaseConfiguration);
-		} catch (final Exception e) {
-		    e.printStackTrace();
-		}
 		new UrlyBirdPresenter(new UrlyBirdView(),
-			UrlyBirdProperties.getInstance(), roomOfferService)
-			.startGui();
+			UrlyBirdProperties.getInstance(), roomOfferService,
+			new DatabaseConnectionPresenter(
+				new DatabaseConnectionPanel(),
+				DatabaseService.instance())).startGui();
 
 	    }
 	    if (args[0].equals(STAND_ALONE_SERVER)) {

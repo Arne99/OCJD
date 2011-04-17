@@ -10,6 +10,7 @@ import java.rmi.registry.Registry;
 import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.datafile.DataFileAccess;
 import suncertify.db.DB;
+import suncertify.db.DatabaseConnectionException;
 import suncertify.db.DatabaseHandler;
 import suncertify.db.DatabaseService;
 import suncertify.domain.UrlyBirdRoomOfferService;
@@ -23,7 +24,9 @@ public final class AdministrationService {
     private RunningState state = RunningState.STOPPED;
 
     public void startStandAloneServer(final ServerConfiguration serverConfig,
-	    final DatabaseConfiguration dataConfig) throws Exception {
+	    final DatabaseConfiguration dataConfig)
+	    throws DatabaseConnectionException, RemoteException,
+	    MalformedURLException {
 
 	if (isServerRunning()) {
 	    throw new IllegalStateException();
@@ -50,11 +53,8 @@ public final class AdministrationService {
     }
 
     private DB connectToDatabase(final DatabaseConfiguration dataConfig)
-	    throws Exception {
-	final DatabaseHandler databaseHandler = DataFileAccess.instance()
-		.getDatabaseHandler(dataConfig.getDatabaseLocation());
-	final DB db = DatabaseService.instance().getDatabaseConnection(
-		databaseHandler);
+	    throws DatabaseConnectionException {
+	final DB db = DatabaseService.instance().connectToDatabase(dataConfig);
 	return db;
     }
 
@@ -71,20 +71,6 @@ public final class AdministrationService {
 
     public boolean isServerRunning() {
 	return !state.equals(RunningState.STOPPED);
-    }
-
-    public RoomOfferService startEmbeddedServer(
-	    final DatabaseConfiguration dataConfig) throws Exception {
-
-	if (isServerRunning()) {
-	    throw new IllegalStateException();
-	}
-
-	final DB database = connectToDatabase(dataConfig);
-	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
-		database);
-	state = RunningState.RUNNING_EMBEDDED;
-	return roomOfferService;
     }
 
 }

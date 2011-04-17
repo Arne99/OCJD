@@ -2,10 +2,9 @@ package suncertify.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -17,80 +16,69 @@ import javax.swing.event.DocumentListener;
 
 import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
-import suncertify.admin.service.AdministrationService;
 import suncertify.admin.service.DatabaseConfiguration;
+import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.db.DB;
+import suncertify.db.DatabaseConnectionException;
+import suncertify.db.DatabaseService;
+import suncertify.domain.UrlyBirdRoomOfferService;
 
-public class DatabaseConnectionPresenter {
+public class DatabaseConnectionPresenter implements ConnectionPresenter {
 
-    private DatabaseConfiguration dbConfiguration;
+    private RoomOfferService roomOfferService;
+
+    private final DatabaseService databaseService;
+
+    private DB database;
 
     private final UrlyBirdProperties properties = UrlyBirdProperties
 	    .getInstance();
 
-    private final class ExitApplication extends WindowAdapter implements
-	    ActionListener {
-
-	@Override
-	public void windowClosing(final WindowEvent arg0) {
-	    askUserForExit();
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent arg0) {
-	    askUserForExit();
-	}
-
-	private void askUserForExit() {
-	    final int result = JOptionPane
-		    .showConfirmDialog(
-			    null,
-			    "Exit?",
-			    "Do you really want to exit, without connectiong to a database? The application will be terminated!",
-			    JOptionPane.OK_CANCEL_OPTION);
-	    if (result == JOptionPane.OK_OPTION) {
-		System.exit(0);
-	    }
-	}
-    }
-
     private final DatabaseConnectionPanel panel;
 
-    private final AdministrationService service;
-
     public DatabaseConnectionPresenter(final DatabaseConnectionPanel panel,
-	    final AdministrationService service) {
+	    final DatabaseService service) {
 	super();
 	this.panel = panel;
-	this.service = service;
+	this.databaseService = service;
     }
 
-    public DatabaseConfiguration askUserForInitialDatabaseConfiguration() {
+    public RoomOfferService connectToDatabaseWithDialog(final JFrame frame) {
 
-	SwingUtilities.invokeLater(new Runnable() {
+	try {
+	    SwingUtilities.invokeAndWait(new Runnable() {
 
-	    @Override
-	    public void run() {
-		startDatabaseDialog();
-	    }
-	});
-
-	while (dbConfiguration == null) {
-	    try {
-		Thread.sleep(10);
-	    } catch (final InterruptedException e) {
-		e.printStackTrace();
-	    }
+		@Override
+		public void run() {
+		    final JDialog dialog = new JDialog(frame, "Database", true);
+		    initDatabaseDialog(dialog, new ExitApplication());
+		}
+	    });
+	} catch (final InterruptedException e) {
+	    e.printStackTrace();
+	} catch (final InvocationTargetException e) {
+	    e.printStackTrace();
 	}
 
-	return dbConfiguration;
-
+	return roomOfferService;
     }
 
-    private DatabaseConfiguration startDatabaseDialog() {
-	final JDialog view = new JDialog(new JFrame(), "Database", true);
-	view.getContentPane().add(panel);
-	view.pack();
-	view.addWindowListener(new ExitApplication());
+    @Override
+    public final RoomOfferService startConnectionDialog(final JFrame frame,
+	    final RoomOfferService service) {
+
+	this.roomOfferService = service;
+	final JDialog dialog = new JDialog(frame, "Database", true);
+	initDatabaseDialog(dialog, new ExitDialog(dialog));
+	return roomOfferService;
+    }
+
+    private RoomOfferService initDatabaseDialog(final JDialog dialog,
+	    final ExitDialogAdapter exitAdapter) {
+	dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+	dialog.getContentPane().add(panel);
+	dialog.pack();
+	dialog.addWindowListener(exitAdapter);
 
 	panel.getSelectButton().addActionListener(new ActionListener() {
 
@@ -99,7 +87,7 @@ public class DatabaseConnectionPresenter {
 
 		final JFileChooser fileChooser = new JFileChooser();
 
-		final int returnVal = fileChooser.showDialog(view,
+		final int returnVal = fileChooser.showDialog(dialog,
 			"Select Database Path");
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 		    panel.getDatabaseTextField().setText(
@@ -136,7 +124,7 @@ public class DatabaseConnectionPresenter {
 		    }
 		});
 
-	panel.getDiscardButton().addActionListener(new ExitApplication());
+	panel.getDiscardButton().addActionListener(exitAdapter);
 
 	panel.getConnectButton().addActionListener(new ActionListener() {
 
@@ -144,14 +132,25 @@ public class DatabaseConnectionPresenter {
 	    public void actionPerformed(final ActionEvent arg0) {
 		final String path = panel.getDatabaseTextField().getText()
 			.trim();
-		dbConfiguration = new DatabaseConfiguration(new File(path));
+		final DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration(
+			new File(path));
+		try {
+		    database = databaseService
+			    .connectToDatabase(databaseConfiguration);
+		} catch (final DatabaseConnectionException connectionException) {
+		    JOptionPane.showMessageDialog(null,
+			    connectionException.getMessage(),
+			    "Connection Failure!", JOptionPane.ERROR_MESSAGE);
+		    return;
+		}
+
 		try {
 		    properties.setProperty(
 			    PropertyName.CLIENT_DATABASE_GUI_PATH, path);
 		} catch (final IOException e) {
 		    e.printStackTrace();
 		}
-		view.dispose();
+		dialog.dispose();
 	    }
 	});
 
@@ -163,9 +162,9 @@ public class DatabaseConnectionPresenter {
 	    e1.printStackTrace();
 	}
 
-	view.setLocationRelativeTo(null);
-	view.setVisible(true);
+	dialog.setLocationRelativeTo(null);
+	dialog.setVisible(true);
 
-	return dbConfiguration;
+	return new UrlyBirdRoomOfferService(database);
     }
 }

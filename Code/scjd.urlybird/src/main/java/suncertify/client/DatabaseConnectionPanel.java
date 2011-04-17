@@ -1,9 +1,11 @@
 package suncertify.client;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -96,6 +98,14 @@ public class DatabaseConnectionPanel extends JPanel {
 	gridBagConstraints.ipady = 15;
 	gridBagConstraints.insets = new Insets(70, 31, 38, 0);
 	add(discardButton, gridBagConstraints);
+
+	setPreferredSize(new Dimension(400, 400));
+
+	connectButton.setMnemonic(KeyEvent.VK_C);
+	discardButton.setMnemonic(KeyEvent.VK_D);
+	selectButton.setMnemonic(KeyEvent.VK_S);
+
+	databaseTextField.setToolTipText("The Path to the DataFile");
     }
 
     public JButton getSelectButton() {
