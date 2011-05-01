@@ -77,7 +77,7 @@ class DataFileHandler implements DatabaseHandler {
 	checkNotNull(specification, "queryRecord");
 
 	final Set<Record> matchingRecords = new HashSet<Record>();
-	final List<DataFileRecord> dataFileRecords = getAllDataFileRecords();
+	final List<DataFileRecord> dataFileRecords = getAllValidDataFileRecords();
 	for (final DataFileRecord record : dataFileRecords) {
 	    if (specification.isSatisfiedBy(record)) {
 		matchingRecords.add(record);
@@ -87,7 +87,17 @@ class DataFileHandler implements DatabaseHandler {
 	return Collections.unmodifiableSet(matchingRecords);
     }
 
-    private List<DataFileRecord> getAllDataFileRecords() throws IOException {
+    /**
+     * Reads all valid {@link Record}s from the DataFile. Valid is a Record if
+     * it is not marked as deleted.
+     * 
+     * @return all valid <code>Records</code> in the DataFile, never
+     *         <code>null</code>.
+     * @throws IOException
+     *             if an IO problem happens during the reading.
+     */
+    private List<DataFileRecord> getAllValidDataFileRecords()
+	    throws IOException {
 
 	final List<DataFileRecord> dataFileRecords = new ArrayList<DataFileRecord>();
 	final List<DataFileRecord> allRecords = getAllRecords();
@@ -99,6 +109,13 @@ class DataFileHandler implements DatabaseHandler {
 	return dataFileRecords;
     }
 
+    /**
+     * Reads all {@link Record}s from the DataFile.
+     * 
+     * @return all <code>Records</code> in the DataFile, never <code>null</code>
+     * @throws IOException
+     *             if an IO problem happens during the reading
+     */
     private List<DataFileRecord> getAllRecords() throws IOException {
 
 	final List<DataFileRecord> records = new ArrayList<DataFileRecord>();
@@ -135,6 +152,15 @@ class DataFileHandler implements DatabaseHandler {
 	return schema.createRecord(recordBuffer, index);
     }
 
+    /**
+     * Returns the index of the last stored {@link Record} in the DataFile.
+     * Every index behind this must be empty.
+     * 
+     * @return the (zero based) index of the last stored <code>Record</code> in
+     *         the DataFile.
+     * @throws IOException
+     *             if an IO problem happens during the reading
+     */
     private int getIndexOfLastRecord() throws IOException {
 
 	final RandomAccessFile reader = new RandomAccessFile(file, READ_ACCESS);
@@ -159,6 +185,16 @@ class DataFileHandler implements DatabaseHandler {
 	writeRecord(record);
     }
 
+    /**
+     * Writes the given {@link DataFileRecord} to the DataFile at the position
+     * of the index of the record.
+     * 
+     * @param record
+     *            the record that should be written to the DataFile, must not be
+     *            <code>null</code>.
+     * @throws IOException
+     *             if an IO problems happens.
+     */
     private void writeRecord(final DataFileRecord record) throws IOException {
 
 	final RandomAccessFile writer = new RandomAccessFile(file,
