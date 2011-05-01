@@ -8,7 +8,7 @@ import java.io.IOException;
 final class UnsupportedDataFileFormat implements SchemaBuilder {
 
     @Override
-    public DataFileMetaData buildSchemaForDataFile(final File file)
+    public DataFileSchema buildSchemaForDataFile(final File file)
 	    throws UnsupportedDataFileFormatException {
 
 	checkNotNull(file, "file");

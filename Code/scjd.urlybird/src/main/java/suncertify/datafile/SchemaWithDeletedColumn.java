@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-final class SchemaWithDeletedColumn implements DataFileMetaData {
+final class SchemaWithDeletedColumn implements DataFileSchema {
 
     private static class SortColumnsInDbOrder implements
 	    Comparator<DataFileColumn> {

@@ -8,7 +8,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import suncertify.common.roomoffer.RoomOfferService;
-import suncertify.datafile.DataFileAccess;
+import suncertify.datafile.DataFileService;
 import suncertify.db.DB;
 import suncertify.db.DatabaseConnectionException;
 import suncertify.db.DatabaseHandler;

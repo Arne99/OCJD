@@ -3,7 +3,7 @@ package suncertify.db;
 import java.io.IOException;
 
 import suncertify.admin.service.DatabaseConfiguration;
-import suncertify.datafile.DataFileAccess;
+import suncertify.datafile.DataFileService;
 import suncertify.datafile.UnsupportedDataFileFormatException;
 
 public class DatabaseService {
@@ -19,7 +19,7 @@ public class DatabaseService {
 
 	DatabaseHandler databaseHandler = null;
 	try {
-	    databaseHandler = DataFileAccess.instance().getDatabaseHandler(
+	    databaseHandler = DataFileService.instance().getDatabaseHandler(
 		    dataConfig.getDatabaseLocation());
 	} catch (final IOException e) {
 	    throw new DatabaseConnectionException(e);

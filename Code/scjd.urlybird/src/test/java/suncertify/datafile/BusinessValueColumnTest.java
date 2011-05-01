@@ -8,9 +8,9 @@ import org.junit.Test;
 import suncertify.util.Range;
 
 /**
- * Tests for the CLass {@link BusinessColumn}.
+ * Tests for the CLass {@link BusinessValueColumn}.
  */
-public final class BusinessColumnTest {
+public final class BusinessValueColumnTest {
 
     /**
      * Should be equals to itself.
@@ -18,7 +18,7 @@ public final class BusinessColumnTest {
     @Test
     public void shouldBeEqualsToItself() {
 
-	final DataFileColumn column = new BusinessColumn("test", new Range(12,
+	final DataFileColumn column = new BusinessValueColumn("test", new Range(12,
 		12));
 	assertEquals(column, column);
     }
@@ -32,8 +32,8 @@ public final class BusinessColumnTest {
 	final String name = "test";
 	final Range range = new Range(12, 12);
 
-	final DataFileColumn columnOne = new BusinessColumn(name, range);
-	final DataFileColumn columnTwo = new BusinessColumn(name, range);
+	final DataFileColumn columnOne = new BusinessValueColumn(name, range);
+	final DataFileColumn columnTwo = new BusinessValueColumn(name, range);
 
 	assertEquals(columnOne, columnTwo);
 	assertEquals(columnTwo, columnOne);
@@ -48,8 +48,8 @@ public final class BusinessColumnTest {
 	final Range firstRange = new Range(12, 12);
 	final Range secondRange = new Range(12, 12);
 
-	final DataFileColumn columnOne = new BusinessColumn("test", firstRange);
-	final DataFileColumn columnTwo = new BusinessColumn("TEST", secondRange);
+	final DataFileColumn columnOne = new BusinessValueColumn("test", firstRange);
+	final DataFileColumn columnTwo = new BusinessValueColumn("TEST", secondRange);
 
 	assertFalse(columnOne.equals(columnTwo));
     }
@@ -63,8 +63,8 @@ public final class BusinessColumnTest {
 	final String name = "test";
 	final Range range = new Range(12, 12);
 
-	final DataFileColumn columnOne = new BusinessColumn(name, range);
-	final DataFileColumn columnTwo = new BusinessColumn(name, range);
+	final DataFileColumn columnOne = new BusinessValueColumn(name, range);
+	final DataFileColumn columnTwo = new BusinessValueColumn(name, range);
 
 	assertEquals(columnOne, columnTwo);
 	assertEquals(columnOne.hashCode(), columnTwo.hashCode());
@@ -79,8 +79,8 @@ public final class BusinessColumnTest {
 	final Range firstRange = new Range(12, 12);
 	final Range secondRange = new Range(12, 12);
 
-	final DataFileColumn columnOne = new BusinessColumn("test", firstRange);
-	final DataFileColumn columnTwo = new BusinessColumn("TEST", secondRange);
+	final DataFileColumn columnOne = new BusinessValueColumn("test", firstRange);
+	final DataFileColumn columnTwo = new BusinessValueColumn("TEST", secondRange);
 
 	assertFalse(columnOne.equals(columnTwo));
 	assertTrue(columnOne.hashCode() != columnTwo.hashCode());
@@ -90,7 +90,7 @@ public final class BusinessColumnTest {
     public void shouldCreateAnEmptyStringWithTheSizeOfTheColumnAsTheDefaultValue() {
 
 	final Range range = new Range(0, 10);
-	final BusinessColumn column = new BusinessColumn("test", range);
+	final DataFileColumn column = new BusinessValueColumn("test", range);
 
 	final RecordValue value = column.createDefaultValue();
 

@@ -2,47 +2,53 @@ package suncertify.datafile;
 
 import static suncertify.util.DesignByContract.*;
 
+import suncertify.db.Record;
 import suncertify.util.Range;
 
 /**
  * 
- * TODO anpassen A <code>TechnicalColumn</code> represents an
- * {@link DataFileColumn} that could only contain non business relevant values.
- * Examples are:
- * <ul>
- * <li>values that indicates if an record is valid
- * <li>
- * <li>the time a record was created
- * <li>
- * </ul>
+ * An <code>DeletedColumn</code> represents an {@link DataFileColumn} which
+ * contains an flag that indicates if the {@link Record} is valid or deleted.
+ * The flag values ("deleted" or "not deleted") are specified by every
+ * DeletedColumn. The default value is "not deleted".
  * 
  * @author arnelandwehr
  * 
  */
 final class DeletedColumn implements DataFileColumn {
 
+    /** the range of this column in bytes. */
     private final Range range;
 
+    /** the value for a <b>not deleted</b> <code>Record</code>. */
     private final String notDeletedFlag;
 
+    /** the value for a <b>deleted</b> <code>Record</code>. */
     private final String isDeletedFlag;
 
-    /**
-     * The name of the column.
-     */
+    /** The name of the column. */
     private final String name;
 
     /**
-     * Constructor.
+     * Constructs a new {@link DeletedColumn} with the given values that
+     * indicates an <b>deleted</b> or <b>not deleted</b> {@link Record}.
      * 
-     * @param size
-     *            the size of the column in bytes, must not be <code>null</code>
-     *            .
+     * @param range
+     *            the <code>Range</code> of the column in bytes, must not be
+     *            <code>null</code> .
      * @param name
      *            the name of the column, must not be <code>null</code>.
+     * @param notdeletedFlag
+     *            the value that indicates an <b>not deleted</b>
+     *            <code>Record</code>.
+     * @param isDeletedFlag
+     *            the value that indicates an <b>deleted</b> <code>Record</code>
+     *            .
+     * 
      */
     DeletedColumn(final String name, final Range range,
-	    final String notdeletedFlag, final String isDeletedFlag) {
+
+    final String notdeletedFlag, final String isDeletedFlag) {
 	super();
 
 	this.name = name;
@@ -129,10 +135,24 @@ final class DeletedColumn implements DataFileColumn {
 		+ "; isDeletedFlag = " + isDeletedFlag + " ] ";
     }
 
+    /**
+     * Creates an {@link RecordValue} that specifies the {@link Record} as
+     * deleted.
+     * 
+     * @return the <code>RecordValue</code>, never <code>null</code>.
+     */
     RecordValue createDeletedValue() {
 	return createValue(isDeletedFlag);
     }
 
+    /**
+     * Returns if the given value indicates an deleted {@link Record}.
+     * 
+     * @param value
+     *            the value which could specify an deleted <code>Record</code>.
+     * @return <code>true</code> if the value indicates an deleted
+     *         <code>Record</code>.
+     */
     boolean isDeletedValue(final String value) {
 	return isDeletedFlag.equals(value);
     }

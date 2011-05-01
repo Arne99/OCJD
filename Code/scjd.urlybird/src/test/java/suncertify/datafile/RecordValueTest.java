@@ -10,7 +10,7 @@ import suncertify.util.Range;
 
 public class RecordValueTest {
 
-    private static final BusinessColumn ANY_COLUMN = new BusinessColumn("test",
+    private static final DataFileColumn ANY_COLUMN = new BusinessValueColumn("test",
 	    new Range(0, 100));
 
     private static final String ANY_OTHER_VALUE = "ANY_OTHER_VALUE";
@@ -40,7 +40,7 @@ public class RecordValueTest {
     @Test
     public void shouldAlwaysReturnAnValueWithTheColumnSize() {
 
-	final BusinessColumn columnWithLength10 = new BusinessColumn("name",
+	final DataFileColumn columnWithLength10 = new BusinessValueColumn("name",
 		new Range(0, 9));
 	final String valueWithLength8 = "12345678";
 	final RecordValue recordValue = new RecordValue(columnWithLength10,

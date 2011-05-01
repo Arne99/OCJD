@@ -55,17 +55,17 @@ public final class Format257SchemaBuilderTest {
 	when(decoder.decodeBytesToString((byte[]) anyVararg())).thenReturn(
 		"name", "age");
 	final SchemaBuilder factory = new Format257SchemaBuilder(null, decoder);
-	final DataFileMetaData schema = factory
+	final DataFileSchema schema = factory
 		.buildSchemaForDataFile(testFile);
 
 	final DeletedColumn deletedColumn = new DeletedColumn("Deleted-Flag",
 		new Range(0, 0), "0", "1");
-	final DataFileColumn businessColumnOne = new BusinessColumn("name",
+	final DataFileColumn businessColumnOne = new BusinessValueColumn("name",
 		new Range(1, 160));
-	final DataFileColumn businessColumnTwo = new BusinessColumn("age",
+	final DataFileColumn businessColumnTwo = new BusinessValueColumn("age",
 		new Range(161, 200));
 
-	final DataFileMetaData expectedSchema = new SchemaWithDeletedColumn(
+	final DataFileSchema expectedSchema = new SchemaWithDeletedColumn(
 		new DataFileHeader(SUPPORTED_IDENTIFIER, 25), deletedColumn,
 		Lists.newArrayList(businessColumnOne, businessColumnTwo),
 		new Utf8Decoder());
@@ -81,13 +81,13 @@ public final class Format257SchemaBuilderTest {
 		testFile);
 
 	final SchemaBuilder factory = new Format257SchemaBuilder(null, null);
-	final DataFileMetaData schema = factory
+	final DataFileSchema schema = factory
 		.buildSchemaForDataFile(testFile);
 
 	final DeletedColumn deletedColumn = new DeletedColumn("Deleted-Flag",
 		new Range(0, 0), "0", "1");
 
-	final DataFileMetaData expectedSchema = new SchemaWithDeletedColumn(
+	final DataFileSchema expectedSchema = new SchemaWithDeletedColumn(
 		new DataFileHeader(SUPPORTED_IDENTIFIER, 10), deletedColumn,
 		Lists.<DataFileColumn> newArrayList(), new Utf8Decoder());
 

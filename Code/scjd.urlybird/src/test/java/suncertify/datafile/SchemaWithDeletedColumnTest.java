@@ -45,11 +45,11 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("Hello", new Range(0, 12)));
+		add(new BusinessValueColumn("Hello", new Range(0, 12)));
 	    }
 	};
 
-	final DataFileMetaData schema = new SchemaWithDeletedColumn(
+	final DataFileSchema schema = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columns,
 		new Utf8Decoder());
 	assertThat(schema, is(equalTo(schema)));
@@ -64,14 +64,14 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn(null, new Range(0, 12)));
+		add(new BusinessValueColumn(null, new Range(0, 12)));
 	    }
 	};
 
-	final DataFileMetaData schemaOne = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaOne = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columns,
 		new Utf8Decoder());
-	final DataFileMetaData schemaTwo = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaTwo = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columns,
 		new Utf8Decoder());
 
@@ -88,14 +88,14 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("Hello", new Range(9, 12)));
+		add(new BusinessValueColumn("Hello", new Range(9, 12)));
 	    }
 	};
 
-	final DataFileMetaData schemaOne = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaOne = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columns,
 		new Utf8Decoder());
-	final DataFileMetaData schemaTwo = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaTwo = new SchemaWithDeletedColumn(
 		new DataFileHeader(11, 123), deletedColumn, columns,
 		new Utf8Decoder());
 
@@ -111,21 +111,21 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columnsSchemaOne = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("Hello", new Range(0, 20)));
+		add(new BusinessValueColumn("Hello", new Range(0, 20)));
 	    }
 	};
 
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columnsSchemaTwo = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("olleH", new Range(0, 20)));
+		add(new BusinessValueColumn("olleH", new Range(0, 20)));
 	    }
 	};
 
-	final DataFileMetaData schemaOne = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaOne = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columnsSchemaOne,
 		new Utf8Decoder());
-	final DataFileMetaData schemaTwo = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaTwo = new SchemaWithDeletedColumn(
 		new DataFileHeader(11, 123), deletedColumn, columnsSchemaTwo,
 		new Utf8Decoder());
 
@@ -141,14 +141,14 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("Hello", new Range(0, 20)));
+		add(new BusinessValueColumn("Hello", new Range(0, 20)));
 	    }
 	};
 
-	final DataFileMetaData schemaOne = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaOne = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columns,
 		new Utf8Decoder());
-	final DataFileMetaData schemaTwo = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaTwo = new SchemaWithDeletedColumn(
 		new DataFileHeader(11, 123), deletedColumn, columns,
 		new BytesToStringDecoder() {
 
@@ -170,14 +170,14 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("Hello", new Range(0, 20)));
+		add(new BusinessValueColumn("Hello", new Range(0, 20)));
 	    }
 	};
 
-	final DataFileMetaData schemaOne = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaOne = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columns,
 		new Utf8Decoder());
-	final DataFileMetaData schemaTwo = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaTwo = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columns,
 		new Utf8Decoder());
 
@@ -194,21 +194,21 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columnsSchemaOne = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("Hello", new Range(0, 20)));
+		add(new BusinessValueColumn("Hello", new Range(0, 20)));
 	    }
 	};
 
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columnsSchemaTwo = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("olleH", new Range(0, 20)));
+		add(new BusinessValueColumn("olleH", new Range(0, 20)));
 	    }
 	};
 
-	final DataFileMetaData schemaOne = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaOne = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columnsSchemaOne,
 		new Utf8Decoder());
-	final DataFileMetaData schemaTwo = new SchemaWithDeletedColumn(
+	final DataFileSchema schemaTwo = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columnsSchemaTwo,
 		new Utf8Decoder());
 
@@ -225,11 +225,11 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("Hello", new Range(1, 20)));
+		add(new BusinessValueColumn("Hello", new Range(1, 20)));
 	    }
 	};
 
-	final DataFileMetaData schema = new SchemaWithDeletedColumn(
+	final DataFileSchema schema = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn, columns,
 		new Utf8Decoder());
 
@@ -253,12 +253,12 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("TestColumn", new Range(
+		add(new BusinessValueColumn("TestColumn", new Range(
 			isDeletedValue.length(), 12)));
 	    }
 	};
 
-	final DataFileMetaData schema = new SchemaWithDeletedColumn(
+	final DataFileSchema schema = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), newDeletedColumn, columns,
 		new Utf8Decoder());
 
@@ -284,12 +284,12 @@ public final class SchemaWithDeletedColumnTest {
 	@SuppressWarnings("serial")
 	final List<DataFileColumn> columns = new ArrayList<DataFileColumn>() {
 	    {
-		add(new BusinessColumn("TestColumn", new Range(
+		add(new BusinessValueColumn("TestColumn", new Range(
 			isDeletedValue.length(), 12)));
 	    }
 	};
 
-	final DataFileMetaData schema = new SchemaWithDeletedColumn(
+	final DataFileSchema schema = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), newDeletedColumn, columns,
 		new Utf8Decoder());
 
@@ -313,7 +313,7 @@ public final class SchemaWithDeletedColumnTest {
 
 	final File testFile = new File("./nothing/exists/here");
 
-	final DataFileMetaData schema = new SchemaWithDeletedColumn(
+	final DataFileSchema schema = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn,
 		Lists.<DataFileColumn> newArrayList(), new Utf8Decoder());
 
@@ -335,7 +335,7 @@ public final class SchemaWithDeletedColumnTest {
 	testFile = new File("./shouldRecognizeThatADirCantBeAnValidDataFile");
 	testFile.mkdir();
 
-	final DataFileMetaData schema = new SchemaWithDeletedColumn(
+	final DataFileSchema schema = new SchemaWithDeletedColumn(
 		new DataFileHeader(12, 1234), deletedColumn,
 		Lists.<DataFileColumn> newArrayList(), new Utf8Decoder());
 

@@ -4,12 +4,35 @@ import static suncertify.util.DesignByContract.*;
 
 import suncertify.util.Range;
 
-final class BusinessColumn implements DataFileColumn {
+/**
+ * An <code>BusinessValueColumn</code> represents an {@link DataFileColumn}
+ * which could store business relevant data in it. It could contain any
+ * <code>String</code> value and the default value is an empty
+ * <code>String</code>. Any <code>BusinessValueColumn</code> could be identified
+ * by its name and its {@link Range}.
+ * 
+ * @author arnelandwehr
+ * 
+ */
+final class BusinessValueColumn implements DataFileColumn {
 
+    /** the name of the business column. */
     private final String name;
+
+    /** the start and end point of the column in an DataFile in bytes. */
     private final Range range;
 
-    BusinessColumn(final String name, final Range range) {
+    /**
+     * Constructs a new <code>BusinessValueColumn</code> with the given name and
+     * {@link Range}.
+     * 
+     * @param name
+     *            the name of the column, must not be <code>null</code>.
+     * @param range
+     *            the <code>Range</code> of this column in the DataFile, must
+     *            not be <code>null</code>.
+     */
+    BusinessValueColumn(final String name, final Range range) {
 	super();
 
 	this.name = name;
@@ -27,10 +50,10 @@ final class BusinessColumn implements DataFileColumn {
 	if (object == this) {
 	    return true;
 	}
-	if (!(object instanceof BusinessColumn)) {
+	if (!(object instanceof BusinessValueColumn)) {
 	    return false;
 	}
-	final BusinessColumn column = (BusinessColumn) object;
+	final BusinessValueColumn column = (BusinessValueColumn) object;
 	return this.name.equals(column.name) && this.range.equals(column.range);
     }
 

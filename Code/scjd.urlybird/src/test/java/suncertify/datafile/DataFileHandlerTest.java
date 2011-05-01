@@ -9,7 +9,6 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 
 import org.junit.After;
@@ -22,32 +21,53 @@ import suncertify.util.Range;
 
 import com.google.common.collect.Lists;
 
+/**
+ * The Class DataFileHandlerTest.
+ */
 public final class DataFileHandlerTest {
 
+    /** The test file. */
     private File testFile = new File("");
 
-    final DeletedColumn firstColumn = new DeletedColumn("deleted", new Range(0,
-	    0), "0", "1");
+    /** The first column. */
+    private final DeletedColumn firstColumn = new DeletedColumn("deleted",
+	    new Range(0, 0), "0", "1");
 
-    final DataFileColumn secondColumn = new BusinessColumn("firstName",
-	    new Range(1, 7));
-    final DataFileColumn thirdColumn = new BusinessColumn("secondName",
+    /** The second column. */
+    private final DataFileColumn secondColumn = new BusinessValueColumn(
+	    "firstName", new Range(1, 7));
+
+    /** The third column. */
+    private final DataFileColumn thirdColumn = new BusinessValueColumn(
+	    "secondName", new Range(8, 15));
+
+    /** The fourth column. */
+    private final DataFileColumn fourthColumn = new BusinessValueColumn("age",
 	    new Range(8, 15));
-    final DataFileColumn fourthColumn = new BusinessColumn("age", new Range(8,
-	    15));
 
-    final DataFileRecord firstRecord = new ValidRecord(Lists.newArrayList(
-	    new RecordValue(firstColumn, "0"), new RecordValue(secondColumn,
-		    "Hans   "), new RecordValue(thirdColumn, "Meier   "),
-	    new RecordValue(fourthColumn, "37")), 0);
+    /** The first record. */
+    private final DataFileRecord firstRecord = new ValidRecord(
+	    Lists.newArrayList(new RecordValue(firstColumn, "0"),
+		    new RecordValue(secondColumn, "Hans   "), new RecordValue(
+			    thirdColumn, "Meier   "), new RecordValue(
+			    fourthColumn, "37")), 0);
 
-    final DataFileRecord secondRecord = new ValidRecord(Lists.newArrayList(
-	    new RecordValue(firstColumn, "0"), new RecordValue(secondColumn,
-		    "Helmut "), new RecordValue(thirdColumn, "Schultze"),
-	    new RecordValue(fourthColumn, "47")), 0);
+    /** The second record. */
+    private final DataFileRecord secondRecord = new ValidRecord(
+	    Lists.newArrayList(new RecordValue(firstColumn, "0"),
+		    new RecordValue(secondColumn, "Helmut "), new RecordValue(
+			    thirdColumn, "Schultze"), new RecordValue(
+			    fourthColumn, "47")), 0);
 
-    final DataFileMetaData schema = mock(DataFileMetaData.class);
+    /** The schema. */
+    private final DataFileSchema schema = mock(DataFileSchema.class);
 
+    /**
+     * Sets the up.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     @Before
     public void setUp() throws IOException {
 	testFile = File.createTempFile("test", getClass().getSimpleName());
@@ -55,6 +75,7 @@ public final class DataFileHandlerTest {
 		.addRecord(secondRecord.getValuesAsBytes())
 		.writeToDataFile(testFile);
 
+	when(schema.isValidDataFile(testFile)).thenReturn(true);
 	when(schema.getOffset()).thenReturn(0);
 	when(schema.createRecord(firstRecord.getValuesAsBytes(), 0))
 		.thenReturn(firstRecord);
@@ -65,14 +86,29 @@ public final class DataFileHandlerTest {
 
     }
 
+    /**
+     * Tear down.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     @After
     public void tearDown() throws IOException {
 	testFile.delete();
     }
 
+    /**
+     * Should match every record in the data file against the specification to
+     * find the matching records.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldMatchEveryRecordInTheDataFileAgainstTheSpecificationToFindTheMatchingRecords()
-	    throws IOException {
+	    throws IOException, UnsupportedDataFileFormatException {
 
 	final RecordMatchingSpecification specification = mock(RecordMatchingSpecification.class);
 	when(specification.isSatisfiedBy(any(ValidRecord.class))).thenReturn(
@@ -86,9 +122,17 @@ public final class DataFileHandlerTest {
 	assertThat(secondRecord, isIn(matchingRecords));
     }
 
+    /**
+     * Should return only records that satisfy the specification.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldReturnOnlyRecordsThatSatisfyTheSpecification()
-	    throws IOException {
+	    throws IOException, UnsupportedDataFileFormatException {
 
 	final RecordMatchingSpecification specification = mock(RecordMatchingSpecification.class);
 	when(specification.isSatisfiedBy(firstRecord)).thenReturn(true);
@@ -102,9 +146,17 @@ public final class DataFileHandlerTest {
 	assertThat(secondRecord, not(isIn(matchingRecords)));
     }
 
+    /**
+     * Should return an empty collection if the specification doesnt match.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldReturnAnEmptyCollectionIfTheSpecificationDoesntMatch()
-	    throws IOException {
+	    throws IOException, UnsupportedDataFileFormatException {
 
 	final RecordMatchingSpecification specification = mock(RecordMatchingSpecification.class);
 	when(specification.isSatisfiedBy(any(Record.class))).thenReturn(false);
@@ -116,8 +168,17 @@ public final class DataFileHandlerTest {
 	assertTrue(matchingRecords.isEmpty());
     }
 
+    /**
+     * Should read the first record from the index0.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
-    public void shouldReadTheFirstRecordFromTheIndex0() throws IOException {
+    public void shouldReadTheFirstRecordFromTheIndex0() throws IOException,
+	    UnsupportedDataFileFormatException {
 
 	final DataFileHandler handler = new DataFileHandler(testFile, schema);
 	final DataFileRecord record = handler.readRecord(0);
@@ -125,8 +186,17 @@ public final class DataFileHandlerTest {
 	assertThat(record, is(equalTo(firstRecord)));
     }
 
+    /**
+     * Should read the second record from the index1.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
-    public void shouldReadTheSecondRecordFromTheIndex1() throws IOException {
+    public void shouldReadTheSecondRecordFromTheIndex1() throws IOException,
+	    UnsupportedDataFileFormatException {
 
 	final DataFileHandler handler = new DataFileHandler(testFile, schema);
 	final DataFileRecord record = handler.readRecord(1);
@@ -134,9 +204,18 @@ public final class DataFileHandlerTest {
 	assertThat(record, is(equalTo(secondRecord)));
     }
 
+    /**
+     * Should return an in valid record if the given index is greater than the
+     * number of available records.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldReturnAnInValidRecordIfTheGivenIndexIsGreaterThanTheNumberOfAvailableRecords()
-	    throws IOException {
+	    throws IOException, UnsupportedDataFileFormatException {
 
 	when(schema.createNullRecord(10)).thenReturn(
 		new DeletedRecord(Lists.newArrayList(new RecordValue(
@@ -148,9 +227,17 @@ public final class DataFileHandlerTest {
 	assertFalse(record.isValid());
     }
 
+    /**
+     * Should write an record to the data file at the given index.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldWriteAnRecordToTheDataFileAtTheGivenIndex()
-	    throws IOException {
+	    throws IOException, UnsupportedDataFileFormatException {
 
 	final DataFileRecord newRecord = new ValidRecord(Lists.newArrayList(
 		new RecordValue(firstColumn, "0"), new RecordValue(
@@ -170,9 +257,17 @@ public final class DataFileHandlerTest {
 	assertThat(record, is(equalTo(newRecord)));
     }
 
+    /**
+     * Should mark the record at the given index in the data file as deleted.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldMarkTheRecordAtTheGivenIndexInTheDataFileAsDeleted()
-	    throws IOException {
+	    throws IOException, UnsupportedDataFileFormatException {
 
 	final DataFileRecord nullRecord = new ValidRecord(Lists.newArrayList(
 		new RecordValue(firstColumn, "1"), new RecordValue(
@@ -191,9 +286,18 @@ public final class DataFileHandlerTest {
 	assertThat(record, is(equalTo(nullRecord)));
     }
 
+    /**
+     * Should return the last index plus one as the first empty index if the
+     * file contains no deleted rows.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldReturnTheLastIndexPlusOneAsTheFirstEmptyIndexIfTheFileContainsNoDeletedRows()
-	    throws IOException {
+	    throws IOException, UnsupportedDataFileFormatException {
 
 	final DataFileHandler handler = new DataFileHandler(testFile, schema);
 	final int emptyIndex = handler.findEmptyIndex();
@@ -201,9 +305,17 @@ public final class DataFileHandlerTest {
 	assertThat(emptyIndex, is(equalTo(2)));
     }
 
+    /**
+     * Should return the index of the first in valid record as an empty index.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldReturnTheIndexOfTheFirstInValidRecordAsAnEmptyIndex()
-	    throws IOException {
+	    throws IOException, UnsupportedDataFileFormatException {
 
 	final int index = 1;
 

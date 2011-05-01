@@ -16,20 +16,56 @@ import suncertify.db.Record;
 import suncertify.db.RecordMatchingSpecification;
 
 /**
- * The Class DataFileAccessHandler.
+ * A <code>DataFileHandler</code> is a {@link DatabaseHandler for DataFiles. It
+ * guarantees write and read operations to <code>Records</code> in a flat file.
  */
 class DataFileHandler implements DatabaseHandler {
 
+    /**
+     * constant for a read and write access to {@link RandomAccessFile}. @see
+     * {@link RandomAccessFile#RandomAccessFile(File, String)}
+     */
     private static final String READ_WRITE_ACCESS = "rw";
+
+    /**
+     * constant for a read access to {@link RandomAccessFile}. @see
+     * {@link RandomAccessFile#RandomAccessFile(File, String)}
+     */
     private static final String READ_ACCESS = "r";
 
-    private final DataFileMetaData schema;
+    /**
+     * the schema that is supported by this <code>DataFileHandler</code>.
+     */
+    private final DataFileSchema schema;
+
+    /**
+     * the <code>File</code> this handler guarantees access to.
+     */
     private final File file;
 
-    DataFileHandler(final File file, final DataFileMetaData schema)
-	    throws IOException {
+    /**
+     * Construct a new <code>DataFileHandler</code> for the given file that must
+     * support the given {@link DataFileSchema}.
+     * 
+     * @param file
+     *            the file to read from and write to.
+     * @param schema
+     *            the schema of the file.
+     * @throws IOException
+     *             if any IO problem occurs.
+     * @throws UnsupportedDataFileFormatException
+     *             if the data in the given file is not in the format wof the
+     *             given schema.
+     */
+    DataFileHandler(final File file, final DataFileSchema schema)
+	    throws IOException, UnsupportedDataFileFormatException {
 
-	schema.isValidDataFile(file);
+	if (!schema.isValidDataFile(file)) {
+	    throw new UnsupportedDataFileFormatException("the given file "
+		    + file.getAbsolutePath()
+		    + " does not contain a supported schema");
+	}
+
 	this.file = file;
 	this.schema = schema;
     }
@@ -41,8 +77,8 @@ class DataFileHandler implements DatabaseHandler {
 	checkNotNull(specification, "queryRecord");
 
 	final Set<Record> matchingRecords = new HashSet<Record>();
-	final List<DataFileRecord> DataFileRecords = getAllDataFileRecords();
-	for (final DataFileRecord record : DataFileRecords) {
+	final List<DataFileRecord> dataFileRecords = getAllDataFileRecords();
+	for (final DataFileRecord record : dataFileRecords) {
 	    if (specification.isSatisfiedBy(record)) {
 		matchingRecords.add(record);
 	    }
@@ -53,14 +89,14 @@ class DataFileHandler implements DatabaseHandler {
 
     private List<DataFileRecord> getAllDataFileRecords() throws IOException {
 
-	final List<DataFileRecord> DataFileRecords = new ArrayList<DataFileRecord>();
+	final List<DataFileRecord> dataFileRecords = new ArrayList<DataFileRecord>();
 	final List<DataFileRecord> allRecords = getAllRecords();
 	for (final DataFileRecord record : allRecords) {
 	    if (record.isValid()) {
-		DataFileRecords.add(record);
+		dataFileRecords.add(record);
 	    }
 	}
-	return DataFileRecords;
+	return dataFileRecords;
     }
 
     private List<DataFileRecord> getAllRecords() throws IOException {

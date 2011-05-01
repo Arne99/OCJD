@@ -39,7 +39,7 @@ final class Format257SchemaBuilder implements SchemaBuilder {
     }
 
     @Override
-    public final DataFileMetaData buildSchemaForDataFile(final File file)
+    public final DataFileSchema buildSchemaForDataFile(final File file)
 	    throws IOException, UnsupportedDataFileFormatException {
 
 	checkNotNull(file, "file");
@@ -51,7 +51,7 @@ final class Format257SchemaBuilder implements SchemaBuilder {
 	}
 
 	final RandomAccessFile reader = new RandomAccessFile(file, READ_MODE);
-	DataFileMetaData schema = null;
+	DataFileSchema schema = null;
 	try {
 	    schema = extractSchemaWithReader(reader);
 	} finally {
@@ -76,7 +76,7 @@ final class Format257SchemaBuilder implements SchemaBuilder {
 
     }
 
-    private DataFileMetaData extractSchemaWithReader(
+    private DataFileSchema extractSchemaWithReader(
 	    final RandomAccessFile reader) throws IOException,
 	    UnsupportedDataFileFormatException {
 
@@ -104,7 +104,7 @@ final class Format257SchemaBuilder implements SchemaBuilder {
 	    final String columnName = decoder.decodeBytesToString(nameBuffer);
 
 	    final int columnSize = reader.readShort();
-	    final BusinessColumn newColumn = new BusinessColumn(columnName,
+	    final DataFileColumn newColumn = new BusinessValueColumn(columnName,
 		    new Range(startPositionNextColumn, startPositionNextColumn
 			    + columnSize - 1));
 	    columns.add(newColumn);
