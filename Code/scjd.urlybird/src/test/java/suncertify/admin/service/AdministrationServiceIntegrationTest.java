@@ -2,14 +2,18 @@ package suncertify.admin.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import suncertify.common.ClientCallback;
 import suncertify.common.ClientServices;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
@@ -19,9 +23,13 @@ import suncertify.domain.RoomOffer;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+
 public final class AdministrationServiceIntegrationTest {
 
     File anyFile;
+    private AdministrationService service;
 
     @Before
     public void setUp() throws IOException {
@@ -33,17 +41,19 @@ public final class AdministrationServiceIntegrationTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws RemoteException, MalformedURLException,
+	    NotBoundException {
 	if (anyFile != null) {
 	    anyFile.delete();
 	}
+	service.stopServer();
     }
 
     @Test
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanFindRooms()
 	    throws Exception {
 
-	final AdministrationService service = new AdministrationService();
+	service = new AdministrationService();
 
 	final ServerConfiguration serverConfig = new ServerConfiguration();
 	final DatabaseConfiguration dataConfig = new DatabaseConfiguration(
@@ -56,17 +66,18 @@ public final class AdministrationServiceIntegrationTest {
 
 	final RoomOfferService roomOfferService = services
 		.getRoomOfferService();
-	roomOfferService.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
-		"Pleasantville", true));
+	final List<RoomOffer> roomOffers = roomOfferService
+		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
+			"Pleasantville", true));
 
-	service.stopServer();
+	assertThat(roomOffers.size(), is(equalTo(1)));
     }
 
     @Test
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanCreateARoom()
 	    throws Exception {
 
-	final AdministrationService service = new AdministrationService();
+	service = new AdministrationService();
 
 	final ServerConfiguration serverConfig = new ServerConfiguration();
 	final DatabaseConfiguration dataConfig = new DatabaseConfiguration(
@@ -80,9 +91,14 @@ public final class AdministrationServiceIntegrationTest {
 	final RoomOfferService roomOfferService = services
 		.getRoomOfferService();
 	roomOfferService.createRoomOffer(new CreateRoomCommand(Lists
-		.newArrayList("MyHotel", "", "", "", "", "", "")));
+		.newArrayList("MyHotel", "MyCity", "4", "Y", "$120.00",
+			new SimpleDateFormat("yyyy/MM/dd").format(new Date()),
+			"12345678")));
 
-	service.stopServer();
+	final List<RoomOffer> roomOffers = roomOfferService
+		.findRoomOffer(new FindRoomCommand("MyHotel", "MyCity", true));
+
+	assertThat(roomOffers.size(), is(equalTo(1)));
     }
 
 }
