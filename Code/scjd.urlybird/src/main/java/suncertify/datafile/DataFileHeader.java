@@ -1,5 +1,11 @@
 package suncertify.datafile;
 
+/**
+ * 
+ * 
+ * @author arnelandwehr
+ * 
+ */
 final class DataFileHeader {
     private final int key;
     private final int headerLength;

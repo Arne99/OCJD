@@ -1,12 +1,9 @@
 package suncertify.common.roomoffer;
 
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.List;
 
-import suncertify.common.ClientCallback;
 import suncertify.domain.RoomOffer;
-import suncertify.util.Pair;
 
 public interface RoomOfferService extends Remote {
 

@@ -4,8 +4,8 @@ import static suncertify.util.DesignByContract.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,16 +22,8 @@ import suncertify.db.RecordNotFoundException;
 public class UrlyBirdRoomOfferService implements RoomOfferService {
 
     private static final int NOT_LOCKED = -1;
-    private static final int HOTEL = 0;
-    private static final int CITY = 1;
-    private static final int SIZE = 2;
-    private static final int SMOKING = 3;
-    private static final int PRICE = 4;
-    private static final int DATE = 5;
-    private static final int CUSTOMER = 6;
-    private static final int INDEX = 7;
 
-    private final BusinessRule<RoomOffer> isOccupancyIn48Hours;
+    private final BusinessRule<Date> isOccupancyIn48Hours;
     private final BusinessRule<RoomOffer> isRoomBookable;
     private final RoomOfferBuilder builder;
     private final Dao<RoomOffer> roomOfferDao;
@@ -44,7 +36,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 
     UrlyBirdRoomOfferService(final Dao<RoomOffer> roomOfferDao,
 	    final RoomOfferBuilder roomOfferBuilder,
-	    final BusinessRule<RoomOffer> isOccupancyIn48Hours,
+	    final BusinessRule<Date> isOccupancyIn48Hours,
 	    final BusinessRule<RoomOffer> isRoomBookable) {
 	super();
 	this.roomOfferDao = roomOfferDao;
@@ -71,8 +63,10 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    if (!isRoomBookable.isSatisfiedBy(dbRoomToBook)) {
 		throw new Exception();
 	    }
-	    final RoomOffer bookedRoomOffer = builder.copyOf(dbRoomToBook)
-		    .bookedBy(command.getCustomerId()).build();
+
+	    final RoomOffer bookedRoomOffer = builder
+		    .createRoomOfferWithNewCustomer(clientRoomToBook,
+			    command.getCustomerId());
 	    roomOfferDao.update(bookedRoomOffer, lock);
 	    return bookedRoomOffer;
 	} catch (final Exception e) {
@@ -90,21 +84,19 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	checkNotNull(command, "command");
 
 	final List<String> values = command.getValues();
-	final RoomOffer roomOffer = builder.newRoomOffer()
-		.fromHotel(values.get(HOTEL)).fromCity(values.get(CITY))
-		.ofSize(values.get(SIZE)).smokingAllowed(values.get(SMOKING))
-		.bookedBy(values.get(CUSTOMER)).bookableAt(values.get(DATE))
-		.withPrice(values.get(PRICE)).build();
-
-	if (!isOccupancyIn48Hours.isSatisfiedBy(roomOffer)) {
-	    throw new Exception("room occupancy is not in the next 48 hours!");
+	final Date date = builder.getDateFromValues(values);
+	if (!isOccupancyIn48Hours.isSatisfiedBy(date)) {
+	    throw new Exception("");
 	}
+
+	RoomOffer roomOffer = null;
 	try {
-	    roomOfferDao.create(roomOffer);
+	    roomOffer = roomOfferDao.create(values);
 	} catch (final Exception e) {
 	    e.printStackTrace();
 	    throw new Exception(e);
 	}
+
 	return roomOffer;
 
     }
@@ -151,14 +143,8 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    final RoomOffer dbRoomToUpdate = roomOfferDao.read(index);
 	    checkStaleRoomData(clientRoomToUpdate, dbRoomToUpdate);
 
-	    final RoomOffer updatedRoomOffer = builder.newRoomOffer()
-		    .fromHotel(values.get(HOTEL)).fromCity(values.get(CITY))
-		    .ofSize(values.get(SIZE))
-		    .smokingAllowed(values.get(SMOKING))
-		    .withIndex(values.get(INDEX))
-		    .bookedBy(values.get(CUSTOMER))
-		    .bookableAt(values.get(DATE)).withPrice(values.get(PRICE))
-		    .build();
+	    final RoomOffer updatedRoomOffer = builder.createRoomOffer(values,
+		    index);
 
 	    roomOfferDao.update(updatedRoomOffer, lock);
 	    return updatedRoomOffer;

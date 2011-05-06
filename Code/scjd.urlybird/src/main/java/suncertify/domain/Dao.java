@@ -8,7 +8,8 @@ import suncertify.db.RecordNotFoundException;
 
 public interface Dao<T> {
 
-    int create(T t) throws DuplicateKeyException;
+    T create(List<String> values) throws DuplicateKeyException,
+	    ConstraintViolationException;
 
     void delete(int index, long lock) throws RecordNotFoundException,
 	    suncertify.db.SecurityException;

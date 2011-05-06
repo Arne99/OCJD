@@ -80,7 +80,7 @@ public final class AdministrationServiceIntegrationTest {
 	final RoomOfferService roomOfferService = services
 		.getRoomOfferService();
 	roomOfferService.createRoomOffer(new CreateRoomCommand(Lists
-		.newArrayList("MyHotel")));
+		.newArrayList("MyHotel", "", "", "", "", "", "")));
 
 	service.stopServer();
     }

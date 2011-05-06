@@ -1,6 +1,7 @@
 package suncertify.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import suncertify.db.DB;
 import suncertify.db.DuplicateKeyException;
@@ -19,8 +20,12 @@ public class RoomOfferDao implements Dao<RoomOffer> {
     }
 
     @Override
-    public int create(final RoomOffer roomOffer) throws DuplicateKeyException {
-	return database.create(roomOffer.toArray());
+    public RoomOffer create(final List<String> values)
+	    throws DuplicateKeyException, ConstraintViolationException {
+
+	builder.checkValues(values);
+	final int index = database.create(values.toArray(new String[] {}));
+	return builder.createRoomOffer(values, index);
     }
 
     @Override
@@ -52,11 +57,8 @@ public class RoomOfferDao implements Dao<RoomOffer> {
     public RoomOffer read(final int index) throws RecordNotFoundException,
 	    ConstraintViolationException {
 	final String[] values = database.read(index);
-	final RoomOffer roomOffer = builder.newRoomOffer().fromHotel(values[0])
-		.fromCity(values[1]).ofSize(values[2])
-		.smokingAllowed(values[3]).withPrice(values[4])
-		.bookableAt(values[5]).bookedBy(values[6]).withIndex(values[7])
-		.build();
+	final RoomOffer roomOffer = builder.createRoomOffer(
+		Arrays.asList(values), index);
 
 	return roomOffer;
     }

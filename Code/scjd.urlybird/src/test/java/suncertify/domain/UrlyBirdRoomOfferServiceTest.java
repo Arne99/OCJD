@@ -22,16 +22,14 @@ import suncertify.common.roomoffer.DeleteRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.UpdateRoomCommand;
 import suncertify.db.RecordNotFoundException;
-import suncertify.domain.RoomOfferBuilder.DefaultBuilder;
 
 public class UrlyBirdRoomOfferServiceTest {
 
     @SuppressWarnings("unchecked")
     final Dao<RoomOffer> dao = mock(Dao.class);
     final RoomOfferBuilder builder = mock(RoomOfferBuilder.class);
-    final DefaultBuilder defaultBuilder = mock(DefaultBuilder.class);
     @SuppressWarnings("unchecked")
-    final BusinessRule<RoomOffer> isOccupancyIn48Hours = mock(BusinessRule.class);
+    final BusinessRule<Date> isOccupancyIn48Hours = mock(BusinessRule.class);
     @SuppressWarnings("unchecked")
     final BusinessRule<RoomOffer> isRoomBookable = mock(BusinessRule.class);
     final RoomOffer validRoomOffer = new RoomOffer("Hilton", "Hamburg", 2,
@@ -43,17 +41,6 @@ public class UrlyBirdRoomOfferServiceTest {
 
     @Before
     public void setUp() {
-	when(builder.copyOf(validRoomOffer)).thenReturn(defaultBuilder);
-	when(builder.newRoomOffer()).thenReturn(defaultBuilder);
-	when(defaultBuilder.bookedBy(anyString())).thenReturn(defaultBuilder);
-	when(defaultBuilder.bookableAt(anyString())).thenReturn(defaultBuilder);
-	when(defaultBuilder.withPrice(anyString())).thenReturn(defaultBuilder);
-	when(defaultBuilder.withIndex(anyString())).thenReturn(defaultBuilder);
-	when(defaultBuilder.fromHotel(anyString())).thenReturn(defaultBuilder);
-	when(defaultBuilder.fromCity(anyString())).thenReturn(defaultBuilder);
-	when(defaultBuilder.smokingAllowed(anyString())).thenReturn(
-		defaultBuilder);
-	when(defaultBuilder.ofSize(anyString())).thenReturn(defaultBuilder);
     }
 
     @Test
@@ -69,10 +56,10 @@ public class UrlyBirdRoomOfferServiceTest {
 		validRoomOffer, customerId);
 
 	when(isRoomBookable.isSatisfiedBy(validRoomOffer)).thenReturn(true);
-	when(defaultBuilder.build()).thenReturn(validRoomOffer);
+	when(builder.createRoomOfferWithNewCustomer(validRoomOffer, customerId))
+		.thenReturn(expectedRoomOffer);
 	when(dao.read(bookRoomCommand.getRoomToBook().getIndex())).thenReturn(
 		validRoomOffer);
-	when(defaultBuilder.build()).thenReturn(expectedRoomOffer);
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, isRoomBookable);
@@ -114,8 +101,10 @@ public class UrlyBirdRoomOfferServiceTest {
 		customerId);
 
 	when(dao.read(index)).thenReturn(validRoomOffer);
-	when(defaultBuilder.build()).thenThrow(
-		new ConstraintViolationException("Test"));
+	when(
+		builder.createRoomOffer(
+			Arrays.asList(validRoomOffer.toArray()), index))
+		.thenThrow(new ConstraintViolationException("Test"));
 	when(isRoomBookable.isSatisfiedBy(validRoomOffer)).thenReturn(true);
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
@@ -133,14 +122,14 @@ public class UrlyBirdRoomOfferServiceTest {
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, isRoomBookable);
 
-	when(defaultBuilder.build()).thenReturn(validRoomOffer);
-	when(isOccupancyIn48Hours.isSatisfiedBy(validRoomOffer)).thenReturn(
-		true);
+	when(isOccupancyIn48Hours.isSatisfiedBy((Date) any())).thenReturn(true);
+	when(dao.create(Arrays.asList(validRoomOffer.toArray()))).thenReturn(
+		validRoomOffer);
 
 	final RoomOffer createdRoomOffer = roomOfferService
 		.createRoomOffer(command);
 
-	verify(dao).create(validRoomOffer);
+	verify(dao).create(Arrays.asList(validRoomOffer.toArray()));
 	assertThat(createdRoomOffer, is(equalTo(validRoomOffer)));
     }
 
@@ -154,14 +143,12 @@ public class UrlyBirdRoomOfferServiceTest {
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, isRoomBookable);
 
-	when(defaultBuilder.build()).thenReturn(validRoomOffer);
-	when(isOccupancyIn48Hours.isSatisfiedBy(validRoomOffer)).thenReturn(
-		false);
-	when(clientCallback.onWarning(anyString())).thenReturn(true);
+	when(isOccupancyIn48Hours.isSatisfiedBy((Date) any()))
+		.thenReturn(false);
 
 	roomOfferService.createRoomOffer(command);
 
-	verify(dao, never()).create(validRoomOffer);
+	verify(dao, never()).create(Arrays.asList(validRoomOffer.toArray()));
     }
 
     @Test(expected = Exception.class)
@@ -174,14 +161,13 @@ public class UrlyBirdRoomOfferServiceTest {
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, null);
 
-	when(defaultBuilder.build()).thenThrow(
-		new ConstraintViolationException("Test"));
-	when(isOccupancyIn48Hours.isSatisfiedBy(validRoomOffer)).thenReturn(
-		true);
+	doThrow(new ConstraintViolationException("")).when(dao).create(
+		Arrays.asList(validRoomOffer.toArray()));
+	when(isOccupancyIn48Hours.isSatisfiedBy((Date) any())).thenReturn(true);
 
 	roomOfferService.createRoomOffer(command);
 
-	verify(dao, never()).create(validRoomOffer);
+	verify(dao, never()).create(Arrays.asList(validRoomOffer.toArray()));
     }
 
     @Test
@@ -211,8 +197,6 @@ public class UrlyBirdRoomOfferServiceTest {
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, null);
-	@SuppressWarnings("unchecked")
-	final ClientCallback<Integer> deleteCallback = mock(ClientCallback.class);
 	doThrow(new RecordNotFoundException("Test")).when(dao).delete(anyInt(),
 		anyLong());
 	when(dao.read(validRoomOffer.getIndex())).thenReturn(validRoomOffer);
@@ -267,15 +251,16 @@ public class UrlyBirdRoomOfferServiceTest {
 	    throws Exception {
 
 	final ArrayList<String> newValidValues = Lists.newArrayList("Hilton",
-		"Hamburg", "2", "N", "12", "12.02.2007", "", "12");
+		"Hamburg", "2", "N", "12", "12.02.2007", "");
 
 	final UpdateRoomCommand command = new UpdateRoomCommand(newValidValues,
 		validRoomOffer);
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, null);
-	when(defaultBuilder.build()).thenReturn(validRoomOffer);
 	when(dao.read(validRoomOffer.getIndex())).thenReturn(validRoomOffer);
+	when(builder.createRoomOffer(newValidValues, validRoomOffer.getIndex()))
+		.thenReturn(validRoomOffer);
 
 	final RoomOffer updatedRoomOffer = roomOfferService
 		.updateRoomOffer(command);
@@ -291,15 +276,16 @@ public class UrlyBirdRoomOfferServiceTest {
 	    throws Exception {
 
 	final ArrayList<String> newValidValues = Lists.newArrayList("Hilton",
-		"Hamburg", "2", "N", "12", "12.02.2007", "", "12");
+		"Hamburg", "2", "N", "12", "12.02.2007", "");
 
 	final UpdateRoomCommand command = new UpdateRoomCommand(newValidValues,
 		validRoomOffer);
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, null);
-	when(defaultBuilder.build()).thenReturn(validRoomOffer);
 	when(dao.read(validRoomOffer.getIndex())).thenReturn(validRoomOffer);
+	when(builder.createRoomOffer(newValidValues, validRoomOffer.getIndex()))
+		.thenReturn(validRoomOffer);
 	doThrow(new RuntimeException()).when(dao).update(eq(validRoomOffer),
 		anyLong());
 
@@ -310,22 +296,4 @@ public class UrlyBirdRoomOfferServiceTest {
 	verify(dao).update(eq(validRoomOffer), anyLong());
     }
 
-    @Test(expected = Exception.class)
-    public void shouldInformTheClientWithAnExceptionIfTheGivenRoomToUpdateIsNotValid()
-	    throws Exception {
-
-	final ArrayList<String> newInvalidValues = Lists.newArrayList("Hilton",
-		"", "2", "N", "12", "12.02.2007", "", "12");
-
-	final UpdateRoomCommand command = new UpdateRoomCommand(
-		newInvalidValues, validRoomOffer);
-
-	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
-		dao, builder, null, null);
-	when(dao.read(validRoomOffer.getIndex())).thenReturn(validRoomOffer);
-	when(defaultBuilder.build()).thenThrow(
-		new ConstraintViolationException("Test"));
-
-	roomOfferService.updateRoomOffer(command);
-    }
 }

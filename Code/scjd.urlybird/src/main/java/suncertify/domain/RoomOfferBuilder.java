@@ -2,243 +2,149 @@ package suncertify.domain;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import suncertify.common.Money;
 
 class RoomOfferBuilder {
 
+    enum PERSISTED_ATTRIBUTE {
+
+	HOTEL(0, "\\w{1,64}"),
+	CITY(1, "\\w{1,64}"),
+	SIZE(2, "\\d{1,4}"),
+	SMOKING(3, "[YNyn]"),
+	PRICE(4, "\\d{4},\\d{2}\\w"),
+	DATE(5, "\\d{4}/\\d{2}/\\d{2}"),
+	CUSTOMER(6, "\\d{8}");
+
+	private int index;
+	private String allowedFormat;
+
+	private PERSISTED_ATTRIBUTE(final int index, final String allowedFormat) {
+	    this.index = index;
+	    this.allowedFormat = allowedFormat;
+	}
+
+    }
+
+    private final static SimpleDateFormat dateFormat = new SimpleDateFormat(
+	    "yyyy/MM/dd", Locale.US);
+
     RoomOfferBuilder() {
 	super();
     }
 
-    public DefaultBuilder copyOf(final RoomOffer roomOffer) {
-	return new InnerBuilder(roomOffer, new RoomOfferValidator());
+    RoomOffer createRoomOffer(final List<String> values, final int index)
+	    throws ConstraintViolationException {
+
+	checkValues(values);
+
+	final String hotelName = values.get(PERSISTED_ATTRIBUTE.HOTEL.index);
+	final String cityName = values.get(PERSISTED_ATTRIBUTE.CITY.index);
+	final int roomSize = convertStringToInteger(values
+		.get(PERSISTED_ATTRIBUTE.SIZE.index));
+	final boolean smokingAllowed = convertStringToBoolean(values
+		.get(PERSISTED_ATTRIBUTE.SMOKING.index));
+	final Money price = convertStringToMoney(values
+		.get(PERSISTED_ATTRIBUTE.PRICE.index));
+	final Date bookableDate = convertStringToDate(values
+		.get(PERSISTED_ATTRIBUTE.DATE.index));
+	final String customerId = values
+		.get(PERSISTED_ATTRIBUTE.CUSTOMER.index);
+
+	return new RoomOffer(hotelName, cityName, roomSize, smokingAllowed,
+		price, bookableDate, customerId, index);
     }
 
-    public DefaultBuilder newRoomOffer() {
-	return new InnerBuilder(new RoomOfferValidator());
+    RoomOffer createRoomOfferWithNewCustomer(final RoomOffer oldRoom,
+	    final String customerId) throws ConstraintViolationException {
+
+	final List<String> values = new ArrayList<String>();
+	values.add(PERSISTED_ATTRIBUTE.CUSTOMER.index, customerId);
+	checkValues(values);
+
+	return new RoomOffer(oldRoom.getHotel(), oldRoom.getCity(),
+		oldRoom.getRoomSize(), oldRoom.isSmokingAllowed(),
+		oldRoom.getPrice(), oldRoom.getBookableDate(), customerId,
+		oldRoom.getIndex());
     }
 
-    private static class InnerBuilder implements DefaultBuilder {
+    void checkValues(final List<String> values)
+	    throws ConstraintViolationException {
 
-	final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd",
-		Locale.US);
-
-	private String hotel;
-
-	private String city;
-
-	private int roomSize;
-
-	private boolean smokingAllowed;
-
-	private Money price;
-
-	private Date bookableDate;
-
-	private String customerId;
-
-	private int index;
-
-	private final RoomOfferValidator validator;
-
-	private InnerBuilder(final RoomOffer offerToCopy,
-		final RoomOfferValidator validator) {
-
-	    this.hotel = offerToCopy.getHotel();
-
-	    this.city = offerToCopy.getCity();
-
-	    this.roomSize = offerToCopy.getRoomSize();
-
-	    this.smokingAllowed = offerToCopy.isSmokingAllowed();
-
-	    this.price = offerToCopy.getPrice();
-
-	    this.bookableDate = new Date(offerToCopy.getBookableDate()
-		    .getTime());
-
-	    this.customerId = offerToCopy.getCustomerId();
-
-	    this.index = offerToCopy.getIndex();
-	    this.validator = validator;
+	if (values.size() < PERSISTED_ATTRIBUTE.values().length) {
+	    throw new ConstraintViolationException("ERROR");
 	}
 
-	public InnerBuilder(final RoomOfferValidator roomOfferValidator) {
-	    validator = roomOfferValidator;
-	}
-
-	@Override
-	public DefaultBuilder fromHotel(final String hotel) {
-	    this.hotel = hotel;
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder ofSize(final int size) {
-	    this.roomSize = size;
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder fromCity(final String city) {
-	    this.city = city;
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder smokingAllowed(final boolean isSmokingAllowed) {
-	    this.smokingAllowed = isSmokingAllowed;
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder withPrice(final Money price) {
-	    this.price = price;
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder bookableAt(final Date date) {
-	    this.bookableDate = new Date(date.getTime());
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder bookedBy(final String customerId) {
-	    this.customerId = customerId;
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder withIndex(final int index) {
-	    this.index = index;
-	    return this;
-	}
-
-	@Override
-	public RoomOffer build() throws ConstraintViolationException {
-
-	    final RoomOffer roomOffer = new RoomOffer(hotel, city, roomSize,
-		    smokingAllowed, price, bookableDate, customerId, index);
-	    validator.validate(roomOffer);
-
-	    return roomOffer;
-	}
-
-	private Boolean convertStringToBoolean(final String string) {
-
-	    if (string == null) {
-		return null;
-	    }
-
-	    if (string.equals("Y")) {
-		return true;
-	    }
-	    if (string.equals("N")) {
-		return false;
-	    }
-	    throw new IllegalArgumentException();
-
-	}
-
-	private Date convertStringToDate(final String string) {
-
-	    if (string == null) {
-		return null;
-	    }
-
-	    try {
-		return dateFormat.parse(string);
-	    } catch (final ParseException e) {
-		throw new IllegalArgumentException(e);
+	for (final PERSISTED_ATTRIBUTE attribute : PERSISTED_ATTRIBUTE.values()) {
+	    final String value = values.get(attribute.index);
+	    if (value == null || !value.matches(attribute.allowedFormat)) {
+		throw new ConstraintViolationException("ERROR!");
 	    }
 	}
+    };
 
-	private Integer convertStringToInteger(final String string) {
+    Date getDateFromValues(final List<String> values)
+	    throws ConstraintViolationException {
 
-	    if (string == null) {
-		return null;
-	    }
+	checkValues(values);
+	final String date = values.get(PERSISTED_ATTRIBUTE.DATE.index);
+	return convertStringToDate(date);
+    }
 
-	    return Integer.valueOf(string);
+    private Boolean convertStringToBoolean(final String string) {
+
+	if (string == null) {
+	    return null;
 	}
 
-	private Money convertStringToMoney(final String string) {
-
-	    if (string == null) {
-		return null;
-	    }
-
-	    final Currency currency = Currency.getInstance(Locale.US);
-	    final int length = currency.getSymbol(Locale.US).length();
-	    final String amount = string.substring(length, string.length());
-	    return Money.create(amount, currency);
+	if (string.equals("Y")) {
+	    return true;
 	}
-
-	@Override
-	public DefaultBuilder ofSize(final String size) {
-	    this.roomSize = convertStringToInteger(size);
-	    return this;
+	if (string.equals("N")) {
+	    return false;
 	}
-
-	@Override
-	public DefaultBuilder smokingAllowed(final String isSmokingAllowed) {
-	    this.smokingAllowed = convertStringToBoolean(isSmokingAllowed);
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder withPrice(final String price) {
-	    this.price = convertStringToMoney(price);
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder bookableAt(final String date) {
-	    this.bookableDate = convertStringToDate(date);
-	    return this;
-	}
-
-	@Override
-	public DefaultBuilder withIndex(final String index) {
-	    this.index = convertStringToInteger(index);
-	    return this;
-	}
+	throw new IllegalArgumentException();
 
     }
 
-    interface DefaultBuilder {
+    private Date convertStringToDate(final String string) {
 
-	DefaultBuilder fromHotel(final String hotel);
+	if (string == null) {
+	    return null;
+	}
 
-	DefaultBuilder ofSize(final int size);
-
-	DefaultBuilder ofSize(final String size);
-
-	DefaultBuilder smokingAllowed(boolean isSmokingAllowed);
-
-	DefaultBuilder smokingAllowed(String isSmokingAllowed);
-
-	DefaultBuilder fromCity(final String city);
-
-	DefaultBuilder withPrice(final Money price);
-
-	DefaultBuilder withPrice(final String price);
-
-	DefaultBuilder bookableAt(final Date date);
-
-	DefaultBuilder bookableAt(final String date);
-
-	DefaultBuilder withIndex(final int index);
-
-	DefaultBuilder withIndex(final String index);
-
-	DefaultBuilder bookedBy(final String customerId);
-
-	RoomOffer build() throws ConstraintViolationException;
+	try {
+	    return dateFormat.parse(string);
+	} catch (final ParseException e) {
+	    throw new IllegalArgumentException(e);
+	}
     }
+
+    private Integer convertStringToInteger(final String string) {
+
+	if (string == null) {
+	    return null;
+	}
+
+	return Integer.valueOf(string);
+    }
+
+    private Money convertStringToMoney(final String string) {
+
+	if (string == null) {
+	    return null;
+	}
+
+	final Currency currency = Currency.getInstance(Locale.US);
+	final int length = currency.getSymbol(Locale.US).length();
+	final String amount = string.substring(length, string.length());
+	return Money.create(amount, currency);
+    }
+
 }
