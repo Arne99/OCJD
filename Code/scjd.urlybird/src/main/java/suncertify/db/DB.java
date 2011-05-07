@@ -1,7 +1,10 @@
 package suncertify.db;
 
 /**
- * TODO JavaDoc.
+ * A Database that stores data in indexed records with simple string values for
+ * the different columns. Data could be read from the database and written to
+ * it. Every write operations requires that the record must first be locked and
+ * finally unlocked.
  * 
  */
 public interface DB {
@@ -15,7 +18,7 @@ public interface DB {
      * @return the record at the at the position {@code recNo} as an array of
      *         strings. Each element contains one record value.
      * @throws RecordNotFoundException
-     *             if the underlying DataFile doesn't contain any record at the
+     *             if the underlying database doesn't contain any record at the
      *             position {@code recNo}.
      */
     String[] read(int recNo) throws RecordNotFoundException;
@@ -33,7 +36,7 @@ public interface DB {
      * @param lockCookie
      *            the cookie to lock the record.
      * @throws RecordNotFoundException
-     *             if the underlying DataFile doesn't contain any record at the
+     *             if the underlying database doesn't contain any record at the
      *             position {@code recNo}.
      * @throws SecurityException
      *             if the record is locked with a cookie other than lockCookie.
@@ -51,7 +54,7 @@ public interface DB {
      * @param lockCookie
      *            the cookie to lock the record.
      * @throws RecordNotFoundException
-     *             if the underlying DataFile doesn't contain any record at the
+     *             if the underlying database doesn't contain any record at the
      *             position {@code recNo}.
      * @throws SecurityException
      *             if the record is locked with a cookie other than lockCookie.
@@ -79,8 +82,11 @@ public interface DB {
      * Inserts the given data, and returns the record number of the new record.
      * 
      * @param data
-     * @return
+     *            the data of the record to create, must not <code>null</code>.
+     * @return the index of created record.
      * @throws DuplicateKeyException
+     *             if unique identifier of the record is already stored in the
+     *             database.
      * 
      */
     int create(String[] data) throws DuplicateKeyException;
@@ -92,13 +98,27 @@ public interface DB {
      * different client, the current thread gives up the CPU and consumes no CPU
      * cycles until the record is unlocked.
      * 
-     * 
+     * @param recNo
+     *            the index of the record that is to lock.
+     * @return the cookie.
+     * @throws RecordNotFoundException
+     *             if no record with the given index is stored in the database.
      */
     long lock(int recNo) throws RecordNotFoundException;
 
     /**
      * Releases the lock on a record. Cookie must be the cookie returned when
      * the record was locked; otherwise throws SecurityException.
+     * 
+     * @param recNo
+     *            the index of the record that is to lock.
+     * @param cookie
+     *            the lock cookie.
+     * @throws RecordNotFoundException
+     *             if no record with the given index is stored in the database.
+     * @throws SecurityException
+     *             if the given cookie is not the returned cookie when the
+     *             record was locked.
      */
     void unlock(int recNo, long cookie) throws RecordNotFoundException,
 	    SecurityException;

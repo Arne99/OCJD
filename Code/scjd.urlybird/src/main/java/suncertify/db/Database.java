@@ -6,12 +6,33 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class Database implements DB {
+/**
+ * Implementation of the {@link DB} interface, that abstract the format of the
+ * real database from the client. So this class could operate with NOSQL,
+ * relational and flat file databases if the necessary {@link DatabaseHandler}
+ * is provided.
+ * 
+ * @author arnelandwehr
+ * 
+ */
+public final class Database implements DB {
 
+    /** the handler operates with the real database in the background. */
     private final DatabaseHandler handler;
 
+    /** locks single records for write operations. */
     private final RecordLocker locker;
 
+    /**
+     * Constructs a new <code>Database</code>.
+     * 
+     * @param handler
+     *            the handler that operates with the real database in the
+     *            back-end, must not be <code>null</code>.
+     * @param locker
+     *            the locker that locks single records for write operations,
+     *            must not be <code>null</code>.
+     */
     Database(final DatabaseHandler handler, final RecordLocker locker) {
 	super();
 	this.handler = handler;
@@ -28,7 +49,8 @@ public class Database implements DB {
 	    throw new RecordNotFoundException("", e);
 	}
 	if (record.isValid()) {
-	    final List<String> allBusinessValues = record.getAllBusinessValues();
+	    final List<String> allBusinessValues = record
+		    .getAllBusinessValues();
 	    return allBusinessValues.toArray(new String[allBusinessValues
 		    .size()]);
 	}
@@ -72,6 +94,8 @@ public class Database implements DB {
 	    records = handler.findMatchingRecords(new NullAlwaysMatches(Arrays
 		    .asList(criteria)));
 	} catch (final IOException e) {
+	    // transforms the checks IO exception in a runtime exception
+	    // to fulfill the interface
 	    throw new DatabaseException(e);
 	}
 
@@ -97,6 +121,8 @@ public class Database implements DB {
 		handler.writeRecord(Arrays.asList(data), emptyIndex);
 		return emptyIndex;
 	    } catch (final IOException e) {
+		// transforms the checks IO exception in a runtime exception
+		// to fulfill the interface
 		throw new DatabaseException(e);
 	    }
 	}
