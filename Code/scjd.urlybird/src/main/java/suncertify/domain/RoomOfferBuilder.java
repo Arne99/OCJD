@@ -2,7 +2,6 @@ package suncertify.domain;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Date;
 import java.util.List;
@@ -64,9 +63,7 @@ class RoomOfferBuilder {
     RoomOffer createRoomOfferWithNewCustomer(final RoomOffer oldRoom,
 	    final String customerId) throws ConstraintViolationException {
 
-	final List<String> values = new ArrayList<String>();
-	values.add(PERSISTED_ATTRIBUTE.CUSTOMER.index, customerId);
-	checkValues(values);
+	checkValue(PERSISTED_ATTRIBUTE.CUSTOMER, customerId);
 
 	return new RoomOffer(oldRoom.getHotel(), oldRoom.getCity(),
 		oldRoom.getRoomSize(), oldRoom.isSmokingAllowed(),
@@ -83,14 +80,20 @@ class RoomOfferBuilder {
 
 	for (final PERSISTED_ATTRIBUTE attribute : PERSISTED_ATTRIBUTE.values()) {
 	    final String value = values.get(attribute.index);
-	    if (value == null || !value.matches(attribute.allowedFormat)) {
-		throw new ConstraintViolationException("the value: '" + value
-			+ "' for the attribute '" + attribute
-			+ "' is not of the specified format: '"
-			+ attribute.allowedFormat + "' ");
-	    }
+	    checkValue(attribute, value);
 	}
     };
+
+    private void checkValue(final PERSISTED_ATTRIBUTE attribute,
+	    final String value) throws ConstraintViolationException {
+	if (value == null || !value.matches(attribute.allowedFormat)) {
+	    throw new ConstraintViolationException("the value: '" + value
+		    + "' for the attribute '" + attribute
+		    + "' is not of the specified format: '"
+		    + attribute.allowedFormat + "' ");
+	}
+
+    }
 
     Date getDateFromValues(final List<String> values)
 	    throws ConstraintViolationException {

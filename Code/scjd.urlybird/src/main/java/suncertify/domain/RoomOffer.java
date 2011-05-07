@@ -136,8 +136,8 @@ public final class RoomOffer implements PresentationObject {
     private String convertMoneyToPersistableString(final Money price) {
 	final String symbol = price.getCurreny().getSymbol(Locale.US);
 	final BigDecimal amount = price.getAmount();
-	final double doubleValue = amount.setScale(2).doubleValue();
-	return symbol + doubleValue;
+	final String value = amount.setScale(2).toPlainString();
+	return symbol + value;
     }
 
     @Override
