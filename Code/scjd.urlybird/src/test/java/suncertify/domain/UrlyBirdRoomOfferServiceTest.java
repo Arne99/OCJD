@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import suncertify.common.ClientCallback;
 import suncertify.common.Money;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
@@ -23,26 +22,43 @@ import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.UpdateRoomCommand;
 import suncertify.db.RecordNotFoundException;
 
-public class UrlyBirdRoomOfferServiceTest {
+/**
+ * The Class UrlyBirdRoomOfferServiceTest.
+ */
+public final class UrlyBirdRoomOfferServiceTest {
 
+    /** The dao. */
     @SuppressWarnings("unchecked")
-    final Dao<RoomOffer> dao = mock(Dao.class);
-    final RoomOfferBuilder builder = mock(RoomOfferBuilder.class);
-    @SuppressWarnings("unchecked")
-    final BusinessRule<Date> isOccupancyIn48Hours = mock(BusinessRule.class);
-    @SuppressWarnings("unchecked")
-    final BusinessRule<RoomOffer> isRoomBookable = mock(BusinessRule.class);
-    final RoomOffer validRoomOffer = new RoomOffer("Hilton", "Hamburg", 2,
-	    false, Money.create("12"), new Date(), "", 12);
-    final RoomOffer invalidRoomOffer = new RoomOffer("", "Hamburg", 2, false,
-	    Money.create("12"), new Date(), "", 12);
-    @SuppressWarnings("unchecked")
-    final ClientCallback<RoomOffer> clientCallback = mock(ClientCallback.class);
+    private final Dao<RoomOffer> dao = mock(Dao.class);
 
+    /** The builder. */
+    private final RoomOfferBuilder builder = mock(RoomOfferBuilder.class);
+
+    /** The is occupancy in48 hours. */
+    @SuppressWarnings("unchecked")
+    private final BusinessRule<Date> isOccupancyIn48Hours = mock(BusinessRule.class);
+
+    /** The is room bookable. */
+    @SuppressWarnings("unchecked")
+    private final BusinessRule<RoomOffer> isRoomBookable = mock(BusinessRule.class);
+
+    /** The valid room offer. */
+    private final RoomOffer validRoomOffer = new RoomOffer("Hilton", "Hamburg",
+	    2, false, Money.create("12"), new Date(), "", 12);
+
+    /**
+     * Sets the up.
+     */
     @Before
     public void setUp() {
     }
 
+    /**
+     * Should book an valid room and persist the changes.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldBookAnValidRoomAndPersistTheChanges() throws Exception {
 
@@ -75,6 +91,13 @@ public class UrlyBirdRoomOfferServiceTest {
 	assertThat(bookedRoom, is(equalTo(expectedRoomOffer)));
     }
 
+    /**
+     * Should not book an already booked room and inform the client with the an
+     * exception.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test(expected = Exception.class)
     public void shouldNotBookAnAlreadyBookedRoomAndInformTheClientWithTheAnException()
 	    throws Exception {
@@ -91,6 +114,12 @@ public class UrlyBirdRoomOfferServiceTest {
 	roomOfferService.bookRoomOffer(command);
     }
 
+    /**
+     * Should not book an invalid room and inform the client with an exception.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test(expected = Exception.class)
     public void shouldNotBookAnInvalidRoomAndInformTheClientWithAnException()
 	    throws Exception {
@@ -113,6 +142,12 @@ public class UrlyBirdRoomOfferServiceTest {
 	roomOfferService.bookRoomOffer(command);
     }
 
+    /**
+     * Should create an valid room and persist it.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldCreateAnValidRoomAndPersistIt() throws Exception {
 
@@ -133,6 +168,12 @@ public class UrlyBirdRoomOfferServiceTest {
 	assertThat(createdRoomOffer, is(equalTo(validRoomOffer)));
     }
 
+    /**
+     * Should throw an exception if the occupany is not in48 hours.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test(expected = Exception.class)
     public void shouldThrowAnExceptionIfTheOccupanyIsNotIn48Hours()
 	    throws Exception {
@@ -151,6 +192,13 @@ public class UrlyBirdRoomOfferServiceTest {
 	verify(dao, never()).create(Arrays.asList(validRoomOffer.toArray()));
     }
 
+    /**
+     * Should not create the room if the given room is invalid and throw an
+     * exception.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test(expected = Exception.class)
     public void shouldNotCreateTheRoomIfTheGivenRoomIsInvalidAndThrowAnException()
 	    throws Exception {
@@ -170,6 +218,12 @@ public class UrlyBirdRoomOfferServiceTest {
 	verify(dao, never()).create(Arrays.asList(validRoomOffer.toArray()));
     }
 
+    /**
+     * Should delete the room if the index is found in the database.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldDeleteTheRoomIfTheIndexIsFoundInTheDatabase()
 	    throws Exception {
@@ -189,6 +243,13 @@ public class UrlyBirdRoomOfferServiceTest {
 	assertThat(deletedRoomIndex, is(equalTo(deletedRoomIndex)));
     }
 
+    /**
+     * Should not delete the room if the index is not found in the database and
+     * thorw an exception.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test(expected = Exception.class)
     public void shouldNotDeleteTheRoomIfTheIndexIsNotFoundInTheDatabaseAndThorwAnException()
 	    throws Exception {
@@ -208,6 +269,12 @@ public class UrlyBirdRoomOfferServiceTest {
 	verify(dao).delete(eq(validRoomOffer.getIndex()), anyLong());
     }
 
+    /**
+     * Should find all matching rooms with the dao and return it to the client.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldFindAllMatchingRoomsWithTheDaoAndReturnItToTheClient()
 	    throws Exception {
@@ -229,6 +296,13 @@ public class UrlyBirdRoomOfferServiceTest {
 	assertThat(foundRooms, is(equalTo(result)));
     }
 
+    /**
+     * Should inform the client with an exception if the find causes an
+     * exception.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test(expected = Exception.class)
     public void shouldInformTheClientWithAnExceptionIfTheFindCausesAnException()
 	    throws Exception {
@@ -246,6 +320,12 @@ public class UrlyBirdRoomOfferServiceTest {
 	roomOfferService.findRoomOffer(command);
     }
 
+    /**
+     * Should update the spezified valid room and persist the changes.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldUpdateTheSpezifiedValidRoomAndPersistTheChanges()
 	    throws Exception {
@@ -271,6 +351,13 @@ public class UrlyBirdRoomOfferServiceTest {
 	assertThat(updatedRoomOffer, is(equalTo(validRoomOffer)));
     }
 
+    /**
+     * Should inform the client with an exception if the update causes an
+     * exception.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test(expected = Exception.class)
     public void shouldInformTheClientWithAnExceptionIfTheUpdateCausesAnException()
 	    throws Exception {

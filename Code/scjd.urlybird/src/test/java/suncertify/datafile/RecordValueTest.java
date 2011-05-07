@@ -8,15 +8,24 @@ import org.junit.Test;
 
 import suncertify.util.Range;
 
-public class RecordValueTest {
+/**
+ * The Class RecordValueTest.
+ */
+public final class RecordValueTest {
 
-    private static final DataFileColumn ANY_COLUMN = new BusinessValueColumn("test",
-	    new Range(0, 100));
+    /** The Constant ANY_COLUMN. */
+    private static final DataFileColumn ANY_COLUMN = new BusinessValueColumn(
+	    "test", new Range(0, 100));
 
+    /** The Constant ANY_OTHER_VALUE. */
     private static final String ANY_OTHER_VALUE = "ANY_OTHER_VALUE";
 
+    /** The Constant ANY_VALUE. */
     private static final String ANY_VALUE = "Test";
 
+    /**
+     * Should have the same hash code than an equal record value.
+     */
     @Test
     public void shouldHaveTheSameHashCodeThanAnEqualRecordValue() {
 
@@ -26,6 +35,9 @@ public class RecordValueTest {
 	assertThat(firstValue.hashCode(), is(equalTo(secondValue.hashCode())));
     }
 
+    /**
+     * Should have an other hash code than an different record value.
+     */
     @Test
     public void shouldHaveAnOtherHashCodeThanAnDifferentRecordValue() {
 
@@ -37,11 +49,14 @@ public class RecordValueTest {
 		is(not(equalTo(secondValue.hashCode()))));
     }
 
+    /**
+     * Should always return an value with the column size.
+     */
     @Test
     public void shouldAlwaysReturnAnValueWithTheColumnSize() {
 
-	final DataFileColumn columnWithLength10 = new BusinessValueColumn("name",
-		new Range(0, 9));
+	final DataFileColumn columnWithLength10 = new BusinessValueColumn(
+		"name", new Range(0, 9));
 	final String valueWithLength8 = "12345678";
 	final RecordValue recordValue = new RecordValue(columnWithLength10,
 		valueWithLength8);
@@ -49,6 +64,9 @@ public class RecordValueTest {
 	assertThat(recordValue.getValue(), is(equalTo(valueWithLength8 + "  ")));
     }
 
+    /**
+     * Should be an business value if the column contains business values.
+     */
     @Test
     public void shouldBeAnBusinessValueIfTheColumnContainsBusinessValues() {
 
@@ -61,6 +79,9 @@ public class RecordValueTest {
 	assertTrue(recordValue.isBuisnessValue());
     }
 
+    /**
+     * Should be equals to itself.
+     */
     @Test
     public void shouldBeEqualsToItself() {
 
@@ -68,6 +89,9 @@ public class RecordValueTest {
 	assertThat(value, is(equalTo(value)));
     }
 
+    /**
+     * Should be symmetric equals.
+     */
     @Test
     public void shouldBeSymmetricEquals() {
 
@@ -78,6 +102,9 @@ public class RecordValueTest {
 	assertThat(secondValue, is(equalTo(firstValue)));
     }
 
+    /**
+     * Should be different to an record value with an different value.
+     */
     @Test
     public void shouldBeDifferentToAnRecordValueWithAnDifferentValue() {
 

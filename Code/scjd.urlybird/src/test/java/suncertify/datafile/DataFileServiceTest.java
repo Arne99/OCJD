@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +31,12 @@ public final class DataFileServiceTest {
     /** The any file. */
     private File anyFile;
 
+    /**
+     * Sets the up.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     @Before
     public void setUp() throws IOException {
 	anyFile = File.createTempFile("test", "test");
@@ -79,6 +84,14 @@ public final class DataFileServiceTest {
 	assertThat(record.getAllBusinessValues(), is(equalTo(expectedReccord)));
     }
 
+    /**
+     * Test test.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void testTest() throws IOException,
 	    UnsupportedDataFileFormatException {
@@ -207,6 +220,14 @@ public final class DataFileServiceTest {
 	DataFileService.instance().getDatabaseHandler(anyFile);
     }
 
+    /**
+     * Should create a database handler that could write a record to an index.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldCreateADatabaseHandlerThatCouldWriteARecordToAnIndex()
 	    throws IOException, UnsupportedDataFileFormatException {
@@ -223,6 +244,15 @@ public final class DataFileServiceTest {
 		is(equalTo(expectedRecord)));
     }
 
+    /**
+     * Should create a database handler that could delete an valid record at an
+     * index.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Test
     public void shouldCreateADatabaseHandlerThatCouldDeleteAnValidRecordAtAnIndex()
 	    throws IOException, UnsupportedDataFileFormatException {

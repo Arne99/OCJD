@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import suncertify.util.Range;
 
+// TODO: Auto-generated Javadoc
 /**
  * Tests for the CLass {@link BusinessValueColumn}.
  */
@@ -86,6 +87,9 @@ public final class BusinessValueColumnTest {
 	assertTrue(columnOne.hashCode() != columnTwo.hashCode());
     }
 
+    /**
+     * Should create an empty string with the size of the column as the default value.
+     */
     @Test
     public void shouldCreateAnEmptyStringWithTheSizeOfTheColumnAsTheDefaultValue() {
 

@@ -23,6 +23,7 @@ public final class SchemaWithDeletedColumnTest {
     /** The test file. */
     private File testFile;
 
+    /** The deleted column. */
     private final DeletedColumn deletedColumn = new DeletedColumn("Deleted",
 	    new Range(0, 0), "0", "1");
 
@@ -239,6 +240,10 @@ public final class SchemaWithDeletedColumnTest {
 	assertThat(createdRecord.getIndex(), is(equalTo(12)));
     }
 
+    /**
+     * Should create an valid record from an array of bytes if the deleted flag
+     * is false and the the size of the array is the record length.
+     */
     @Test
     public void shouldCreateAnValidRecordFromAnArrayOfBytesIfTheDeletedFlagIsFalseAndTheTheSizeOfTheArrayIsTheRecordLength() {
 
@@ -270,6 +275,10 @@ public final class SchemaWithDeletedColumnTest {
 	assertTrue(record.isValid());
     }
 
+    /**
+     * Should create an valid record from an array of bytes if the deleted flag
+     * is true.
+     */
     @Test
     public void shouldCreateAnValidRecordFromAnArrayOfBytesIfTheDeletedFlagIsTrue() {
 

@@ -15,6 +15,7 @@ import suncertify.util.Range;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Tests for the Class DataFileSchemaFactory.
  */
@@ -23,13 +24,24 @@ public final class Format257SchemaBuilderTest {
     /** The Constant SUPPORTED_IDENTIFIER. */
     private static final int SUPPORTED_IDENTIFIER = 257;
 
+    /** The test file. */
     private File testFile;
 
+    /**
+     * Sets the up.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Before
     public void setUp() throws IOException {
 	testFile = File.createTempFile("test", "DataFileSchemaFactoryTest");
     }
 
+    /**
+     * Tear down.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @After
     public void tearDown() throws IOException {
 	testFile.delete();
@@ -73,6 +85,12 @@ public final class Format257SchemaBuilderTest {
 	assertThat(schema, is(equalTo(expectedSchema)));
     }
 
+    /**
+     * Should create a schema with zero business and one deleted column if the data file contains only a header.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException the unsupported data file format exception
+     */
     @Test
     public void shouldCreateASchemaWithZeroBusinessAndOneDeletedColumnIfTheDataFileContainsOnlyAHeader()
 	    throws IOException, UnsupportedDataFileFormatException {

@@ -1,14 +1,22 @@
 package suncertify.db;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
+/**
+ * The Class SynchronizedRecordLockerTest.
+ */
 public final class SynchronizedRecordLockerTest {
 
+    /**
+     * Should do nothing if it checks the record owner and no one ownes the
+     * record.
+     * 
+     * @throws SecurityException
+     *             the security exception
+     */
     @Test
     public void shouldDoNothingIfItChecksTheRecordOwnerAndNoOneOwnesTheRecord()
 	    throws SecurityException {
@@ -20,6 +28,13 @@ public final class SynchronizedRecordLockerTest {
 	recordLocker.checkRecordOwner(anyIndex, anyOwner);
     }
 
+    /**
+     * Should throw an security exception if the record is already locke by an
+     * other owner.
+     * 
+     * @throws SecurityException
+     *             the security exception
+     */
     @Test(expected = SecurityException.class)
     public void shouldThrowAnSecurityExceptionIfTheRecordIsAlreadyLockeByAnOtherOwner()
 	    throws SecurityException {

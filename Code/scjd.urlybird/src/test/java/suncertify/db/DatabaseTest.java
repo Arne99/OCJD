@@ -18,17 +18,37 @@ import suncertify.datafile.UnsupportedDataFileFormatException;
 
 import com.google.common.io.Files;
 
-public class DatabaseTest {
+/**
+ * The Class DatabaseTest.
+ */
+public final class DatabaseTest {
 
-    private final static String PATH = "/Users/arnelandwehr/Coden/Sun Certified Java Developer/Project/Database/db-1x1.db";
+    /** The Constant PATH. */
+    private static final String PATH = "/Users/arnelandwehr/Coden/Sun Certified Java Developer/Project/Database/db-1x1.db";
+
+    /** The test db. */
     private File testDb;
 
+    /** The exception happened. */
     private volatile boolean exceptionHappened;
 
+    /** The database handler. */
     private DatabaseHandler databaseHandler;
+
+    /** The locker. */
     private SynchronizedRecordLocker locker;
+
+    /** The db. */
     private Database db;
 
+    /**
+     * Sets the up.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     */
     @Before
     public void setUp() throws IOException, UnsupportedDataFileFormatException {
 
@@ -41,11 +61,24 @@ public class DatabaseTest {
 
     }
 
+    /**
+     * Tear down.
+     */
     @After
     public void tearDown() {
 	testDb.delete();
     }
 
+    /**
+     * Should be thread safe for concurrent reads on the same row.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
     @Test
     public void shouldBeThreadSafeForConcurrentReadsOnTheSameRow()
 	    throws IOException, UnsupportedDataFileFormatException,
@@ -75,6 +108,12 @@ public class DatabaseTest {
 	assertFalse(exceptionHappened);
     }
 
+    /**
+     * Should be thread safe for concurrent reads and finds.
+     * 
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
     @Test
     public void shouldBeThreadSafeForConcurrentReadsAndFinds()
 	    throws InterruptedException {
@@ -107,6 +146,12 @@ public class DatabaseTest {
 	assertFalse(exceptionHappened);
     }
 
+    /**
+     * Should be thread safe for concurrent writes and reades on one record.
+     * 
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
     @Test
     public void shouldBeThreadSafeForConcurrentWritesAndReadesOnOneRecord()
 	    throws InterruptedException {
@@ -148,6 +193,14 @@ public class DatabaseTest {
 
     }
 
+    /**
+     * Excecute concurrent.
+     * 
+     * @param task
+     *            the task
+     * @throws InterruptedException
+     *             the interrupted exception
+     */
     private void excecuteConcurrent(final Runnable task)
 	    throws InterruptedException {
 

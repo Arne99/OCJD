@@ -4,17 +4,28 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
-import org.mockito.asm.tree.analysis.Analyzer;
-
 import suncertify.util.Range;
 
-public class DeletedColumnTest {
+/**
+ * The Class DeletedColumnTest.
+ */
+public final class DeletedColumnTest {
 
+    /** The Constant ANY_NAME. */
     private static final String ANY_NAME = "Test";
+
+    /** The Constant ANY_NOT_DELETED_FLAG. */
     private static final String ANY_NOT_DELETED_FLAG = "0";
+
+    /** The Constant ANY_DELETED_FLAG. */
     private static final String ANY_DELETED_FLAG = "1";
+
+    /** The Constant ANY_RANGE. */
     private static final Range ANY_RANGE = new Range(0, 10);
 
+    /**
+     * Should be equals to itself.
+     */
     @Test
     public void shouldBeEqualsToItself() {
 
@@ -23,6 +34,9 @@ public class DeletedColumnTest {
 	assertThat(column, is(equalTo(column)));
     }
 
+    /**
+     * Should be symmetrical equals.
+     */
     @Test
     public void shouldBeSymmetricalEquals() {
 
@@ -33,6 +47,9 @@ public class DeletedColumnTest {
 	assertThat(columnOne, is(equalTo(columnTwo)));
     }
 
+    /**
+     * Should be different to an column with an different name.
+     */
     @Test
     public void shouldBeDifferentToAnColumnWithAnDifferentName() {
 
@@ -44,6 +61,9 @@ public class DeletedColumnTest {
 	assertThat(columnOne, is(not(equalTo(columnTwo))));
     }
 
+    /**
+     * Should be different to an column with an different range.
+     */
     @Test
     public void shouldBeDifferentToAnColumnWithAnDifferentRange() {
 
@@ -55,6 +75,9 @@ public class DeletedColumnTest {
 	assertThat(columnOne, is(not(equalTo(columnTwo))));
     }
 
+    /**
+     * Should be different to an column with an different deleted flag.
+     */
     @Test
     public void shouldBeDifferentToAnColumnWithAnDifferentDeletedFlag() {
 
@@ -66,6 +89,9 @@ public class DeletedColumnTest {
 	assertThat(columnOne, is(not(equalTo(columnTwo))));
     }
 
+    /**
+     * Should have the same hash code than an equals column.
+     */
     @Test
     public void shouldHaveTheSameHashCodeThanAnEqualsColumn() {
 
@@ -76,6 +102,9 @@ public class DeletedColumnTest {
 	assertThat(columnOne.hashCode(), is(equalTo(columnTwo.hashCode())));
     }
 
+    /**
+     * Should have an different hash code than a different column.
+     */
     @Test
     public void shouldHaveAnDifferentHashCodeThanADifferentColumn() {
 
@@ -87,6 +116,9 @@ public class DeletedColumnTest {
 	assertThat(columnOne.hashCode(), is(not(equalTo(columnTwo.hashCode()))));
     }
 
+    /**
+     * Should never contain business values.
+     */
     @Test
     public void shouldNeverContainBusinessValues() {
 
@@ -96,6 +128,9 @@ public class DeletedColumnTest {
 	assertFalse(column.containsValuesOfType(ColumnType.BUSINESS));
     }
 
+    /**
+     * Should always have the not deleted flag as its default value.
+     */
     @Test
     public void shouldAlwaysHaveTheNotDeletedFlagAsItsDefaultValue() {
 

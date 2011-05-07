@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
 /**
  * Test for the Class DataFileHeaderTest.
  */
@@ -51,6 +52,9 @@ public final class DataFileHeaderTest {
 	assertEquals(headerOne.hashCode(), headerTwo.hashCode());
     }
 
+    /**
+     * Should return different hash codes for headers with different header length.
+     */
     @Test
     public void shouldReturnDifferentHashCodesForHeadersWithDifferentHeaderLength() {
 

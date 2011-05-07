@@ -30,12 +30,30 @@ import com.google.common.io.Files;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
+/**
+ * The Class AdministrationServiceIntegrationTest.
+ */
 public final class AdministrationServiceIntegrationTest {
 
+    /** The any file. */
     private File anyFile;
+
+    /** The service. */
     private AdministrationService service;
+
+    /** The room offer service. */
     private RoomOfferService roomOfferService;
 
+    /**
+     * Sets the up.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws DatabaseConnectionException
+     *             the database connection exception
+     * @throws NotBoundException
+     *             the not bound exception
+     */
     @Before
     public void setUp() throws IOException, DatabaseConnectionException,
 	    NotBoundException {
@@ -59,6 +77,16 @@ public final class AdministrationServiceIntegrationTest {
 	roomOfferService = services.getRoomOfferService();
     }
 
+    /**
+     * Tear down.
+     * 
+     * @throws RemoteException
+     *             the remote exception
+     * @throws MalformedURLException
+     *             the malformed url exception
+     * @throws NotBoundException
+     *             the not bound exception
+     */
     @After
     public void tearDown() throws RemoteException, MalformedURLException,
 	    NotBoundException {
@@ -68,6 +96,13 @@ public final class AdministrationServiceIntegrationTest {
 	service.stopServer();
     }
 
+    /**
+     * Should start an server an binds the client services at the given adresse
+     * so that the client can find rooms.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanFindRooms()
 	    throws Exception {
@@ -79,6 +114,13 @@ public final class AdministrationServiceIntegrationTest {
 	assertThat(roomOffers.size(), is(equalTo(1)));
     }
 
+    /**
+     * Should start an server an binds the client services at the given adresse
+     * so that the client can create a room.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanCreateARoom()
 	    throws Exception {
@@ -94,6 +136,13 @@ public final class AdministrationServiceIntegrationTest {
 	assertThat(roomOffers.size(), is(equalTo(1)));
     }
 
+    /**
+     * Should start an server an binds the client services at the given adresse
+     * so that the client can delete a room.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanDeleteARoom()
 	    throws Exception {
@@ -114,6 +163,13 @@ public final class AdministrationServiceIntegrationTest {
 	assertThat(roomOffersAfter.size(), is(equalTo(0)));
     }
 
+    /**
+     * Should start an server an binds the client services at the given adresse
+     * so that the client can update a room.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanUpdateARoom()
 	    throws Exception {
@@ -142,6 +198,13 @@ public final class AdministrationServiceIntegrationTest {
 	assertThat(roomOffersAfter2.size(), is(equalTo(1)));
     }
 
+    /**
+     * Should start an server an binds the client services at the given adresse
+     * so that the client can book a room.
+     * 
+     * @throws Exception
+     *             the exception
+     */
     @Test
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanBookARoom()
 	    throws Exception {

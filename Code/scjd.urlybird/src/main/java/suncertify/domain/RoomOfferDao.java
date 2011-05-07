@@ -40,7 +40,8 @@ public class RoomOfferDao implements Dao<RoomOffer> {
 	    throws RecordNotFoundException, ConstraintViolationException {
 	final int[] indices = database.find(criteria.toArray(new String[] {}));
 
-	final List<RoomOffer> matchingRooms = new ArrayList<RoomOffer>();
+	final List<RoomOffer> matchingRooms = new ArrayList<RoomOffer>(
+		indices.length);
 	for (final int index : indices) {
 	    final RoomOffer roomOffer = read(index);
 	    matchingRooms.add(roomOffer);
