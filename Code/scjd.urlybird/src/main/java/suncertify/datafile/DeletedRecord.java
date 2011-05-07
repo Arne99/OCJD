@@ -25,7 +25,7 @@ class DeletedRecord extends DataFileRecord {
 	if (object == this) {
 	    return true;
 	}
-	if (!(object instanceof ValidRecord)) {
+	if (!(object instanceof DeletedRecord)) {
 	    return false;
 	}
 

@@ -277,13 +277,6 @@ public final class UrlyBirdPresenter {
 	}
     }
 
-    private final static boolean askForUserDecision(final Component frame,
-	    final String title, final String message) {
-	final int result = JOptionPane.showConfirmDialog(frame, message, title,
-		JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-	return result == JOptionPane.OK_OPTION;
-    }
-
     private final static void showUserTheError(final Component parent,
 	    final String message) {
 

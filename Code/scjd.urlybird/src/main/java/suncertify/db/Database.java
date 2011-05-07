@@ -3,6 +3,7 @@ package suncertify.db;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class Database implements DB {
@@ -27,7 +28,9 @@ public class Database implements DB {
 	    throw new RecordNotFoundException("", e);
 	}
 	if (record.isValid()) {
-	    return record.getAllBusinessValues().toArray(new String[] {});
+	    final List<String> allBusinessValues = record.getAllBusinessValues();
+	    return allBusinessValues.toArray(new String[allBusinessValues
+		    .size()]);
 	}
 
 	throw new RecordNotFoundException("");

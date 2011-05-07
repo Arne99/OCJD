@@ -139,7 +139,7 @@ class DataFileHandler implements DatabaseHandler {
 
 	final RandomAccessFile reader = new RandomAccessFile(file, READ_ACCESS);
 
-	byte[] recordBuffer = new byte[] {};
+	byte[] recordBuffer = null;
 	try {
 	    final int offset = schema.getOffset()
 		    + (index * schema.getRecordLength());

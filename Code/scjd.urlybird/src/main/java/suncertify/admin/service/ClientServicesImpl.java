@@ -11,7 +11,7 @@ import suncertify.domain.UrlyBirdRoomOfferService;
 public final class ClientServicesImpl extends UnicastRemoteObject implements
 	ClientServices {
 
-    private static ClientServicesImpl INSTANCE;
+    private static volatile ClientServicesImpl INSTANCE;
 
     public static ClientServicesImpl instance() throws RemoteException {
 

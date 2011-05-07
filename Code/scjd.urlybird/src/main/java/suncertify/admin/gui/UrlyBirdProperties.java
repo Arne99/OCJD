@@ -65,20 +65,19 @@ public class UrlyBirdProperties {
 
 	BufferedReader propertyReader = null;
 	BufferedWriter propertyWriter = null;
+	final Properties properties = new Properties();
 	try {
 	    propertyReader = new BufferedReader(new FileReader(propertyFile));
-	    final Properties properties = new Properties();
 	    properties.load(propertyReader);
 	    properties.setProperty(name.name(), value);
+	} finally {
+	    propertyReader.close();
+	}
+	try {
 	    propertyWriter = new BufferedWriter(new FileWriter(propertyFile));
 	    properties.store(propertyWriter, "");
 	} finally {
-	    if (propertyReader != null) {
-		propertyReader.close();
-	    }
-	    if (propertyWriter != null) {
-		propertyWriter.close();
-	    }
+	    propertyWriter.close();
 	}
     }
 

@@ -24,7 +24,8 @@ public class RoomOfferDao implements Dao<RoomOffer> {
 	    throws DuplicateKeyException, ConstraintViolationException {
 
 	builder.checkValues(values);
-	final int index = database.create(values.toArray(new String[] {}));
+	final int index = database.create(values.toArray(new String[values
+		.size()]));
 	return builder.createRoomOffer(values, index);
     }
 
