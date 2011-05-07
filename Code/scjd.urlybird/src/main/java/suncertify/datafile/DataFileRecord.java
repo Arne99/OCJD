@@ -6,16 +6,24 @@ import java.util.List;
 
 import suncertify.db.Record;
 
+/**
+ * A <code>DataFileRecord</code> represents an {@link Record} in a flat file
+ * store. The values are stored as {@link RecordValue}s.
+ * 
+ * 
+ * @author arnelandwehr
+ * 
+ */
 abstract class DataFileRecord implements Record {
 
     /**
      * The values of the record. The order represents the column order in the
-     * underlying datafile.
+     * underlying DataFile.
      */
     protected final List<RecordValue> values;
 
     /**
-     * the index of the record in the datafile.
+     * the index of the record in the DataFile.
      */
     protected final int index;
 
@@ -34,6 +42,11 @@ abstract class DataFileRecord implements Record {
 	this.index = index;
     }
 
+    /**
+     * Transforms all values in this record in one byte array and returns it.
+     * 
+     * @return the byte array, never <code>null</code>.
+     */
     protected byte[] getValuesAsBytes() {
 
 	final StringBuilder sb = new StringBuilder();
@@ -65,6 +78,12 @@ abstract class DataFileRecord implements Record {
 	return Collections.unmodifiableList(businessValues);
     }
 
+    /**
+     * Getter for all values in this <code>DataFileRecord</code> in database
+     * order.
+     * 
+     * @return all record values, never <code>null</code>.
+     */
     protected List<String> getAllValues() {
 
 	final List<String> allValues = new ArrayList<String>();

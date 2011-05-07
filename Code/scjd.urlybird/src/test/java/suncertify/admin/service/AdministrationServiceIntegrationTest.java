@@ -18,6 +18,7 @@ import suncertify.common.ClientServices;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.db.DatabaseConnectionException;
 import suncertify.domain.RoomOffer;
 
 import com.google.common.collect.Lists;
@@ -30,14 +31,29 @@ public final class AdministrationServiceIntegrationTest {
 
     File anyFile;
     private AdministrationService service;
+    private RoomOfferService roomOfferService;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, DatabaseConnectionException,
+	    NotBoundException {
 	anyFile = File.createTempFile("test", "test");
 	Files.copy(
 		new File(
 			"/Users/arnelandwehr/Coden/Sun Certified Java Developer/Project/Code/scjd.urlybird/src/test/ressources/db-1x1.db"),
 		anyFile);
+
+	service = new AdministrationService();
+
+	final ServerConfiguration serverConfig = new ServerConfiguration();
+	final DatabaseConfiguration dataConfig = new DatabaseConfiguration(
+		anyFile);
+
+	service.startStandAloneServer(serverConfig, dataConfig);
+
+	final ClientServices services = (ClientServices) Naming
+		.lookup(serverConfig.getClientServiceName());
+
+	roomOfferService = services.getRoomOfferService();
     }
 
     @After
@@ -53,19 +69,6 @@ public final class AdministrationServiceIntegrationTest {
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanFindRooms()
 	    throws Exception {
 
-	service = new AdministrationService();
-
-	final ServerConfiguration serverConfig = new ServerConfiguration();
-	final DatabaseConfiguration dataConfig = new DatabaseConfiguration(
-		anyFile);
-
-	service.startStandAloneServer(serverConfig, dataConfig);
-
-	final ClientServices services = (ClientServices) Naming
-		.lookup(serverConfig.getClientServiceName());
-
-	final RoomOfferService roomOfferService = services
-		.getRoomOfferService();
 	final List<RoomOffer> roomOffers = roomOfferService
 		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
 			"Pleasantville", true));
@@ -77,19 +80,6 @@ public final class AdministrationServiceIntegrationTest {
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanCreateARoom()
 	    throws Exception {
 
-	service = new AdministrationService();
-
-	final ServerConfiguration serverConfig = new ServerConfiguration();
-	final DatabaseConfiguration dataConfig = new DatabaseConfiguration(
-		anyFile);
-
-	service.startStandAloneServer(serverConfig, dataConfig);
-
-	final ClientServices services = (ClientServices) Naming
-		.lookup(serverConfig.getClientServiceName());
-
-	final RoomOfferService roomOfferService = services
-		.getRoomOfferService();
 	roomOfferService.createRoomOffer(new CreateRoomCommand(Lists
 		.newArrayList("MyHotel", "MyCity", "4", "Y", "$120.00",
 			new SimpleDateFormat("yyyy/MM/dd").format(new Date()),
