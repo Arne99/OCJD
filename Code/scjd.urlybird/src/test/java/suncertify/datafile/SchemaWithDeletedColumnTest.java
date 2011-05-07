@@ -16,7 +16,7 @@ import suncertify.util.Range;
 import com.google.common.collect.Lists;
 
 /**
- * Tests for the Class {@link UrlyBirdSchema}.
+ * Tests for the Class {@link SchemaWithDeletedColumnTest}.
  */
 public final class SchemaWithDeletedColumnTest {
 

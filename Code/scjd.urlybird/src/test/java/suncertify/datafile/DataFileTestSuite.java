@@ -10,10 +10,10 @@ import org.junit.runners.Suite;
  * 
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ Format257SchemaBuilderTest.class,
+@Suite.SuiteClasses({ Format257SchemaFactoryTest.class,
 	DataFileHeaderTest.class, BusinessValueColumnTest.class,
 	SchemaWithDeletedColumnTest.class, DataFileServiceTest.class,
-	Utf8DecoderTest.class, Format257SchemaBuilderTest.class,
+	Utf8DecoderTest.class, Format257SchemaFactoryTest.class,
 	DataFileHandlerTest.class, RecordValueTest.class,
 	DeletedColumnTest.class })
 public class DataFileTestSuite {

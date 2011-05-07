@@ -1,13 +1,11 @@
 package suncertify.datafile;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * A <code>ValidRecord</code> represents a regular not deleted
- * {@link ValidRecord} in the underlying datafile. It contains one
- * {@link BusinessValue} for every column in the datafile. The values are stored
+ * {@link ValidRecord} in the underlying DataFile. It contains one
+ * {@link RecordValue} for every column in the DataFile. The values are stored
  * as simple <code>Strings</code>. Every <code>ValidRecord</code> contains its
  * index as an unique identifier.
  * 
@@ -22,7 +20,7 @@ final class ValidRecord extends DataFileRecord {
      * @param values
      *            the values in this record, must be not <code>null</code>.
      * @param index
-     *            the index of this record, must be positiv.
+     *            the index of this record, must be positive.
      */
     ValidRecord(final List<RecordValue> values, final int index) {
 	super(values, index);

@@ -1,16 +1,45 @@
 package suncertify.datafile;
 
+/**
+ * A {@link RecordValue} represents one value of a <code>DataFileRecord</code>
+ * in a DataFile that belong to a exact one {@link DataFileColumn}.
+ * 
+ * @author arnelandwehr
+ * 
+ */
 class RecordValue {
 
+    /** the <code>DataFileCoumn</code> this values belongs to. */
     private final DataFileColumn column;
+
+    /** the stored value. */
     private final String value;
 
+    /**
+     * Constructs a new <code>RecordValue</code> for the given
+     * {@link DataFileColumn} and value.
+     * 
+     * @param dataFileColumn
+     *            the column of this <code>RecordValue</code>, must not be
+     *            <code>null</code>.
+     * @param value
+     *            the stored value, must not be null and its length must be
+     *            positive and smaller than the column size.
+     */
     RecordValue(final DataFileColumn dataFileColumn, final String value) {
 
 	this.column = dataFileColumn;
 	this.value = expandValueToColumnSize(value);
     }
 
+    /**
+     * Right pad the given values with white spaces until the value length is
+     * equal to the column size.
+     * 
+     * @param value
+     *            the value to expand.
+     * @return the stretched value.
+     */
     private String expandValueToColumnSize(final String value) {
 
 	if (value.length() == column.getSize()) {
@@ -24,10 +53,23 @@ class RecordValue {
 	return sb.toString();
     }
 
+    /**
+     * Getter for the value .
+     * 
+     * @return the value, never <code>null</code>.
+     */
     String getValue() {
 	return value;
     }
 
+    /**
+     * Specifies if this <code>RecordValue</code> stores a business value
+     * (prices etc.) or a technical value (deleted or not).
+     * 
+     * @return <code>true</code> if this <code>RecordValue</code> stores a
+     *         business value.
+     * @see ColumnType
+     */
     boolean isBuisnessValue() {
 	return column.containsValuesOfType(ColumnType.BUSINESS);
     }

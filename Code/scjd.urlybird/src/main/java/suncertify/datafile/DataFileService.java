@@ -55,11 +55,11 @@ public final class DataFileService {
 	checkNotNull(dataFile, "dataFile");
 
 	final BytesToStringDecoder decoder = new Utf8Decoder();
-	final SchemaBuilder schemaBuilder = new Format257SchemaBuilder(
+	final SchemaFactory schemaBuilder = new Format257SchemaFactory(
 		new UnsupportedDataFileFormat(), decoder);
 
 	final DataFileSchema schema = schemaBuilder
-		.buildSchemaForDataFile(dataFile);
+		.createSchemaForDataFile(dataFile);
 
 	return new DataFileHandler(dataFile, schema);
     }

@@ -2,8 +2,27 @@ package suncertify.datafile;
 
 import java.util.List;
 
+/**
+ * An <code>DeletedRecord</code> is an {@link DataFileRecord} that is already
+ * deleted but still stored in the DataFile, it is not valid and must be
+ * overlooked by business find or read methods. The storage of an
+ * <code>DeletedRecord</code> in an DataFile could be reused by new created
+ * valid {@link DataFileRecord}s.
+ * 
+ * @author arnelandwehr
+ * 
+ */
 class DeletedRecord extends DataFileRecord {
 
+    /**
+     * Construct a new <code>DeletedRecord</code>.
+     * 
+     * @param recordValues
+     *            the values of the deleted record, must not be
+     *            <code>null</code>.
+     * @param index
+     *            the index of the record, must be positive.
+     */
     DeletedRecord(final List<RecordValue> recordValues, final int index) {
 	super(recordValues, index);
     }

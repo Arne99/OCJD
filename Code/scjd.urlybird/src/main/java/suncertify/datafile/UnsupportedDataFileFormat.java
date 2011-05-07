@@ -3,12 +3,23 @@ package suncertify.datafile;
 import static suncertify.util.DesignByContract.*;
 
 import java.io.File;
-import java.io.IOException;
 
-final class UnsupportedDataFileFormat implements SchemaBuilder {
+/**
+ * This <code>SchemaFactory</code> implementation always throws an
+ * {@link UnsupportedDataFileFormatException}. Could be used as the end point of
+ * the schema factory chain of responsibility.
+ * 
+ * @see SchemaFactory
+ * @see SchemaWithDeletedColumn
+ * @see DataFileService
+ * 
+ * @author arnelandwehr
+ * 
+ */
+final class UnsupportedDataFileFormat implements SchemaFactory {
 
     @Override
-    public DataFileSchema buildSchemaForDataFile(final File file)
+    public DataFileSchema createSchemaForDataFile(final File file)
 	    throws UnsupportedDataFileFormatException {
 
 	checkNotNull(file, "file");

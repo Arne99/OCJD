@@ -15,11 +15,10 @@ import suncertify.util.Range;
 
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Tests for the Class DataFileSchemaFactory.
  */
-public final class Format257SchemaBuilderTest {
+public final class Format257SchemaFactoryTest {
 
     /** The Constant SUPPORTED_IDENTIFIER. */
     private static final int SUPPORTED_IDENTIFIER = 257;
@@ -29,8 +28,9 @@ public final class Format257SchemaBuilderTest {
 
     /**
      * Sets the up.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     @Before
     public void setUp() throws IOException {
@@ -39,8 +39,9 @@ public final class Format257SchemaBuilderTest {
 
     /**
      * Tear down.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     @After
     public void tearDown() throws IOException {
@@ -66,14 +67,13 @@ public final class Format257SchemaBuilderTest {
 	final BytesToStringDecoder decoder = mock(BytesToStringDecoder.class);
 	when(decoder.decodeBytesToString((byte[]) anyVararg())).thenReturn(
 		"name", "age");
-	final SchemaBuilder factory = new Format257SchemaBuilder(null, decoder);
-	final DataFileSchema schema = factory
-		.buildSchemaForDataFile(testFile);
+	final SchemaFactory factory = new Format257SchemaFactory(null, decoder);
+	final DataFileSchema schema = factory.createSchemaForDataFile(testFile);
 
 	final DeletedColumn deletedColumn = new DeletedColumn("Deleted-Flag",
 		new Range(0, 0), "0", "1");
-	final DataFileColumn businessColumnOne = new BusinessValueColumn("name",
-		new Range(1, 160));
+	final DataFileColumn businessColumnOne = new BusinessValueColumn(
+		"name", new Range(1, 160));
 	final DataFileColumn businessColumnTwo = new BusinessValueColumn("age",
 		new Range(161, 200));
 
@@ -86,10 +86,13 @@ public final class Format257SchemaBuilderTest {
     }
 
     /**
-     * Should create a schema with zero business and one deleted column if the data file contains only a header.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws UnsupportedDataFileFormatException the unsupported data file format exception
+     * Should create a schema with zero business and one deleted column if the
+     * data file contains only a header.
+     * 
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws UnsupportedDataFileFormatException
+     *             the unsupported data file format exception
      */
     @Test
     public void shouldCreateASchemaWithZeroBusinessAndOneDeletedColumnIfTheDataFileContainsOnlyAHeader()
@@ -98,9 +101,8 @@ public final class Format257SchemaBuilderTest {
 	UrlyBirdSchemaWriter.writeSchema(SUPPORTED_IDENTIFIER, 0).toFile(
 		testFile);
 
-	final SchemaBuilder factory = new Format257SchemaBuilder(null, null);
-	final DataFileSchema schema = factory
-		.buildSchemaForDataFile(testFile);
+	final SchemaFactory factory = new Format257SchemaFactory(null, null);
+	final DataFileSchema schema = factory.createSchemaForDataFile(testFile);
 
 	final DeletedColumn deletedColumn = new DeletedColumn("Deleted-Flag",
 		new Range(0, 0), "0", "1");

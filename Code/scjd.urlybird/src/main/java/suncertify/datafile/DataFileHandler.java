@@ -16,7 +16,7 @@ import suncertify.db.Record;
 import suncertify.db.RecordMatchingSpecification;
 
 /**
- * A <code>DataFileHandler</code> is a {@link DatabaseHandler for DataFiles. It
+ * A <code>DataFileHandler</code> is a {@link DatabaseHandler} for DataFiles. It
  * guarantees write and read operations to <code>Records</code> in a flat file.
  */
 class DataFileHandler implements DatabaseHandler {

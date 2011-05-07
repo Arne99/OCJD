@@ -14,8 +14,25 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Implementation of a {@link DataFileSchema} that consists of n business
+ * {@link DataFileColumn}s and one {@link DeletedColumn}. The
+ * <code>DeletedColumn</code> contains a technical flag that indicates if a
+ * record is deleted or not.
+ * 
+ * 
+ * @author arnelandwehr
+ * 
+ */
 final class SchemaWithDeletedColumn implements DataFileSchema {
 
+    /**
+     * {@link Comparator} that sorts {@link DataFileColumn} after their
+     * occurrence in the DataFile.
+     * 
+     * @author arnelandwehr
+     * 
+     */
     private static class SortColumnsInDbOrder implements
 	    Comparator<DataFileColumn> {
 
@@ -27,13 +44,43 @@ final class SchemaWithDeletedColumn implements DataFileSchema {
 
     }
 
+    /** the deleted column. */
     private final DeletedColumn deletedColumn;
 
+    /**
+     * header information in the underlying DataFile that does not contain any
+     * business values.
+     */
     private final DataFileHeader header;
+
+    /**
+     * a number of <code>DataFileColumns</code>.
+     */
     private final ArrayList<DataFileColumn> columns;
+
+    /**
+     * transforms bytes to strings.
+     */
     private final BytesToStringDecoder decoder;
+
+    /**
+     * the index of the deleted column in the list of
+     * <code>DataFileColumns</code>.
+     */
     private final int deletedColumnIndex;
 
+    /**
+     * Construct a new <code>SchemaWithDeletedColumn</code>.
+     * 
+     * @param header
+     *            the header, must not be <code>null</code>.
+     * @param deletedColumn
+     *            the deleted column, must not be <code>null</code>.
+     * @param otherColumns
+     *            all other columns, must not be <code>null</code>.
+     * @param decoder
+     *            the byte to string decoder, must not be <code>null</code>.
+     */
     SchemaWithDeletedColumn(final DataFileHeader header,
 	    final DeletedColumn deletedColumn,
 	    final Collection<DataFileColumn> otherColumns,
@@ -77,11 +124,29 @@ final class SchemaWithDeletedColumn implements DataFileSchema {
 		+ columns + "; decoder = " + decoder + " ] ";
     }
 
+    /**
+     * Checks if the given file is not corrupted by any write operation. The
+     * <code>File</code> must contain only complete records.
+     * 
+     * @param file
+     *            the file to check.
+     * @return <code>true</code> if the file contains only complete records.
+     */
     private boolean fileContainsOnlyCompleteRecords(final File file) {
 
 	return (file.length() - getOffset()) % getRecordLength() == 0;
     }
 
+    /**
+     * Checks if the given file has a valid identifier for this schema.
+     * 
+     * @param file
+     *            the file to check.
+     * @return <code>true</code> if the files identifier is equal with the
+     *         supported identifiers.
+     * @throws IOException
+     *             if an IO-problem occurs during the reading of the identifier.
+     */
     private boolean fileHasValidIdentifier(final File file) throws IOException {
 
 	boolean hasValidIdentifier = false;

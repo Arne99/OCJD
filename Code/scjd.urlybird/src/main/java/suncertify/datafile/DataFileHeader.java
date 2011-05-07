@@ -1,15 +1,34 @@
 package suncertify.datafile;
 
 /**
+ * A <code>DataFileHeader</code> contains the header information of the
+ * {@link DataFileSchema}. These are:
+ * <ul>
+ * <li>the unique format identifier</li>
+ * <li>the length of the header in bytes</li>
+ * </ul>
  * 
+ * Every header is an immutable value object.
  * 
  * @author arnelandwehr
  * 
  */
 final class DataFileHeader {
+
+    /** the unique identifier for one special DataFileSchema. */
     private final int key;
+
+    /** the length of the header in bytes. */
     private final int headerLength;
 
+    /**
+     * Construct a new <code>DataFileHeader</code>.
+     * 
+     * @param key
+     *            the unique identifier for one special DataFileSchema.
+     * @param headerLength
+     *            the length of the header in bytes, must be positive.
+     */
     DataFileHeader(final int key, final int headerLength) {
 	this.key = key;
 	this.headerLength = headerLength;
@@ -42,10 +61,20 @@ final class DataFileHeader {
 	return result;
     }
 
+    /**
+     * Getter for the key.
+     * 
+     * @return the key.
+     */
     int getKey() {
 	return key;
     }
 
+    /**
+     * Getter for the length of the header in bytes.
+     * 
+     * @return the header length.
+     */
     int getHeaderLength() {
 	return headerLength;
     }
