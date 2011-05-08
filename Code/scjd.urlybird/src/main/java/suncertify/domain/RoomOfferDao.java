@@ -44,7 +44,8 @@ final class RoomOfferDao implements Dao<UrlyBirdRoomOffer> {
     @Override
     public List<UrlyBirdRoomOffer> find(final List<String> criteria)
 	    throws RecordNotFoundException, ConstraintViolationException {
-	final int[] indices = database.find(criteria.toArray(new String[] {}));
+	final int[] indices = database.find(criteria
+		.toArray(new String[criteria.size()]));
 
 	final List<UrlyBirdRoomOffer> matchingRooms = new ArrayList<UrlyBirdRoomOffer>(
 		indices.length);
