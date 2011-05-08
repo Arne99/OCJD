@@ -19,13 +19,14 @@ import suncertify.common.RoomOfferService;
 import suncertify.common.UpdateRoomCommand;
 import suncertify.db.DB;
 import suncertify.db.RecordNotFoundException;
+import suncertify.util.Specification;
 
 public class UrlyBirdRoomOfferService implements RoomOfferService {
 
     private static final int NOT_LOCKED = -1;
 
-    private final BusinessRule<Date> isOccupancyIn48Hours;
-    private final BusinessRule<RoomOffer> isRoomBookable;
+    private final Specification<Date> isOccupancyIn48Hours;
+    private final Specification<RoomOffer> isRoomBookable;
     private final RoomOfferBuilder builder;
     private final Dao<UrlyBirdRoomOffer> roomOfferDao;
 
@@ -37,8 +38,8 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 
     UrlyBirdRoomOfferService(final Dao<UrlyBirdRoomOffer> roomOfferDao,
 	    final RoomOfferBuilder roomOfferBuilder,
-	    final BusinessRule<Date> isOccupancyIn48Hours,
-	    final BusinessRule<RoomOffer> isRoomBookable) {
+	    final Specification<Date> isOccupancyIn48Hours,
+	    final Specification<RoomOffer> isRoomBookable) {
 	super();
 	this.roomOfferDao = roomOfferDao;
 	this.builder = roomOfferBuilder;

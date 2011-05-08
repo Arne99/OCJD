@@ -13,8 +13,8 @@ import java.util.Set;
 
 import suncertify.db.DatabaseHandler;
 import suncertify.db.Record;
-import suncertify.db.RecordMatchingSpecification;
 import suncertify.db.RecordNotFoundException;
+import suncertify.util.Specification;
 
 import org.junit.After;
 import org.junit.Before;
@@ -99,7 +99,7 @@ public final class DataFileServiceTest {
 	final DatabaseHandler handler = DataFileService.instance()
 		.getDatabaseHandler(anyFile);
 	final Set<Record> records = handler
-		.findMatchingRecords(new RecordMatchingSpecification() {
+		.findMatchingRecords(new Specification<Record>() {
 
 		    @Override
 		    public boolean isSatisfiedBy(final Record record) {

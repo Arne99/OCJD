@@ -10,8 +10,8 @@ package suncertify.db;
 public interface DB {
 
     /**
-     * Reads a record from the file. Returns an array where each element is a
-     * record value.
+     * Reads a record from the database. Returns an array where each element is
+     * a record value.
      * 
      * @param recNo
      *            the Number of the record to return, must be positive.
@@ -64,7 +64,7 @@ public interface DB {
 
     /**
      * Returns an array of record numbers that match the specified criteria.
-     * Field n in the database file is described by criteria[n]. A null value in
+     * Field n in the database is described by criteria[n]. A null value in
      * criteria[n] matches any field value. A non-null value in criteria[n]
      * matches any field value that begins with criteria[n]. (For example,
      * "Fred" matches "Fred" or "Freddy".)

@@ -16,8 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import suncertify.db.Record;
-import suncertify.db.RecordMatchingSpecification;
 import suncertify.util.Range;
+import suncertify.util.Specification;
 
 import com.google.common.collect.Lists;
 
@@ -111,7 +111,7 @@ public final class DataFileHandlerTest {
     public void shouldMatchEveryRecordInTheDataFileAgainstTheSpecificationToFindTheMatchingRecords()
 	    throws IOException, UnsupportedDataFileFormatException {
 
-	final RecordMatchingSpecification specification = mock(RecordMatchingSpecification.class);
+	final Specification specification = mock(Specification.class);
 	when(specification.isSatisfiedBy(any(ValidRecord.class))).thenReturn(
 		true);
 
@@ -135,7 +135,7 @@ public final class DataFileHandlerTest {
     public void shouldReturnOnlyRecordsThatSatisfyTheSpecification()
 	    throws IOException, UnsupportedDataFileFormatException {
 
-	final RecordMatchingSpecification specification = mock(RecordMatchingSpecification.class);
+	final Specification specification = mock(Specification.class);
 	when(specification.isSatisfiedBy(firstRecord)).thenReturn(true);
 	when(specification.isSatisfiedBy(secondRecord)).thenReturn(false);
 
@@ -159,7 +159,7 @@ public final class DataFileHandlerTest {
     public void shouldReturnAnEmptyCollectionIfTheSpecificationDoesntMatch()
 	    throws IOException, UnsupportedDataFileFormatException {
 
-	final RecordMatchingSpecification specification = mock(RecordMatchingSpecification.class);
+	final Specification specification = mock(Specification.class);
 	when(specification.isSatisfiedBy(any(Record.class))).thenReturn(false);
 
 	final DataFileHandler handler = new DataFileHandler(testFile, schema);

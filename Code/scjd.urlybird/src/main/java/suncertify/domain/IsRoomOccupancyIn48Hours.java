@@ -5,7 +5,9 @@ import java.util.Date;
 
 import javax.swing.event.MouseInputListener;
 
-public class IsRoomOccupancyIn48Hours implements BusinessRule<Date> {
+import suncertify.util.Specification;
+
+public class IsRoomOccupancyIn48Hours implements Specification<Date> {
 
     @Override
     public boolean isSatisfiedBy(final Date dateToBook) {

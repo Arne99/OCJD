@@ -1,8 +1,18 @@
 package suncertify.domain;
 
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,8 +23,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
-
 import suncertify.common.BookRoomCommand;
 import suncertify.common.CreateRoomCommand;
 import suncertify.common.DeleteRoomCommand;
@@ -23,6 +31,9 @@ import suncertify.common.Money;
 import suncertify.common.RoomOffer;
 import suncertify.common.UpdateRoomCommand;
 import suncertify.db.RecordNotFoundException;
+import suncertify.util.Specification;
+
+import com.google.common.collect.Lists;
 
 /**
  * The Class UrlyBirdRoomOfferServiceTest.
@@ -38,11 +49,11 @@ public final class UrlyBirdRoomOfferServiceTest {
 
     /** The is occupancy in48 hours. */
     @SuppressWarnings("unchecked")
-    private final BusinessRule<Date> isOccupancyIn48Hours = mock(BusinessRule.class);
+    private final Specification<Date> isOccupancyIn48Hours = mock(Specification.class);
 
     /** The is room bookable. */
     @SuppressWarnings("unchecked")
-    private final BusinessRule<RoomOffer> isRoomBookable = mock(BusinessRule.class);
+    private final Specification<RoomOffer> isRoomBookable = mock(Specification.class);
 
     /** The valid room offer. */
     private final UrlyBirdRoomOffer validRoomOffer = new UrlyBirdRoomOffer(

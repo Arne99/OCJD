@@ -13,7 +13,7 @@ import java.util.Set;
 
 import suncertify.db.DatabaseHandler;
 import suncertify.db.Record;
-import suncertify.db.RecordMatchingSpecification;
+import suncertify.util.Specification;
 
 /**
  * A <code>DataFileHandler</code> is a {@link DatabaseHandler} for DataFiles. It
@@ -72,7 +72,7 @@ class DataFileHandler implements DatabaseHandler {
 
     @Override
     public Set<Record> findMatchingRecords(
-	    final RecordMatchingSpecification specification) throws IOException {
+	    final Specification specification) throws IOException {
 
 	checkNotNull(specification, "queryRecord");
 

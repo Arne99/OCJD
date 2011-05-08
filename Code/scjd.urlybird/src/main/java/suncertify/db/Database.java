@@ -94,7 +94,7 @@ public final class Database implements DB {
 	    records = handler.findMatchingRecords(new NullAlwaysMatches(Arrays
 		    .asList(criteria)));
 	} catch (final IOException e) {
-	    // transforms the checks IO exception in a runtime exception
+	    // transforms the checked IO exception in a runtime exception
 	    // to fulfill the interface
 	    throw new DatabaseException(e);
 	}
@@ -121,7 +121,7 @@ public final class Database implements DB {
 		handler.writeRecord(Arrays.asList(data), emptyIndex);
 		return emptyIndex;
 	    } catch (final IOException e) {
-		// transforms the checks IO exception in a runtime exception
+		// transforms the checked IO exception in a runtime exception
 		// to fulfill the interface
 		throw new DatabaseException(e);
 	    }

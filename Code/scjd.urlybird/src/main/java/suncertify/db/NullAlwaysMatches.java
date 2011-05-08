@@ -3,9 +3,16 @@ package suncertify.db;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.regex.Pattern;
 
-class NullAlwaysMatches implements RecordMatchingSpecification {
+import suncertify.util.Specification;
+
+/**
+ * 
+ * 
+ * @author arnelandwehr
+ * 
+ */
+final class NullAlwaysMatches implements Specification<Record> {
 
     private final List<String> criteria;
 
