@@ -13,9 +13,10 @@ class SynchronizedRecordLocker implements RecordLocker {
     }
 
     /**
-     * For testing only!
+     * For testing only! Never use in production code!
      * 
      * @param lockTable
+     *            the {@link Map} with the already known locks.
      */
     SynchronizedRecordLocker(final Map<Integer, Long> lockTable) {
 	super();

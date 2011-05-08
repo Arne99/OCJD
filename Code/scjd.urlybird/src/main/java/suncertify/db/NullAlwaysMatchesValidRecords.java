@@ -12,18 +12,18 @@ import suncertify.util.Specification;
  * @author arnelandwehr
  * 
  */
-final class NullAlwaysMatches implements Specification<Record> {
+final class NullAlwaysMatchesValidRecords implements Specification<Record> {
 
     private final List<String> criteria;
 
-    NullAlwaysMatches(final List<String> criteria) {
+    NullAlwaysMatchesValidRecords(final List<String> criteria) {
 	super();
 	this.criteria = new ArrayList<String>(criteria);
     }
 
     @Override
     public boolean isSatisfiedBy(final Record record) {
-
+ 
 	if (!record.isValid()) {
 	    return false;
 	}
