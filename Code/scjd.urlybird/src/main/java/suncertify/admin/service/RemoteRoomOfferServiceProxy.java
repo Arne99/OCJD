@@ -11,7 +11,6 @@ import suncertify.common.FindRoomCommand;
 import suncertify.common.RoomOffer;
 import suncertify.common.RoomOfferService;
 import suncertify.common.UpdateRoomCommand;
-import suncertify.domain.UrlyBirdRoomOffer;
 
 class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
 	RoomOfferService {
@@ -76,7 +75,7 @@ class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
     }
 
     @Override
-    public UrlyBirdRoomOffer bookRoomOffer(final BookRoomCommand command)
+    public RoomOffer bookRoomOffer(final BookRoomCommand command)
 	    throws Exception {
 
 	checkAccessibility();
