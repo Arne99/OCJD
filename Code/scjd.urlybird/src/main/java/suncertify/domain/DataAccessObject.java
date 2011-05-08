@@ -7,7 +7,7 @@ import suncertify.common.RoomOffer;
 import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;
 
-public interface Dao<T> {
+public interface DataAccessObject<T> {
 
     T create(List<String> values) throws DuplicateKeyException,
 	    ConstraintViolationException;

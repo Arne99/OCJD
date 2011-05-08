@@ -42,7 +42,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 
     /** The dao. */
     @SuppressWarnings("unchecked")
-    private final Dao<UrlyBirdRoomOffer> dao = mock(Dao.class);
+    private final DataAccessObject<UrlyBirdRoomOffer> dao = mock(DataAccessObject.class);
 
     /** The builder. */
     private final RoomOfferBuilder builder = mock(RoomOfferBuilder.class);

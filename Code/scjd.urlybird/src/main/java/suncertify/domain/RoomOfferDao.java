@@ -14,7 +14,7 @@ import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;
 import suncertify.db.SecurityException;
 
-final class RoomOfferDao implements Dao<UrlyBirdRoomOffer> {
+final class RoomOfferDao implements DataAccessObject<UrlyBirdRoomOffer> {
 
     private final DB database;
 

@@ -28,7 +28,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
     private final Specification<Date> isOccupancyIn48Hours;
     private final Specification<RoomOffer> isRoomBookable;
     private final RoomOfferBuilder builder;
-    private final Dao<UrlyBirdRoomOffer> roomOfferDao;
+    private final DataAccessObject<UrlyBirdRoomOffer> roomOfferDao;
 
     public UrlyBirdRoomOfferService(final DB database) {
 	this(new RoomOfferDao(database, new RoomOfferBuilder()),
@@ -36,7 +36,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 		new IsRoomBookable());
     }
 
-    UrlyBirdRoomOfferService(final Dao<UrlyBirdRoomOffer> roomOfferDao,
+    UrlyBirdRoomOfferService(final DataAccessObject<UrlyBirdRoomOffer> roomOfferDao,
 	    final RoomOfferBuilder roomOfferBuilder,
 	    final Specification<Date> isOccupancyIn48Hours,
 	    final Specification<RoomOffer> isRoomBookable) {
