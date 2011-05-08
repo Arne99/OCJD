@@ -72,7 +72,7 @@ class DataFileHandler implements DatabaseHandler {
 
     @Override
     public Set<Record> findMatchingRecords(
-	    final Specification specification) throws IOException {
+	    final Specification<Record> specification) throws IOException {
 
 	checkNotNull(specification, "queryRecord");
 

@@ -85,8 +85,8 @@ public interface DB {
      *            the data of the record to create, must not <code>null</code>.
      * @return the index of created record.
      * @throws DuplicateKeyException
-     *             if unique identifier of the record is already stored in the
-     *             database.
+     *             if the unique identifier of the record is already stored in
+     *             the database.
      * 
      */
     int create(String[] data) throws DuplicateKeyException;

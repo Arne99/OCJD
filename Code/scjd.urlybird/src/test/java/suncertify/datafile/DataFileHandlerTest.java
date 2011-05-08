@@ -111,7 +111,8 @@ public final class DataFileHandlerTest {
     public void shouldMatchEveryRecordInTheDataFileAgainstTheSpecificationToFindTheMatchingRecords()
 	    throws IOException, UnsupportedDataFileFormatException {
 
-	final Specification specification = mock(Specification.class);
+	@SuppressWarnings("unchecked")
+	final Specification<Record> specification = mock(Specification.class);
 	when(specification.isSatisfiedBy(any(ValidRecord.class))).thenReturn(
 		true);
 
@@ -135,7 +136,8 @@ public final class DataFileHandlerTest {
     public void shouldReturnOnlyRecordsThatSatisfyTheSpecification()
 	    throws IOException, UnsupportedDataFileFormatException {
 
-	final Specification specification = mock(Specification.class);
+	@SuppressWarnings("unchecked")
+	final Specification<Record> specification = mock(Specification.class);
 	when(specification.isSatisfiedBy(firstRecord)).thenReturn(true);
 	when(specification.isSatisfiedBy(secondRecord)).thenReturn(false);
 
@@ -159,7 +161,8 @@ public final class DataFileHandlerTest {
     public void shouldReturnAnEmptyCollectionIfTheSpecificationDoesntMatch()
 	    throws IOException, UnsupportedDataFileFormatException {
 
-	final Specification specification = mock(Specification.class);
+	@SuppressWarnings("unchecked")
+	final Specification<Record> specification = mock(Specification.class);
 	when(specification.isSatisfiedBy(any(Record.class))).thenReturn(false);
 
 	final DataFileHandler handler = new DataFileHandler(testFile, schema);

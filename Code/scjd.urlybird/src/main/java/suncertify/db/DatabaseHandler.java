@@ -44,8 +44,8 @@ public interface DatabaseHandler {
      * @throws IOException
      *             if an IO-problem occurs during the reading.
      */
-    Set<Record> findMatchingRecords(
-	    final Specification specification) throws IOException;
+    Set<Record> findMatchingRecords(final Specification<Record> specification)
+	    throws IOException;
 
     /**
      * Reads a record from the database. Returns an array where each element is
