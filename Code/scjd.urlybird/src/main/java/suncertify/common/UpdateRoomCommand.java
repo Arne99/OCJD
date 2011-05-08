@@ -1,10 +1,8 @@
-package suncertify.common.roomoffer;
+package suncertify.common;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import suncertify.common.Command;
-import suncertify.common.RoomOffer;
 
 public final class UpdateRoomCommand implements Command {
 

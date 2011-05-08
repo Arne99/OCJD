@@ -17,7 +17,7 @@ import javax.swing.event.DocumentListener;
 import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
 import suncertify.admin.service.DatabaseConfiguration;
-import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.common.RoomOfferService;
 import suncertify.datafile.DataFileService;
 import suncertify.datafile.UnsupportedDataFileFormatException;
 import suncertify.db.DB;

@@ -1,7 +1,5 @@
-package suncertify.common.roomoffer;
+package suncertify.common;
 
-import suncertify.common.Command;
-import suncertify.common.RoomOffer;
 
 public final class DeleteRoomCommand implements Command {
 

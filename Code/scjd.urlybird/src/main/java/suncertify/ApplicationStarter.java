@@ -14,7 +14,7 @@ import suncertify.client.DatabaseConnectionPresenter;
 import suncertify.client.ServerConnectionPresenter;
 import suncertify.client.UrlyBirdPresenter;
 import suncertify.client.UrlyBirdView;
-import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.common.RoomOfferService;
 import suncertify.db.DB;
 import suncertify.db.DatabaseService;
 import suncertify.domain.UrlyBirdRoomOfferService;

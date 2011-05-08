@@ -5,28 +5,23 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.Naming;
-import java.text.ParseException;
 import java.util.regex.Pattern;
 
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.MaskFormatter;
 import javax.swing.text.PlainDocument;
 
 import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
 import suncertify.admin.service.ServerConfiguration;
 import suncertify.client.UrlyBirdPresenter.ToggleButtonWhenTextChanges;
+import suncertify.common.RoomOfferService;
 import suncertify.common.Services;
-import suncertify.common.roomoffer.RoomOfferService;
 
 public class ServerConnectionPresenter implements ConnectionPresenter {
 
@@ -59,7 +54,7 @@ public class ServerConnectionPresenter implements ConnectionPresenter {
 	    final JFrame frame, final ExitDialogAdapter exitDialog) {
 	final ServerConnectionPanel connectionPanel = new ServerConnectionPanel();
 	dialog.add(connectionPanel);
-	dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+	dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 	dialog.setLocationRelativeTo(frame);
 	dialog.pack();
 

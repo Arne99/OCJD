@@ -1,9 +1,7 @@
-package suncertify.common.roomoffer;
+package suncertify.common;
 
 import java.io.Serializable;
 
-import suncertify.common.Command;
-import suncertify.common.RoomOffer;
 
 public final class BookRoomCommand implements Command {
 

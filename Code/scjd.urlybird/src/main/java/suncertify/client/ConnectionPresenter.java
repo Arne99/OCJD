@@ -2,7 +2,7 @@ package suncertify.client;
 
 import javax.swing.JFrame;
 
-import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.common.RoomOfferService;
 
 interface ConnectionPresenter {
 

@@ -1,9 +1,8 @@
-package suncertify.common.roomoffer;
+package suncertify.common;
 
 import java.rmi.Remote;
 import java.util.List;
 
-import suncertify.common.RoomOffer;
 import suncertify.domain.UrlyBirdRoomOffer;
 
 public interface RoomOfferService extends Remote {
@@ -16,6 +15,6 @@ public interface RoomOfferService extends Remote {
 
     RoomOffer updateRoomOffer(UpdateRoomCommand command) throws Exception;
 
-    List<UrlyBirdRoomOffer> findRoomOffer(final FindRoomCommand command)
+    List<RoomOffer> findRoomOffer(final FindRoomCommand command)
 	    throws Exception;
 }

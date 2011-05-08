@@ -2,7 +2,7 @@ package suncertify.admin.service;
 
 import java.io.File;
 
-public class DatabaseConfiguration {
+public final class DatabaseConfiguration {
 
     private final File location;
 

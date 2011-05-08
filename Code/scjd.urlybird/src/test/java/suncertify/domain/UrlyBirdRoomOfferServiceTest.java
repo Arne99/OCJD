@@ -15,13 +15,13 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
+import suncertify.common.BookRoomCommand;
+import suncertify.common.CreateRoomCommand;
+import suncertify.common.DeleteRoomCommand;
+import suncertify.common.FindRoomCommand;
 import suncertify.common.Money;
 import suncertify.common.RoomOffer;
-import suncertify.common.roomoffer.BookRoomCommand;
-import suncertify.common.roomoffer.CreateRoomCommand;
-import suncertify.common.roomoffer.DeleteRoomCommand;
-import suncertify.common.roomoffer.FindRoomCommand;
-import suncertify.common.roomoffer.UpdateRoomCommand;
+import suncertify.common.UpdateRoomCommand;
 import suncertify.db.RecordNotFoundException;
 
 /**
@@ -299,10 +299,10 @@ public final class UrlyBirdRoomOfferServiceTest {
 		.newArrayList(validRoomOffer);
 	when(dao.find(criteria)).thenReturn(result);
 
-	final List<UrlyBirdRoomOffer> foundRooms = roomOfferService
+	final List<RoomOffer> foundRooms = roomOfferService
 		.findRoomOffer(command);
 
-	assertThat(foundRooms, is(equalTo(result)));
+	assertEquals(foundRooms, result);
     }
 
     /**

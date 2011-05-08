@@ -1,6 +1,6 @@
 package suncertify.client;
 
-import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.common.RoomOfferService;
 
 public interface ServiceProvider {
 

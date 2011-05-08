@@ -1,6 +1,5 @@
-package suncertify.common.roomoffer;
+package suncertify.common;
 
-import suncertify.common.Command;
 
 public final class FindRoomCommand implements Command {
 

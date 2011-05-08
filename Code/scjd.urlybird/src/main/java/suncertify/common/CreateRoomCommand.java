@@ -1,9 +1,8 @@
-package suncertify.common.roomoffer;
+package suncertify.common;
 
 import java.util.Collections;
 import java.util.List;
 
-import suncertify.common.Command;
 
 public final class CreateRoomCommand implements Command {
 

@@ -1,5 +1,9 @@
 package suncertify.admin.service;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,21 +18,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import suncertify.common.BookRoomCommand;
+import suncertify.common.CreateRoomCommand;
+import suncertify.common.DeleteRoomCommand;
+import suncertify.common.FindRoomCommand;
+import suncertify.common.RoomOffer;
+import suncertify.common.RoomOfferService;
 import suncertify.common.Services;
-import suncertify.common.roomoffer.BookRoomCommand;
-import suncertify.common.roomoffer.CreateRoomCommand;
-import suncertify.common.roomoffer.DeleteRoomCommand;
-import suncertify.common.roomoffer.FindRoomCommand;
-import suncertify.common.roomoffer.RoomOfferService;
-import suncertify.common.roomoffer.UpdateRoomCommand;
+import suncertify.common.UpdateRoomCommand;
 import suncertify.db.DatabaseConnectionException;
-import suncertify.domain.UrlyBirdRoomOffer;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 
 /**
  * The Class AdministrationServiceIntegrationTest.
@@ -71,8 +72,8 @@ public final class AdministrationServiceIntegrationTest {
 
 	service.startStandAloneServer(serverConfig, dataConfig);
 
-	final Services services = (Services) Naming
-		.lookup(serverConfig.getClientServiceName());
+	final Services services = (Services) Naming.lookup(serverConfig
+		.getClientServiceName());
 
 	roomOfferService = services.getRoomOfferService();
     }
@@ -107,7 +108,7 @@ public final class AdministrationServiceIntegrationTest {
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanFindRooms()
 	    throws Exception {
 
-	final List<UrlyBirdRoomOffer> roomOffers = roomOfferService
+	final List<RoomOffer> roomOffers = roomOfferService
 		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
 			"Pleasantville", true));
 
@@ -130,7 +131,7 @@ public final class AdministrationServiceIntegrationTest {
 			new SimpleDateFormat("yyyy/MM/dd").format(new Date()),
 			"12345678")));
 
-	final List<UrlyBirdRoomOffer> roomOffers = roomOfferService
+	final List<RoomOffer> roomOffers = roomOfferService
 		.findRoomOffer(new FindRoomCommand("MyHotel", "MyCity", true));
 
 	assertThat(roomOffers.size(), is(equalTo(1)));
@@ -147,7 +148,7 @@ public final class AdministrationServiceIntegrationTest {
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanDeleteARoom()
 	    throws Exception {
 
-	final List<UrlyBirdRoomOffer> roomOffersBefore = roomOfferService
+	final List<RoomOffer> roomOffersBefore = roomOfferService
 		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
 			"Pleasantville", true));
 
@@ -156,7 +157,7 @@ public final class AdministrationServiceIntegrationTest {
 	roomOfferService.deleteRoomOffer(new DeleteRoomCommand(roomOffersBefore
 		.iterator().next()));
 
-	final List<UrlyBirdRoomOffer> roomOffersAfter = roomOfferService
+	final List<RoomOffer> roomOffersAfter = roomOfferService
 		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
 			"Pleasantville", true));
 
@@ -174,7 +175,7 @@ public final class AdministrationServiceIntegrationTest {
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanUpdateARoom()
 	    throws Exception {
 
-	final List<UrlyBirdRoomOffer> roomOffersBefore = roomOfferService
+	final List<RoomOffer> roomOffersBefore = roomOfferService
 		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
 			"Pleasantville", true));
 
@@ -186,13 +187,13 @@ public final class AdministrationServiceIntegrationTest {
 			new SimpleDateFormat("yyyy/MM/dd").format(new Date()),
 			"12345678")), roomOffersBefore.iterator().next()));
 
-	final List<UrlyBirdRoomOffer> roomOffersAfter = roomOfferService
+	final List<RoomOffer> roomOffersAfter = roomOfferService
 		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
 			"Pleasantville", true));
 
 	assertThat(roomOffersAfter.size(), is(equalTo(0)));
 
-	final List<UrlyBirdRoomOffer> roomOffersAfter2 = roomOfferService
+	final List<RoomOffer> roomOffersAfter2 = roomOfferService
 		.findRoomOffer(new FindRoomCommand("MyHotel", "MyCity", true));
 
 	assertThat(roomOffersAfter2.size(), is(equalTo(1)));
@@ -209,7 +210,7 @@ public final class AdministrationServiceIntegrationTest {
     public void shouldStartAnServerAnBindsTheClientServicesAtTheGivenAdresseSoThatTheClientCanBookARoom()
 	    throws Exception {
 
-	final List<UrlyBirdRoomOffer> roomOffersBefore = roomOfferService
+	final List<RoomOffer> roomOffersBefore = roomOfferService
 		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
 			"Pleasantville", true));
 
@@ -218,7 +219,7 @@ public final class AdministrationServiceIntegrationTest {
 	roomOfferService.bookRoomOffer(new BookRoomCommand(roomOffersBefore
 		.iterator().next(), "12345678"));
 
-	final List<UrlyBirdRoomOffer> roomOffersAfter = roomOfferService
+	final List<RoomOffer> roomOffersAfter = roomOfferService
 		.findRoomOffer(new FindRoomCommand("Dew Drop Inn",
 			"Pleasantville", true));
 
