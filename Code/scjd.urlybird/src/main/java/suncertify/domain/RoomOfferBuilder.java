@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import suncertify.common.Money;
+import suncertify.common.RoomOffer;
 
 class RoomOfferBuilder {
 
@@ -38,7 +39,7 @@ class RoomOfferBuilder {
 	super();
     }
 
-    RoomOffer createRoomOffer(final List<String> values, final int index)
+    UrlyBirdRoomOffer createRoomOffer(final List<String> values, final int index)
 	    throws ConstraintViolationException {
 
 	checkValues(values);
@@ -56,16 +57,16 @@ class RoomOfferBuilder {
 	final String customerId = values
 		.get(PERSISTED_ATTRIBUTE.CUSTOMER.index);
 
-	return new RoomOffer(hotelName, cityName, roomSize, smokingAllowed,
+	return new UrlyBirdRoomOffer(hotelName, cityName, roomSize, smokingAllowed,
 		price, bookableDate, customerId, index);
     }
 
-    RoomOffer createRoomOfferWithNewCustomer(final RoomOffer oldRoom,
+    UrlyBirdRoomOffer createRoomOfferWithNewCustomer(final RoomOffer oldRoom,
 	    final String customerId) throws ConstraintViolationException {
 
 	checkValue(PERSISTED_ATTRIBUTE.CUSTOMER, customerId);
 
-	return new RoomOffer(oldRoom.getHotel(), oldRoom.getCity(),
+	return new UrlyBirdRoomOffer(oldRoom.getHotel(), oldRoom.getCity(),
 		oldRoom.getRoomSize(), oldRoom.isSmokingAllowed(),
 		oldRoom.getPrice(), oldRoom.getBookableDate(), customerId,
 		oldRoom.getIndex());

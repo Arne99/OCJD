@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 
 import suncertify.common.Money;
+import suncertify.common.RoomOffer;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
@@ -29,7 +31,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 
     /** The dao. */
     @SuppressWarnings("unchecked")
-    private final Dao<RoomOffer> dao = mock(Dao.class);
+    private final Dao<UrlyBirdRoomOffer> dao = mock(Dao.class);
 
     /** The builder. */
     private final RoomOfferBuilder builder = mock(RoomOfferBuilder.class);
@@ -43,8 +45,14 @@ public final class UrlyBirdRoomOfferServiceTest {
     private final BusinessRule<RoomOffer> isRoomBookable = mock(BusinessRule.class);
 
     /** The valid room offer. */
-    private final RoomOffer validRoomOffer = new RoomOffer("Hilton", "Hamburg",
-	    2, false, Money.create("12"), new Date(), "", 12);
+    private final UrlyBirdRoomOffer validRoomOffer = new UrlyBirdRoomOffer(
+	    "Hilton", "Hamburg", 2, false, Money.create("12"), new Date(), "",
+	    12);
+
+    /** The valid room offer values. */
+    private final String[] validRoomOfferValues = new String[] { "Hilton",
+	    "Hamburg", "2", "N", "$120,00",
+	    new SimpleDateFormat("yyyy/MM/dd").format(new Date()), "" };
 
     /**
      * Sets the up.
@@ -63,7 +71,7 @@ public final class UrlyBirdRoomOfferServiceTest {
     public void shouldBookAnValidRoomAndPersistTheChanges() throws Exception {
 
 	final String customerId = "1234";
-	final RoomOffer expectedRoomOffer = new RoomOffer(
+	final UrlyBirdRoomOffer expectedRoomOffer = new UrlyBirdRoomOffer(
 		validRoomOffer.getHotel(), validRoomOffer.getCity(),
 		validRoomOffer.getRoomSize(), false, validRoomOffer.getPrice(),
 		validRoomOffer.getBookableDate(), customerId,
@@ -80,7 +88,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, null, isRoomBookable);
 
-	final RoomOffer bookedRoom = roomOfferService
+	final UrlyBirdRoomOffer bookedRoom = roomOfferService
 		.bookRoomOffer(bookRoomCommand);
 
 	verify(isRoomBookable).isSatisfiedBy(validRoomOffer);
@@ -131,9 +139,9 @@ public final class UrlyBirdRoomOfferServiceTest {
 
 	when(dao.read(index)).thenReturn(validRoomOffer);
 	when(
-		builder.createRoomOffer(
-			Arrays.asList(validRoomOffer.toArray()), index))
-		.thenThrow(new ConstraintViolationException("Test"));
+		builder.createRoomOffer(Arrays.asList(validRoomOfferValues),
+			index)).thenThrow(
+		new ConstraintViolationException("Test"));
 	when(isRoomBookable.isSatisfiedBy(validRoomOffer)).thenReturn(true);
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
@@ -152,19 +160,19 @@ public final class UrlyBirdRoomOfferServiceTest {
     public void shouldCreateAnValidRoomAndPersistIt() throws Exception {
 
 	final CreateRoomCommand command = new CreateRoomCommand(
-		Arrays.asList(validRoomOffer.toArray()));
+		Arrays.asList(validRoomOfferValues));
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, isRoomBookable);
 
 	when(isOccupancyIn48Hours.isSatisfiedBy((Date) any())).thenReturn(true);
-	when(dao.create(Arrays.asList(validRoomOffer.toArray()))).thenReturn(
+	when(dao.create(Arrays.asList(validRoomOfferValues))).thenReturn(
 		validRoomOffer);
 
-	final RoomOffer createdRoomOffer = roomOfferService
+	final UrlyBirdRoomOffer createdRoomOffer = roomOfferService
 		.createRoomOffer(command);
 
-	verify(dao).create(Arrays.asList(validRoomOffer.toArray()));
+	verify(dao).create(Arrays.asList(validRoomOfferValues));
 	assertThat(createdRoomOffer, is(equalTo(validRoomOffer)));
     }
 
@@ -179,7 +187,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 	    throws Exception {
 
 	final CreateRoomCommand command = new CreateRoomCommand(
-		Arrays.asList(validRoomOffer.toArray()));
+		Arrays.asList(validRoomOfferValues));
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, isRoomBookable);
@@ -189,7 +197,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 
 	roomOfferService.createRoomOffer(command);
 
-	verify(dao, never()).create(Arrays.asList(validRoomOffer.toArray()));
+	verify(dao, never()).create(Arrays.asList(validRoomOfferValues));
     }
 
     /**
@@ -204,18 +212,18 @@ public final class UrlyBirdRoomOfferServiceTest {
 	    throws Exception {
 
 	final CreateRoomCommand command = new CreateRoomCommand(
-		Arrays.asList(validRoomOffer.toArray()));
+		Arrays.asList(validRoomOfferValues));
 
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, builder, isOccupancyIn48Hours, null);
 
 	doThrow(new ConstraintViolationException("")).when(dao).create(
-		Arrays.asList(validRoomOffer.toArray()));
+		Arrays.asList(validRoomOfferValues));
 	when(isOccupancyIn48Hours.isSatisfiedBy((Date) any())).thenReturn(true);
 
 	roomOfferService.createRoomOffer(command);
 
-	verify(dao, never()).create(Arrays.asList(validRoomOffer.toArray()));
+	verify(dao, never()).create(Arrays.asList(validRoomOfferValues));
     }
 
     /**
@@ -287,10 +295,11 @@ public final class UrlyBirdRoomOfferServiceTest {
 	final UrlyBirdRoomOfferService roomOfferService = new UrlyBirdRoomOfferService(
 		dao, null, null, null);
 
-	final List<RoomOffer> result = Lists.newArrayList(validRoomOffer);
+	final List<UrlyBirdRoomOffer> result = Lists
+		.newArrayList(validRoomOffer);
 	when(dao.find(criteria)).thenReturn(result);
 
-	final List<RoomOffer> foundRooms = roomOfferService
+	final List<UrlyBirdRoomOffer> foundRooms = roomOfferService
 		.findRoomOffer(command);
 
 	assertThat(foundRooms, is(equalTo(result)));
@@ -342,7 +351,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 	when(builder.createRoomOffer(newValidValues, validRoomOffer.getIndex()))
 		.thenReturn(validRoomOffer);
 
-	final RoomOffer updatedRoomOffer = roomOfferService
+	final UrlyBirdRoomOffer updatedRoomOffer = roomOfferService
 		.updateRoomOffer(command);
 
 	verify(dao).lock(validRoomOffer.getIndex());

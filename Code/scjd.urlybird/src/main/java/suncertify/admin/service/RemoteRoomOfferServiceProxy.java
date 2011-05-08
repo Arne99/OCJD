@@ -4,15 +4,14 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-import suncertify.common.ClientCallback;
+import suncertify.common.RoomOffer;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.common.roomoffer.UpdateRoomCommand;
-import suncertify.domain.RoomOffer;
-import suncertify.util.Pair;
+import suncertify.domain.UrlyBirdRoomOffer;
 
 class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
 	RoomOfferService {
@@ -53,7 +52,7 @@ class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
     }
 
     @Override
-    public List<RoomOffer> findRoomOffer(final FindRoomCommand command)
+    public List<UrlyBirdRoomOffer> findRoomOffer(final FindRoomCommand command)
 	    throws Exception {
 
 	checkAccessibility();
@@ -77,7 +76,8 @@ class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
     }
 
     @Override
-    public RoomOffer bookRoomOffer(final BookRoomCommand command) throws Exception {
+    public UrlyBirdRoomOffer bookRoomOffer(final BookRoomCommand command)
+	    throws Exception {
 
 	checkAccessibility();
 	return delegate.bookRoomOffer(command);

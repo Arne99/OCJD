@@ -1,5 +1,7 @@
 package suncertify.domain;
 
+import suncertify.common.RoomOffer;
+
 public class IsRoomBookable implements BusinessRule<RoomOffer> {
 
     @Override

@@ -1,17 +1,14 @@
 package suncertify.domain;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import suncertify.common.Money;
-import suncertify.common.PresentationObject;
+import suncertify.common.RoomOffer;
 
-public final class RoomOffer implements PresentationObject {
-
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd",
-	    Locale.US);
+public final class UrlyBirdRoomOffer implements Serializable, RoomOffer {
 
     private static final long serialVersionUID = 6482035761421384445L;
 
@@ -31,41 +28,90 @@ public final class RoomOffer implements PresentationObject {
 
     private final int index;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see suncertify.domain.RoomOffer1#getHotel()
+     */
+    @Override
     public String getHotel() {
 	return hotel;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see suncertify.domain.RoomOffer1#getCity()
+     */
+    @Override
     public String getCity() {
 	return city;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see suncertify.domain.RoomOffer1#getRoomSize()
+     */
+    @Override
     public int getRoomSize() {
 	return roomSize;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see suncertify.domain.RoomOffer1#isSmokingAllowed()
+     */
+    @Override
     public boolean isSmokingAllowed() {
 	return smokingAllowed;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see suncertify.domain.RoomOffer1#getPrice()
+     */
+    @Override
     public Money getPrice() {
 	return price;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see suncertify.domain.RoomOffer1#getBookableDate()
+     */
+    @Override
     public Date getBookableDate() {
 	return bookableDate;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see suncertify.domain.RoomOffer1#getCustomerId()
+     */
+    @Override
     public String getCustomerId() {
 	return customerId;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see suncertify.domain.RoomOffer1#getIndex()
+     */
+    @Override
     public int getIndex() {
 	return index;
     }
 
-    public RoomOffer(final String hotel, final String city, final int roomSize,
-	    final boolean smokingAllowed, final Money price,
-	    final Date bookableDate, final String customerId, final int index) {
+    public UrlyBirdRoomOffer(final String hotel, final String city,
+	    final int roomSize, final boolean smokingAllowed,
+	    final Money price, final Date bookableDate,
+	    final String customerId, final int index) {
 	super();
 	this.hotel = hotel;
 	this.city = city;
@@ -82,10 +128,10 @@ public final class RoomOffer implements PresentationObject {
 	if (this == object) {
 	    return true;
 	}
-	if (!(object instanceof RoomOffer)) {
+	if (!(object instanceof UrlyBirdRoomOffer)) {
 	    return false;
 	}
-	final RoomOffer roomOffer = (RoomOffer) object;
+	final UrlyBirdRoomOffer roomOffer = (UrlyBirdRoomOffer) object;
 	return roomOffer.hotel.equals(this.hotel)
 		&& roomOffer.city.equals(this.city)
 		&& roomOffer.roomSize == this.roomSize
@@ -119,36 +165,4 @@ public final class RoomOffer implements PresentationObject {
 		+ customerId + "; index = " + index + " ] ";
     }
 
-    private String convertBooleanToPersistableString(
-	    final boolean smokingAllowed) {
-	return (smokingAllowed) ? "Y" : "N";
-    }
-
-    private String convertDateToPersistableString(final Date bookableDate) {
-
-	return dateFormat.format(bookableDate);
-    }
-
-    private String convertIntToPersistableString(final int roomSize) {
-	return "" + roomSize;
-    }
-
-    private String convertMoneyToPersistableString(final Money price) {
-	final String symbol = price.getCurreny().getSymbol(Locale.US);
-	final BigDecimal amount = price.getAmount();
-	final String value = amount.setScale(2).toPlainString();
-	return symbol + value;
-    }
-
-    @Override
-    public String[] toArray() {
-
-	final String roomSize = convertIntToPersistableString(this.roomSize);
-	final String smokingAllowed = convertBooleanToPersistableString(this.smokingAllowed);
-	final String price = convertMoneyToPersistableString(this.price);
-	final String date = convertDateToPersistableString(this.bookableDate);
-
-	return new String[] { hotel, city, roomSize, smokingAllowed, price,
-		date, customerId };
-    }
 }

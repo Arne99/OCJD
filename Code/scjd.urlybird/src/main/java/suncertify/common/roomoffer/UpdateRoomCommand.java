@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import suncertify.common.Command;
-import suncertify.domain.RoomOffer;
+import suncertify.common.RoomOffer;
 
 public final class UpdateRoomCommand implements Command {
 

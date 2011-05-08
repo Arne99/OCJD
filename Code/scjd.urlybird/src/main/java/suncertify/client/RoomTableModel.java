@@ -16,7 +16,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import suncertify.common.Money;
-import suncertify.domain.RoomOffer;
+import suncertify.common.RoomOffer;
+import suncertify.domain.UrlyBirdRoomOffer;
 
 public final class RoomTableModel extends AbstractTableModel {
 
@@ -50,7 +51,7 @@ public final class RoomTableModel extends AbstractTableModel {
     }
 
     private final Set<COLUMN> columns = EnumSet.allOf(COLUMN.class);
-    private final ArrayList<RoomOffer> rooms = new ArrayList<RoomOffer>();
+    private final ArrayList<UrlyBirdRoomOffer> rooms = new ArrayList<UrlyBirdRoomOffer>();
 
     RoomOffer getRoomAtIndex(final int index) {
 	return rooms.get(index);
@@ -90,7 +91,7 @@ public final class RoomTableModel extends AbstractTableModel {
 	return rooms.get(index).getRoomSize() + "";
     }
 
-    public void replaceRoom(final RoomOffer changedRoom) {
+    public void replaceRoom(final UrlyBirdRoomOffer changedRoom) {
 
 	for (final RoomOffer room : rooms) {
 	    if (room.getIndex() == changedRoom.getIndex()) {
@@ -115,7 +116,7 @@ public final class RoomTableModel extends AbstractTableModel {
 		"no column found for the given column index: " + columnIndex);
     }
 
-    public void replaceAll(final List<RoomOffer> newRooms) {
+    public void replaceAll(final List<UrlyBirdRoomOffer> newRooms) {
 
 	rooms.clear();
 	rooms.addAll(newRooms);

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import suncertify.common.RoomOffer;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
@@ -26,7 +27,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
     private final BusinessRule<Date> isOccupancyIn48Hours;
     private final BusinessRule<RoomOffer> isRoomBookable;
     private final RoomOfferBuilder builder;
-    private final Dao<RoomOffer> roomOfferDao;
+    private final Dao<UrlyBirdRoomOffer> roomOfferDao;
 
     public UrlyBirdRoomOfferService(final DB database) {
 	this(new RoomOfferDao(database, new RoomOfferBuilder()),
@@ -34,7 +35,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 		new IsRoomBookable());
     }
 
-    UrlyBirdRoomOfferService(final Dao<RoomOffer> roomOfferDao,
+    UrlyBirdRoomOfferService(final Dao<UrlyBirdRoomOffer> roomOfferDao,
 	    final RoomOfferBuilder roomOfferBuilder,
 	    final BusinessRule<Date> isOccupancyIn48Hours,
 	    final BusinessRule<RoomOffer> isRoomBookable) {
@@ -46,7 +47,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
     }
 
     @Override
-    public RoomOffer bookRoomOffer(final BookRoomCommand command)
+    public UrlyBirdRoomOffer bookRoomOffer(final BookRoomCommand command)
 	    throws Exception {
 
 	checkNotNull(command, "command");
@@ -64,7 +65,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 		throw new Exception();
 	    }
 
-	    final RoomOffer bookedRoomOffer = builder
+	    final UrlyBirdRoomOffer bookedRoomOffer = builder
 		    .createRoomOfferWithNewCustomer(clientRoomToBook,
 			    command.getCustomerId());
 	    roomOfferDao.update(bookedRoomOffer, lock);
@@ -78,7 +79,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
     }
 
     @Override
-    public RoomOffer createRoomOffer(final CreateRoomCommand command)
+    public UrlyBirdRoomOffer createRoomOffer(final CreateRoomCommand command)
 	    throws Exception {
 
 	checkNotNull(command, "command");
@@ -89,7 +90,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    throw new Exception("");
 	}
 
-	RoomOffer roomOffer = null;
+	UrlyBirdRoomOffer roomOffer = null;
 	try {
 	    roomOffer = roomOfferDao.create(values);
 	} catch (final Exception e) {
@@ -128,7 +129,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
     }
 
     @Override
-    public RoomOffer updateRoomOffer(final UpdateRoomCommand command)
+    public UrlyBirdRoomOffer updateRoomOffer(final UpdateRoomCommand command)
 	    throws Exception {
 
 	checkNotNull(command, "command");
@@ -143,8 +144,8 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    final RoomOffer dbRoomToUpdate = roomOfferDao.read(index);
 	    checkStaleRoomData(clientRoomToUpdate, dbRoomToUpdate);
 
-	    final RoomOffer updatedRoomOffer = builder.createRoomOffer(values,
-		    index);
+	    final UrlyBirdRoomOffer updatedRoomOffer = builder.createRoomOffer(
+		    values, index);
 
 	    roomOfferDao.update(updatedRoomOffer, lock);
 	    return updatedRoomOffer;
@@ -157,30 +158,31 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
     }
 
     @Override
-    public List<RoomOffer> findRoomOffer(final FindRoomCommand command)
+    public List<UrlyBirdRoomOffer> findRoomOffer(final FindRoomCommand command)
 	    throws Exception {
 
 	checkNotNull(command, "command");
 
 	try {
 	    if (command.isAnd()) {
-		return new ArrayList<RoomOffer>(roomOfferDao.find(Arrays
-			.asList(command.getHotel(), command.getLocation(),
-				null, null, null, null, null, null)));
+		return new ArrayList<UrlyBirdRoomOffer>(
+			roomOfferDao.find(Arrays.asList(command.getHotel(),
+				command.getLocation(), null, null, null, null,
+				null, null)));
 
 	    } else {
-		final ArrayList<RoomOffer> matchingHotels = new ArrayList<RoomOffer>(
+		final ArrayList<UrlyBirdRoomOffer> matchingHotels = new ArrayList<UrlyBirdRoomOffer>(
 			roomOfferDao.find(Arrays.asList(command.getHotel(),
 				null, null, null, null, null, null, null)));
-		final ArrayList<RoomOffer> matchingLocations = new ArrayList<RoomOffer>(
+		final ArrayList<UrlyBirdRoomOffer> matchingLocations = new ArrayList<UrlyBirdRoomOffer>(
 			roomOfferDao.find(Arrays.asList(null,
 				command.getLocation(), null, null, null, null,
 				null, null)));
 
-		final Set<RoomOffer> union = new HashSet<RoomOffer>();
+		final Set<UrlyBirdRoomOffer> union = new HashSet<UrlyBirdRoomOffer>();
 		union.addAll(matchingHotels);
 		union.addAll(matchingLocations);
-		return new ArrayList<RoomOffer>(union);
+		return new ArrayList<UrlyBirdRoomOffer>(union);
 	    }
 	} catch (final Exception e) {
 	    e.printStackTrace();

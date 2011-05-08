@@ -23,10 +23,11 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 
 import suncertify.admin.gui.UrlyBirdProperties;
+import suncertify.common.RoomOffer;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.FindRoomCommand;
 import suncertify.common.roomoffer.RoomOfferService;
-import suncertify.domain.RoomOffer;
+import suncertify.domain.UrlyBirdRoomOffer;
 
 public final class UrlyBirdPresenter {
 
@@ -65,7 +66,7 @@ public final class UrlyBirdPresenter {
 	public void actionPerformed(final ActionEvent arg0) {
 
 	    try {
-		final List<RoomOffer> rooms = service
+		final List<UrlyBirdRoomOffer> rooms = service
 			.findRoomOffer(new FindRoomCommand(null, null, false));
 		tableModel.replaceAll(rooms);
 	    } catch (final Exception e) {
@@ -114,7 +115,7 @@ public final class UrlyBirdPresenter {
 				.getAndRadioButton().isSelected());
 
 		try {
-		    final List<RoomOffer> rooms = service
+		    final List<UrlyBirdRoomOffer> rooms = service
 			    .findRoomOffer(command);
 		    tableModel.replaceAll(rooms);
 		    dialog.dispose();
@@ -428,7 +429,7 @@ public final class UrlyBirdPresenter {
 				.getRoomAtIndex(modelIndex);
 
 			try {
-			    final RoomOffer bookedRoomOffer = service
+			    final UrlyBirdRoomOffer bookedRoomOffer = service
 				    .bookRoomOffer(new BookRoomCommand(
 					    roomToBook, dialog
 						    .getCustomerIdTextField1()
