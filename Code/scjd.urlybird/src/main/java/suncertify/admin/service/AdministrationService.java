@@ -1,5 +1,6 @@
 package suncertify.admin.service;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -7,13 +8,12 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.datafile.DataFileService;
+import suncertify.datafile.UnsupportedDataFileFormatException;
 import suncertify.db.DB;
 import suncertify.db.DatabaseConnectionException;
 import suncertify.db.DatabaseHandler;
 import suncertify.db.DatabaseService;
-import suncertify.domain.UrlyBirdRoomOfferService;
 
 public final class AdministrationService {
 
@@ -54,7 +54,19 @@ public final class AdministrationService {
 
     private DB connectToDatabase(final DatabaseConfiguration dataConfig)
 	    throws DatabaseConnectionException {
-	final DB db = DatabaseService.instance().connectToDatabase(dataConfig);
+
+	DatabaseHandler databaseHandler;
+	try {
+	    databaseHandler = DataFileService.instance().getDatabaseHandler(
+		    dataConfig.getDatabaseLocation());
+	} catch (final IOException e) {
+	    throw new DatabaseConnectionException(e);
+	} catch (final UnsupportedDataFileFormatException e) {
+	    throw new DatabaseConnectionException(e);
+	}
+
+	final DB db = DatabaseService.instance().connectToDatabase(
+		databaseHandler);
 	return db;
     }
 

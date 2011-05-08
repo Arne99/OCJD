@@ -14,13 +14,13 @@ import suncertify.db.DuplicateKeyException;
 import suncertify.db.RecordNotFoundException;
 import suncertify.db.SecurityException;
 
-public class RoomOfferDao implements Dao<UrlyBirdRoomOffer> {
+final class RoomOfferDao implements Dao<UrlyBirdRoomOffer> {
 
     private final DB database;
 
     private final RoomOfferBuilder builder;
 
-    public RoomOfferDao(final DB database, final RoomOfferBuilder builder) {
+    RoomOfferDao(final DB database, final RoomOfferBuilder builder) {
 	this.database = database;
 	this.builder = builder;
     }

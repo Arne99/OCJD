@@ -18,8 +18,11 @@ import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
 import suncertify.admin.service.DatabaseConfiguration;
 import suncertify.common.roomoffer.RoomOfferService;
+import suncertify.datafile.DataFileService;
+import suncertify.datafile.UnsupportedDataFileFormatException;
 import suncertify.db.DB;
 import suncertify.db.DatabaseConnectionException;
+import suncertify.db.DatabaseHandler;
 import suncertify.db.DatabaseService;
 import suncertify.domain.UrlyBirdRoomOfferService;
 
@@ -135,14 +138,22 @@ public class DatabaseConnectionPresenter implements ConnectionPresenter {
 		final DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration(
 			new File(path));
 		try {
+		    final DatabaseHandler databaseHandler = DataFileService
+			    .instance()
+			    .getDatabaseHandler(
+				    databaseConfiguration.getDatabaseLocation());
 		    database = databaseService
-			    .connectToDatabase(databaseConfiguration);
+			    .connectToDatabase(databaseHandler);
 		    roomOfferService = new UrlyBirdRoomOfferService(database);
 		} catch (final DatabaseConnectionException connectionException) {
 		    JOptionPane.showMessageDialog(null,
 			    connectionException.getMessage(),
 			    "Connection Failure!", JOptionPane.ERROR_MESSAGE);
 		    return;
+		} catch (final IOException e) {
+		    e.printStackTrace();
+		} catch (final UnsupportedDataFileFormatException e) {
+		    e.printStackTrace();
 		}
 
 		try {
