@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 
 import suncertify.common.roomoffer.RoomOfferService;
 
-public interface ClientServices extends Remote {
+public interface Services extends Remote {
 
-    public RoomOfferService getRoomOfferService() throws RemoteException;
+     RoomOfferService getRoomOfferService() throws RemoteException;
 }

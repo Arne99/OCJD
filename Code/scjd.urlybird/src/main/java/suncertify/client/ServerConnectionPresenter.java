@@ -25,7 +25,7 @@ import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
 import suncertify.admin.service.ServerConfiguration;
 import suncertify.client.UrlyBirdPresenter.ToggleButtonWhenTextChanges;
-import suncertify.common.ClientServices;
+import suncertify.common.Services;
 import suncertify.common.roomoffer.RoomOfferService;
 
 public class ServerConnectionPresenter implements ConnectionPresenter {
@@ -110,7 +110,7 @@ public class ServerConnectionPresenter implements ConnectionPresenter {
 			final ServerConfiguration serverConfiguration = new ServerConfiguration(
 				port, host);
 			try {
-			    final ClientServices services = (ClientServices) Naming
+			    final Services services = (Services) Naming
 				    .lookup(serverConfiguration
 					    .getHostNameWithPort()
 					    + "/"

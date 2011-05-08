@@ -3,13 +3,13 @@ package suncertify.admin.service;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import suncertify.common.ClientServices;
+import suncertify.common.Services;
 import suncertify.common.roomoffer.RoomOfferService;
 import suncertify.db.DB;
 import suncertify.domain.UrlyBirdRoomOfferService;
 
 public final class ClientServicesImpl extends UnicastRemoteObject implements
-	ClientServices {
+	Services {
 
     private static volatile ClientServicesImpl INSTANCE;
 

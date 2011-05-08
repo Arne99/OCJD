@@ -14,7 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import suncertify.common.ClientServices;
+import suncertify.common.Services;
 import suncertify.common.roomoffer.BookRoomCommand;
 import suncertify.common.roomoffer.CreateRoomCommand;
 import suncertify.common.roomoffer.DeleteRoomCommand;
@@ -71,7 +71,7 @@ public final class AdministrationServiceIntegrationTest {
 
 	service.startStandAloneServer(serverConfig, dataConfig);
 
-	final ClientServices services = (ClientServices) Naming
+	final Services services = (Services) Naming
 		.lookup(serverConfig.getClientServiceName());
 
 	roomOfferService = services.getRoomOfferService();
