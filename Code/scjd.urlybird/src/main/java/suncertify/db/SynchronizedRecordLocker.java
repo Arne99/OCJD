@@ -3,14 +3,40 @@ package suncertify.db;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A {@link RecordLocker} implementation for an multi-threaded environment which
+ * is synchronized internally.
+ * 
+ * Singleton because there should be just one locker to guarantee an secure
+ * environment.
+ * 
+ * @author arnelandwehr
+ * 
+ */
 class SynchronizedRecordLocker implements RecordLocker {
 
+    /** the singleton instance. */
     private static final SynchronizedRecordLocker INSTANCE = new SynchronizedRecordLocker(
 	    new HashMap<Integer, Long>());
 
+    /**
+     * Getter for the singleton instance of the <code>RecordLocker</code>.
+     * 
+     * @return the singleton instance.
+     */
     public static SynchronizedRecordLocker instance() {
 	return INSTANCE;
     }
+
+    /**
+     * the {@link Map} with the locks the locker holds. Keys are the
+     * {@link Record} indices and values are the threadIds (
+     * {@link Thread#getId()})
+     */
+    private final Map<Integer, Long> lockTable;
+
+    /** the mutes that provides synchronized access to the {@link #lockTable}. */
+    private final String mutex = new String("MUTEX");
 
     /**
      * For testing only! Never use in production code!
@@ -22,10 +48,6 @@ class SynchronizedRecordLocker implements RecordLocker {
 	super();
 	this.lockTable = lockTable;
     }
-
-    private final Map<Integer, Long> lockTable;
-
-    private final String mutex = new String("MUTEX");
 
     @Override
     public void checkRecordOwner(final int index, final long id)
@@ -40,7 +62,7 @@ class SynchronizedRecordLocker implements RecordLocker {
     public long lockRecord(final int index) {
 
 	synchronized (mutex) {
-	    final long newOwnerId = createOwnerIdForCurrentThread();
+	    final long newOwnerId = Thread.currentThread().getId();
 	    while (isRecordLockedByAnOtherThread(index, newOwnerId)) {
 		try {
 		    mutex.wait();
@@ -64,10 +86,17 @@ class SynchronizedRecordLocker implements RecordLocker {
 	}
     }
 
-    private long createOwnerIdForCurrentThread() {
-	return Thread.currentThread().getId();
-    }
-
+    /**
+     * Checks if the given index is already locked by an other threadID than the
+     * given.
+     * 
+     * @param index
+     *            the index to check.
+     * @param newOwnerId
+     *            the threadId to check for.
+     * @return <code>true</code> if the index is already locked by an other
+     *         threadId than the given one.
+     */
     private boolean isRecordLockedByAnOtherThread(final int index,
 	    final long newOwnerId) {
 

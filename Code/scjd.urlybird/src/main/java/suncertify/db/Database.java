@@ -91,7 +91,7 @@ public final class Database implements DB {
 
 	Set<Record> records = null;
 	try {
-	    records = handler.findMatchingRecords(new NullAlwaysMatchesValidRecords(Arrays
+	    records = handler.findMatchingRecords(new NullAlwaysMatchesAllValuesInValidRecords(Arrays
 		    .asList(criteria)));
 	} catch (final IOException e) {
 	    // transforms the checked IO exception in a runtime exception
