@@ -58,11 +58,11 @@ public final class ServerAdminPresenter {
 	}
     }
 
-    private final ServerConsoleView view;
+    private final ServerAdminGui view;
     private final AdministrationService service;
     private final UrlyBirdProperties properties;
 
-    public ServerAdminPresenter(final ServerConsoleView view,
+    public ServerAdminPresenter(final ServerAdminGui view,
 	    final AdministrationService service,
 	    final UrlyBirdProperties properties) {
 	super();
@@ -81,12 +81,18 @@ public final class ServerAdminPresenter {
 		initView();
 
 		try {
-		    view.getDbPathTextField().setText(
-			    properties.getProperty(PropertyName.ADMIN_GUI_DB_PATH));
-		    view.getPortTextField().setText(
-			    properties.getProperty(PropertyName.ADMIN_GUI_PORT));
-		    view.getHostConnectionTextField().setText(
-			    properties.getProperty(PropertyName.ADMIN_GUI_HOST));
+		    view.getDbPathTextField()
+			    .setText(
+				    properties
+					    .getProperty(PropertyName.ADMIN_GUI_DB_PATH));
+		    view.getPortTextField()
+			    .setText(
+				    properties
+					    .getProperty(PropertyName.ADMIN_GUI_PORT));
+		    view.getHostConnectionTextField()
+			    .setText(
+				    properties
+					    .getProperty(PropertyName.ADMIN_GUI_HOST));
 		} catch (final IOException e) {
 		    JOptionPane.showMessageDialog(
 			    view.getMainFrame(),

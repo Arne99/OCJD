@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class ServerAdminGui implements ServerConsoleView {
+public class ServerAdminGui {
 
     private static final long serialVersionUID = 4762410272117483890L;
     private JFrame mainFrame;
@@ -33,7 +33,6 @@ public class ServerAdminGui implements ServerConsoleView {
     private JLabel serverStatusLabel;
     private JFileChooser dbPathChooser;
 
-    @Override
     public void init() {
 
 	mainFrame = new JFrame();
@@ -180,42 +179,34 @@ public class ServerAdminGui implements ServerConsoleView {
 
     }
 
-    @Override
     public JFrame getMainFrame() {
 	return mainFrame;
     }
 
-    @Override
     public JFormattedTextField getDbPathTextField() {
 	return dbPathTextField;
     }
 
-    @Override
     public JButton getDbPathButton() {
 	return dbPathButton;
     }
 
-    @Override
     public JFormattedTextField getHostConnectionTextField() {
 	return hostConnectionTextField;
     }
 
-    @Override
     public JFormattedTextField getPortTextField() {
 	return portTextField;
     }
 
-    @Override
     public JButton getStartServerButton() {
 	return startServerButton;
     }
 
-    @Override
     public JLabel getServerStatusLabel() {
 	return serverStatusLabel;
     }
 
-    @Override
     public JFileChooser getDbPathChooser() {
 	return dbPathChooser;
     }
@@ -224,7 +215,6 @@ public class ServerAdminGui implements ServerConsoleView {
 	new ServerAdminGui().init();
     }
 
-    @Override
     public void show() {
 	mainFrame.setVisible(true);
     }
