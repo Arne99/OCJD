@@ -10,7 +10,7 @@ import java.util.Locale;
 import suncertify.common.Money;
 import suncertify.common.RoomOffer;
 
-class RoomOfferBuilder {
+class RoomOfferFactory {
 
     enum PERSISTED_ATTRIBUTE {
 
@@ -31,7 +31,7 @@ class RoomOfferBuilder {
     private final static SimpleDateFormat dateFormat = new SimpleDateFormat(
 	    "yyyy/MM/dd", Locale.US);
 
-    RoomOfferBuilder() {
+    RoomOfferFactory() {
 	super();
     }
 

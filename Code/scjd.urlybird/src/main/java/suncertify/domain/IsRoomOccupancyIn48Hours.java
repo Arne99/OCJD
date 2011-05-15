@@ -3,11 +3,16 @@ package suncertify.domain;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.swing.event.MouseInputListener;
-
 import suncertify.util.Specification;
 
-public class IsRoomOccupancyIn48Hours implements Specification<Date> {
+/**
+ * Business rule that specifies if the occupancy of the given room is in the
+ * next 48 hours.
+ * 
+ * @author arnelandwehr
+ * 
+ */
+final class IsRoomOccupancyIn48Hours implements Specification<Date> {
 
     @Override
     public boolean isSatisfiedBy(final Date dateToBook) {

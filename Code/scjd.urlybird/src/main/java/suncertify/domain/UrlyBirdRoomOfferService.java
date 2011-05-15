@@ -27,18 +27,18 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 
     private final Specification<Date> isOccupancyIn48Hours;
     private final Specification<RoomOffer> isRoomBookable;
-    private final RoomOfferBuilder builder;
+    private final RoomOfferFactory builder;
     private final DataAccessObject<UrlyBirdRoomOffer> roomOfferDao;
 
     public UrlyBirdRoomOfferService(final DB database) {
-	this(new RoomOfferDao(database, new RoomOfferBuilder()),
-		new RoomOfferBuilder(), new IsRoomOccupancyIn48Hours(),
+	this(new RoomOfferDao(database, new RoomOfferFactory()),
+		new RoomOfferFactory(), new IsRoomOccupancyIn48Hours(),
 		new IsRoomBookable());
     }
 
     UrlyBirdRoomOfferService(
 	    final DataAccessObject<UrlyBirdRoomOffer> roomOfferDao,
-	    final RoomOfferBuilder roomOfferBuilder,
+	    final RoomOfferFactory roomOfferBuilder,
 	    final Specification<Date> isOccupancyIn48Hours,
 	    final Specification<RoomOffer> isRoomBookable) {
 	super();

@@ -18,9 +18,9 @@ final class RoomOfferDao implements DataAccessObject<UrlyBirdRoomOffer> {
 
     private final DB database;
 
-    private final RoomOfferBuilder builder;
+    private final RoomOfferFactory builder;
 
-    RoomOfferDao(final DB database, final RoomOfferBuilder builder) {
+    RoomOfferDao(final DB database, final RoomOfferFactory builder) {
 	this.database = database;
 	this.builder = builder;
     }

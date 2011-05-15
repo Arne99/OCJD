@@ -45,7 +45,7 @@ public final class UrlyBirdRoomOfferServiceTest {
     private final DataAccessObject<UrlyBirdRoomOffer> dao = mock(DataAccessObject.class);
 
     /** The builder. */
-    private final RoomOfferBuilder builder = mock(RoomOfferBuilder.class);
+    private final RoomOfferFactory builder = mock(RoomOfferFactory.class);
 
     /** The is occupancy in48 hours. */
     @SuppressWarnings("unchecked")
