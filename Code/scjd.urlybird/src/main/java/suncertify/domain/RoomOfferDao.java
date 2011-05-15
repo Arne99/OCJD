@@ -43,15 +43,21 @@ final class RoomOfferDao implements DataAccessObject<UrlyBirdRoomOffer> {
 
     @Override
     public List<UrlyBirdRoomOffer> find(final List<String> criteria)
-	    throws RecordNotFoundException, ConstraintViolationException {
+	    throws ConstraintViolationException {
 	final int[] indices = database.find(criteria
 		.toArray(new String[criteria.size()]));
 
+	// this could give you stale data.
 	final List<UrlyBirdRoomOffer> matchingRooms = new ArrayList<UrlyBirdRoomOffer>(
 		indices.length);
 	for (final int index : indices) {
-	    final UrlyBirdRoomOffer roomOffer = read(index);
-	    matchingRooms.add(roomOffer);
+	    UrlyBirdRoomOffer roomOffer = null;
+	    try {
+		roomOffer = read(index);
+		matchingRooms.add(roomOffer);
+	    } catch (final RecordNotFoundException e) {
+		e.printStackTrace();
+	    }
 	}
 
 	return matchingRooms;

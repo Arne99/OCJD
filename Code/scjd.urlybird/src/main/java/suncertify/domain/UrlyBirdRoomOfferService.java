@@ -36,7 +36,8 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 		new IsRoomBookable());
     }
 
-    UrlyBirdRoomOfferService(final DataAccessObject<UrlyBirdRoomOffer> roomOfferDao,
+    UrlyBirdRoomOfferService(
+	    final DataAccessObject<UrlyBirdRoomOffer> roomOfferDao,
 	    final RoomOfferBuilder roomOfferBuilder,
 	    final Specification<Date> isOccupancyIn48Hours,
 	    final Specification<RoomOffer> isRoomBookable) {
@@ -55,6 +56,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 
 	final RoomOffer clientRoomToBook = command.getRoomToBook();
 	final int roomOfferIndex = clientRoomToBook.getIndex();
+
 	long lock = NOT_LOCKED;
 	try {
 	    lock = roomOfferDao.lock(roomOfferIndex);

@@ -14,13 +14,9 @@ class RoomOfferBuilder {
 
     enum PERSISTED_ATTRIBUTE {
 
-	HOTEL(0, "[\\w\\s]{1,64}"),
-	CITY(1, "\\w{1,64}"),
-	SIZE(2, "\\d{1,4}"),
-	SMOKING(3, "[YNyn]"),
-	PRICE(4, ".\\d{3,4}\\.\\d{2}"),
-	DATE(5, "\\d{4}/\\d{2}/\\d{2}"),
-	CUSTOMER(6, ".?|\\d{8}");
+	HOTEL(0, ".{1,64}"), CITY(1, ".{1,64}"), SIZE(2, "\\d{1,4}"), SMOKING(
+		3, "[YNyn]"), PRICE(4, ".\\d{2,4}\\.\\d{2}"), DATE(5,
+		"\\d{4}/\\d{2}/\\d{2}"), CUSTOMER(6, ".?|\\d{8}");
 
 	private int index;
 	private String allowedFormat;
@@ -57,8 +53,8 @@ class RoomOfferBuilder {
 	final String customerId = values
 		.get(PERSISTED_ATTRIBUTE.CUSTOMER.index);
 
-	return new UrlyBirdRoomOffer(hotelName, cityName, roomSize, smokingAllowed,
-		price, bookableDate, customerId, index);
+	return new UrlyBirdRoomOffer(hotelName, cityName, roomSize,
+		smokingAllowed, price, bookableDate, customerId, index);
     }
 
     UrlyBirdRoomOffer createRoomOfferWithNewCustomer(final RoomOffer oldRoom,

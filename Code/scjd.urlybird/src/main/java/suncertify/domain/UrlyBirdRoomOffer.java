@@ -28,81 +28,41 @@ public final class UrlyBirdRoomOffer implements Serializable, RoomOffer {
 
     private final int index;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see suncertify.domain.RoomOffer1#getHotel()
-     */
     @Override
     public String getHotel() {
 	return hotel;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see suncertify.domain.RoomOffer1#getCity()
-     */
     @Override
     public String getCity() {
 	return city;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see suncertify.domain.RoomOffer1#getRoomSize()
-     */
     @Override
     public int getRoomSize() {
 	return roomSize;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see suncertify.domain.RoomOffer1#isSmokingAllowed()
-     */
     @Override
     public boolean isSmokingAllowed() {
 	return smokingAllowed;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see suncertify.domain.RoomOffer1#getPrice()
-     */
     @Override
     public Money getPrice() {
 	return price;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see suncertify.domain.RoomOffer1#getBookableDate()
-     */
     @Override
     public Date getBookableDate() {
 	return bookableDate;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see suncertify.domain.RoomOffer1#getCustomerId()
-     */
     @Override
     public String getCustomerId() {
 	return customerId;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see suncertify.domain.RoomOffer1#getIndex()
-     */
     @Override
     public int getIndex() {
 	return index;

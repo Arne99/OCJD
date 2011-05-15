@@ -54,7 +54,7 @@ class DataFileHandler implements DatabaseHandler {
      * @throws IOException
      *             if any IO problem occurs.
      * @throws UnsupportedDataFileFormatException
-     *             if the data in the given file is not in the format wof the
+     *             if the data in the given file is not in the format of the
      *             given schema.
      */
     DataFileHandler(final File file, final DataFileSchema schema)

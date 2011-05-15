@@ -19,8 +19,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
+import javax.swing.text.PlainDocument;
 
 import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.common.BookRoomCommand;
@@ -30,11 +33,11 @@ import suncertify.common.RoomOfferService;
 
 public final class UrlyBirdPresenter {
 
-    private final class ToggleBookButton implements DocumentListener {
+    private final class ToggleBookButtonListener implements DocumentListener {
 	private final BookDialog dialog;
 	private final JFormattedTextField customerIdTextField;
 
-	private ToggleBookButton(final BookDialog dialog,
+	private ToggleBookButtonListener(final BookDialog dialog,
 		final JFormattedTextField customerIdTextField) {
 	    this.dialog = dialog;
 	    this.customerIdTextField = customerIdTextField;
@@ -56,7 +59,7 @@ public final class UrlyBirdPresenter {
 	}
 
 	private boolean isCustomerIdComplete() {
-	    return !customerIdTextField.getText().trim().equals("");
+	    return customerIdTextField.getText().trim().matches("\\d{8}");
 	}
     }
 
@@ -396,25 +399,27 @@ public final class UrlyBirdPresenter {
 		sizeTextField.setText(tableModel
 			.getRoomSizeAtIndex(selectedModelRow));
 
-		MaskFormatter numericFormatter = null;
-		try {
-		    numericFormatter = new MaskFormatter("########");
-		} catch (final ParseException parseException) {
-		    throw new RuntimeException(parseException);
-		}
-
 		final JFormattedTextField customerIdTextField1 = dialog
 			.getCustomerIdTextField1();
-		customerIdTextField1
-			.setFormatterFactory(new DefaultFormatterFactory(
-				numericFormatter));
+		customerIdTextField1.setDocument(new PlainDocument() {
 
-		final ToggleBookButton toggleBookButton = new ToggleBookButton(
+		    @Override
+		    public void insertString(final int offs, final String str,
+			    final AttributeSet a) throws BadLocationException {
+			if (offs <= 7 && str.matches("\\d")) {
+			    super.insertString(offs, str, a);
+			}
+		    }
+
+		});
+
+		final ToggleBookButtonListener toggleBookButtonListener = new ToggleBookButtonListener(
 			dialog, customerIdTextField1);
 
 		customerIdTextField1.getDocument().addDocumentListener(
-			toggleBookButton);
+			toggleBookButtonListener);
 
+		dialog.getBookButton().setEnabled(false);
 		dialog.getBookButton().addActionListener(new ActionListener() {
 
 		    @Override
@@ -441,6 +446,9 @@ public final class UrlyBirdPresenter {
 			}
 		    }
 		});
+
+		dialog.getDiscardButton().addActionListener(
+			new ExitDialog(dialog));
 
 		dialog.setVisible(true);
 		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
