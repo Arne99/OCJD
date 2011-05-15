@@ -1,31 +1,49 @@
 package suncertify.domain;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-
 import suncertify.common.Money;
 import suncertify.common.RoomOffer;
+import suncertify.common.RoomOfferService;
 
-public final class UrlyBirdRoomOffer implements Serializable, RoomOffer {
+/**
+ * Server side representation of an {@link RoomOffer}. Immutable value class
+ * that could be transfered to the client. Every <code>UrlyBirdRoomOffer</code>
+ * could be created by the {@link RoomOfferFactory} and stored and loaded from
+ * the database with an {@link RoomOfferDao}. The business logic to work with
+ * <code>UrlyBirdRoomOffers</code> is located in the {@link RoomOfferService}.
+ * 
+ * 
+ * @author arnelandwehr
+ * 
+ */
+final class UrlyBirdRoomOffer implements Serializable, RoomOffer {
 
+    /** the SUID. */
     private static final long serialVersionUID = 6482035761421384445L;
 
+    /** the name of the hotel to this RoomOffer. */
     private final String hotel;
 
+    /** the name of the city where this RoomOffer is located. */
     private final String city;
 
+    /** the room size. */
     private final int roomSize;
 
+    /** if smoking is allowed in this room. */
     private final boolean smokingAllowed;
 
+    /** the price of this room. */
     private final Money price;
 
+    /** the date at which the room is bookable. */
     private final Date bookableDate;
 
+    /** the id of the customer who booked this room. */
     private final String customerId;
 
+    /** the identifier of this {@link RoomOffer}. */
     private final int index;
 
     @Override
@@ -68,7 +86,29 @@ public final class UrlyBirdRoomOffer implements Serializable, RoomOffer {
 	return index;
     }
 
-    public UrlyBirdRoomOffer(final String hotel, final String city,
+    /**
+     * Constructs a new <code>UrlyBirdRoomOffer</code>.
+     * 
+     * @param hotel
+     *            the name of the hotel, must not be <code>null</code>.
+     * @param city
+     *            the city of the hotel, must not be <code>null</code>.
+     * @param roomSize
+     *            the size of the room, must be positive.
+     * @param smokingAllowed
+     *            if smoking is allowed in this room.
+     * @param price
+     *            the price of this room, must not be <code>null</code>.
+     * @param bookableDate
+     *            the date at which this room is bookable, must not be
+     *            <code>null</code>.
+     * @param customerId
+     *            the id of the customer who booked this room, could be
+     *            <code>null</code>.
+     * @param index
+     *            the unique id of this <code>RoomOffer</code>.
+     */
+    UrlyBirdRoomOffer(final String hotel, final String city,
 	    final int roomSize, final boolean smokingAllowed,
 	    final Money price, final Date bookableDate,
 	    final String customerId, final int index) {
