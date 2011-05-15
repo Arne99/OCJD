@@ -16,12 +16,12 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import suncertify.admin.gui.UrlyBirdProperties;
-import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
 import suncertify.admin.service.ServerConfiguration;
 import suncertify.client.UrlyBirdPresenter.ToggleButtonWhenTextChanges;
 import suncertify.common.RoomOfferService;
 import suncertify.common.Services;
+import suncertify.common.UrlyBirdProperties;
+import suncertify.common.UrlyBirdProperties.PropertyName;
 
 public class ServerConnectionPresenter implements ConnectionPresenter {
 

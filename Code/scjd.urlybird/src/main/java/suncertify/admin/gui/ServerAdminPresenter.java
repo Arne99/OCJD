@@ -17,10 +17,11 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 
-import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
 import suncertify.admin.service.AdministrationService;
 import suncertify.admin.service.DatabaseConfiguration;
 import suncertify.admin.service.ServerConfiguration;
+import suncertify.common.UrlyBirdProperties;
+import suncertify.common.UrlyBirdProperties.PropertyName;
 
 public final class ServerAdminPresenter {
 

@@ -6,20 +6,17 @@ import javax.swing.JFrame;
 
 import suncertify.admin.gui.ServerAdminGui;
 import suncertify.admin.gui.ServerAdminPresenter;
-import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.admin.service.AdministrationService;
-import suncertify.admin.service.DatabaseConfiguration;
 import suncertify.client.DatabaseConnectionPanel;
 import suncertify.client.DatabaseConnectionPresenter;
 import suncertify.client.ServerConnectionPresenter;
 import suncertify.client.UrlyBirdPresenter;
 import suncertify.client.UrlyBirdView;
 import suncertify.common.RoomOfferService;
-import suncertify.db.DB;
+import suncertify.common.UrlyBirdProperties;
 import suncertify.db.DatabaseService;
-import suncertify.domain.UrlyBirdRoomOfferService;
 
-public class ApplicationStarter {
+class ApplicationStarter {
 
     private static final String STAND_ALONE_SERVER = "server";
     private static final String STAND_ALONE_CLIENT = "alone";

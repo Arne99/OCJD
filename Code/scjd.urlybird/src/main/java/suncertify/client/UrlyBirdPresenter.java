@@ -25,11 +25,11 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.PlainDocument;
 
-import suncertify.admin.gui.UrlyBirdProperties;
 import suncertify.common.BookRoomCommand;
 import suncertify.common.FindRoomCommand;
 import suncertify.common.RoomOffer;
 import suncertify.common.RoomOfferService;
+import suncertify.common.UrlyBirdProperties;
 
 public final class UrlyBirdPresenter {
 

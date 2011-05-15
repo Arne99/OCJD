@@ -14,10 +14,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import suncertify.admin.gui.UrlyBirdProperties;
-import suncertify.admin.gui.UrlyBirdProperties.PropertyName;
 import suncertify.admin.service.DatabaseConfiguration;
 import suncertify.common.RoomOfferService;
+import suncertify.common.UrlyBirdProperties;
+import suncertify.common.UrlyBirdProperties.PropertyName;
 import suncertify.datafile.DataFileService;
 import suncertify.datafile.UnsupportedDataFileFormatException;
 import suncertify.db.DB;
