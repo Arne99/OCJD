@@ -8,6 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * 
+ * @author arnelandwehr
+ * 
+ */
 public class UrlyBirdProperties {
 
     private static UrlyBirdProperties INSTANCE = new UrlyBirdProperties();

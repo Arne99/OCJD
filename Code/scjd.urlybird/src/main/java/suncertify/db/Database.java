@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Implementation of the {@link DB} interface, that abstract the format of the
@@ -16,6 +17,9 @@ import java.util.Set;
  * 
  */
 public final class Database implements DB {
+
+    /** exception logger, global is sufficient here. */
+    private final Logger logger = Logger.getLogger("global");
 
     /** the handler operates with the real database in the background. */
     private final DatabaseHandler handler;
@@ -46,7 +50,9 @@ public final class Database implements DB {
 	try {
 	    record = handler.readRecord(recNo);
 	} catch (final IOException e) {
-	    throw new RecordNotFoundException("", e);
+	    throw new RecordNotFoundException(
+		    "The database does not contain any record for the given index: "
+			    + recNo, e);
 	}
 	if (record.isValid()) {
 	    final List<String> allBusinessValues = record
@@ -55,7 +61,9 @@ public final class Database implements DB {
 		    .size()]);
 	}
 
-	throw new RecordNotFoundException("");
+	throw new RecordNotFoundException(
+		"The database does not contain any record for the given index: "
+			+ recNo);
     }
 
     @Override
@@ -68,7 +76,9 @@ public final class Database implements DB {
 	try {
 	    handler.writeRecord(Arrays.asList(data), recNo);
 	} catch (final IOException e) {
-	    throw new RecordNotFoundException("", e);
+	    throw new RecordNotFoundException(
+		    "The database does not contain any record for the given index: "
+			    + recNo, e);
 	}
     }
 
@@ -81,8 +91,12 @@ public final class Database implements DB {
 	try {
 	    handler.deleteRecord(recNo);
 	} catch (final IOException e) {
-	    e.printStackTrace();
-	    throw new RecordNotFoundException("", e);
+	    // transforms the IOException in a RecordNotFoundException to
+	    // fulfill the interface.
+	    logger.throwing(getClass().getName(), "delete", e);
+	    throw new RecordNotFoundException(
+		    "The database could not obtain any record for the given index: "
+			    + recNo + " because of: " + e.getMessage(), e);
 	}
     }
 
@@ -91,12 +105,17 @@ public final class Database implements DB {
 
 	Set<Record> records = null;
 	try {
-	    records = handler.findMatchingRecords(new NullAlwaysMatchesAllValuesInValidRecords(Arrays
-		    .asList(criteria)));
+	    records = handler
+		    .findMatchingRecords(new NullAlwaysMatchesAllValuesInValidRecords(
+			    Arrays.asList(criteria)));
 	} catch (final IOException e) {
+	    logger.throwing(getClass().getName(), "find", e);
 	    // transforms the checked IO exception in a runtime exception
 	    // to fulfill the interface
-	    throw new DatabaseException(e);
+	    throw new DatabaseException(
+		    "The database could not find any record for the given criteria: "
+			    + Arrays.toString(criteria) + " because of: "
+			    + e.getMessage(), e);
 	}
 
 	final int[] recNumbers = new int[records.size()];
@@ -121,9 +140,13 @@ public final class Database implements DB {
 		handler.writeRecord(Arrays.asList(data), emptyIndex);
 		return emptyIndex;
 	    } catch (final IOException e) {
+		logger.throwing(getClass().getName(), "create", e);
 		// transforms the checked IO exception in a runtime exception
 		// to fulfill the interface
-		throw new DatabaseException(e);
+		throw new DatabaseException(
+			"The database could not create any record with the given values: "
+				+ Arrays.toString(data) + "because of: "
+				+ e.getMessage(), e);
 	    }
 	}
     }

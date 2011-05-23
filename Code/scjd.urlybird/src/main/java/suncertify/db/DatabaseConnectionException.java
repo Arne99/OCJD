@@ -5,6 +5,7 @@ package suncertify.db;
  * operation to a database.
  * 
  * @author arnelandwehr
+ * 
  * @see DatabaseService
  */
 public final class DatabaseConnectionException extends Exception {

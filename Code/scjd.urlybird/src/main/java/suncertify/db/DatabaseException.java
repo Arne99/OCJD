@@ -20,11 +20,14 @@ public final class DatabaseException extends RuntimeException {
      * Constructs a new wrapper <code>DatabaseException</code> for the given
      * nested {@link IOException}.
      * 
+     * @param message
+     *            the exception message
+     * 
      * @param ioException
      *            the nested <code>IOException</code>, must not be
      *            <code>null</code>.
      */
-    public DatabaseException(final IOException ioException) {
+    public DatabaseException(final String message, final IOException ioException) {
 	super(ioException);
     }
 

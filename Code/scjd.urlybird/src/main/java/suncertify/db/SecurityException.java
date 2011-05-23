@@ -19,7 +19,16 @@ public final class SecurityException extends Exception {
      * Constructs a new <code>SecurityException</code>.
      */
     public SecurityException() {
-	super();
+	this("");
     }
 
+    /**
+     * Construct a new <code>SecurityException</code>.
+     * 
+     * @param message
+     *            the exception message.
+     */
+    public SecurityException(final String message) {
+	super(message);
+    }
 }

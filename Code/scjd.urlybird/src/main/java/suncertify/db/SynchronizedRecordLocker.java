@@ -2,6 +2,7 @@ package suncertify.db;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * A {@link RecordLocker} implementation for an multi-threaded environment which
@@ -14,6 +15,9 @@ import java.util.Map;
  * 
  */
 class SynchronizedRecordLocker implements RecordLocker {
+
+    /** exception logger, global is sufficient here. */
+    private final Logger logger = Logger.getLogger("global");
 
     /** the singleton instance. */
     private static final SynchronizedRecordLocker INSTANCE = new SynchronizedRecordLocker(
@@ -54,7 +58,8 @@ class SynchronizedRecordLocker implements RecordLocker {
 	    throws SecurityException {
 
 	if (isRecordLockedByAnOtherThread(index, id)) {
-	    throw new SecurityException();
+	    throw new SecurityException("The record with the index: " + index
+		    + " is owned by an other owner than: " + id);
 	}
     }
 
@@ -67,7 +72,7 @@ class SynchronizedRecordLocker implements RecordLocker {
 		try {
 		    mutex.wait();
 		} catch (final InterruptedException e) {
-		    e.printStackTrace();
+		    logger.throwing(getClass().getName(), "lockRecord", e);
 		}
 	    }
 	    lockTable.put(index, newOwnerId);
