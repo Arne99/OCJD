@@ -29,7 +29,7 @@ public final class Range {
     public Range(final int start, final int end) {
 	super();
 
-	checkMustBeGreaterThan(end, start);
+	checkMustBeGreaterOrEqualThan(end, start);
 	this.start = start;
 	this.end = end;
     }

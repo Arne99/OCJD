@@ -1,8 +1,5 @@
 package suncertify.common;
 
-import java.io.Serializable;
-
-
 public final class BookRoomCommand implements Command {
 
     private static final long serialVersionUID = -225024283571144227L;

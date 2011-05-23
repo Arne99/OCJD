@@ -88,7 +88,7 @@ public final class DesignByContract {
      * @param array
      *            the array to check.
      * @param lenght
-     *            the requiered length.
+     *            the required length.
      */
     public static void checkArrayHasLength(final byte[] array, final int lenght) {
 	if (array.length != lenght) {
@@ -105,7 +105,7 @@ public final class DesignByContract {
      * @param collection
      *            the collection to check.
      * @param size
-     *            the requiered size.
+     *            the required size.
      */
     public static void checkCollectionHasSize(final Collection<?> collection,
 	    final int size) {
@@ -118,16 +118,17 @@ public final class DesignByContract {
 
     /**
      * Throws an {@link IllegalArgumentException} if the first value is not
-     * greater than the second value.
+     * greater or equal to the second value.
      * 
      * @param greater
-     *            the value that should be greater
+     *            the value that should be greater or equal
      * @param than
-     *            the value that should be smaller
+     *            the value that should be smaller or equal
      */
-    public static void checkMustBeGreaterThan(final int greater, final int than) {
+    public static void checkMustBeGreaterOrEqualThan(final int greater,
+	    final int than) {
 
-	if (greater <= than) {
+	if (greater < than) {
 	    throw new IllegalArgumentException(" the first value: " + greater
 		    + " is not greater than the second: " + than);
 	}
