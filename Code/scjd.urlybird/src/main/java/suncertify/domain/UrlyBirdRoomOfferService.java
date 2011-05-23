@@ -69,7 +69,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	    }
 
 	    final UrlyBirdRoomOffer bookedRoomOffer = builder
-		    .createRoomOfferWithNewCustomer(clientRoomToBook,
+		    .copyRoomOfferWithNewCustomer(clientRoomToBook,
 			    command.getCustomerId());
 	    roomOfferDao.update(bookedRoomOffer, lock);
 	    return bookedRoomOffer;
@@ -88,7 +88,7 @@ public class UrlyBirdRoomOfferService implements RoomOfferService {
 	checkNotNull(command, "command");
 
 	final List<String> values = command.getValues();
-	final Date date = builder.getDateFromValues(values);
+	final Date date = builder.getBookableDateFromValues(values);
 	if (!isOccupancyIn48Hours.isSatisfiedBy(date)) {
 	    throw new Exception("");
 	}

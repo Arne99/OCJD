@@ -91,7 +91,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 		validRoomOffer, customerId);
 
 	when(isRoomBookable.isSatisfiedBy(validRoomOffer)).thenReturn(true);
-	when(builder.createRoomOfferWithNewCustomer(validRoomOffer, customerId))
+	when(builder.copyRoomOfferWithNewCustomer(validRoomOffer, customerId))
 		.thenReturn(expectedRoomOffer);
 	when(dao.read(bookRoomCommand.getRoomToBook().getIndex())).thenReturn(
 		validRoomOffer);
