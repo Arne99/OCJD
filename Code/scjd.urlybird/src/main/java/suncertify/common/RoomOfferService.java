@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Interface between the client and the server for all business methods that
  * belongs to {@link RoomOffer}s. The implementation of this interface is on the
- * server side and could be queried for by the client with the {@link Services}
+ * server side and could be queried for by the client with the {@link ServicProvider}
  * interface.
  * 
  * Every method in this interface takes an specified {@link Command} object as

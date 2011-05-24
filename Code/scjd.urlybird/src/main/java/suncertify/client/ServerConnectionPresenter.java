@@ -19,7 +19,7 @@ import javax.swing.text.PlainDocument;
 import suncertify.admin.service.ServerConfiguration;
 import suncertify.client.UrlyBirdPresenter.ToggleButtonWhenTextChanges;
 import suncertify.common.RoomOfferService;
-import suncertify.common.Services;
+import suncertify.common.ServicProvider;
 import suncertify.common.UrlyBirdProperties;
 import suncertify.common.UrlyBirdProperties.PropertyName;
 
@@ -105,7 +105,7 @@ public class ServerConnectionPresenter implements ConnectionPresenter {
 			final ServerConfiguration serverConfiguration = new ServerConfiguration(
 				port, host);
 			try {
-			    final Services services = (Services) Naming
+			    final ServicProvider services = (ServicProvider) Naming
 				    .lookup(serverConfiguration
 					    .getHostNameWithPort()
 					    + "/"

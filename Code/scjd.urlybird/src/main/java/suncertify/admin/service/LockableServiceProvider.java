@@ -4,12 +4,18 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import suncertify.common.RoomOfferService;
-import suncertify.common.Services;
+import suncertify.common.ServicProvider;
 import suncertify.db.DB;
 import suncertify.domain.UrlyBirdRoomOfferService;
 
-public final class LockableServiceProvider extends UnicastRemoteObject implements
-	Services {
+/**
+ * 
+ * 
+ * @author arnelandwehr
+ * 
+ */
+public final class LockableServiceProvider extends UnicastRemoteObject
+	implements ServicProvider {
 
     private static volatile LockableServiceProvider INSTANCE;
 

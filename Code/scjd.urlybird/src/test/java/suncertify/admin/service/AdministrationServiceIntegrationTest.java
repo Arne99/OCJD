@@ -27,7 +27,7 @@ import suncertify.common.DeleteRoomCommand;
 import suncertify.common.FindRoomCommand;
 import suncertify.common.RoomOffer;
 import suncertify.common.RoomOfferService;
-import suncertify.common.Services;
+import suncertify.common.ServicProvider;
 import suncertify.common.UpdateRoomCommand;
 import suncertify.db.DatabaseConnectionException;
 
@@ -75,7 +75,7 @@ public final class AdministrationServiceIntegrationTest {
 
 	service.startServer(serverConfig, dataConfig);
 
-	final Services services = (Services) Naming.lookup(serverConfig
+	final ServicProvider services = (ServicProvider) Naming.lookup(serverConfig
 		.getClientServiceName());
 
 	roomOfferService = services.getRoomOfferService();
