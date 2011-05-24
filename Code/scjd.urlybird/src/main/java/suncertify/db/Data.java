@@ -52,7 +52,9 @@ public final class Data implements DB {
      * must be provided.
      * 
      * @throws IOException
+     *             if an io problem occurs.
      * @throws UnsupportedDataFileFormatException
+     *             if the data file is not of any supported format.
      */
     public Data() throws IOException, UnsupportedDataFileFormatException {
 
