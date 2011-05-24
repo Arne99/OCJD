@@ -218,16 +218,16 @@ public final class UrlyBirdRoomOfferService implements RoomOfferService {
 	    if (command.isAnd()) {
 		return new ArrayList<RoomOffer>(roomOfferDao.find(Arrays
 			.asList(command.getHotel(), command.getLocation(),
-				null, null, null, null, null, null)));
+				null, null, null, null, null)));
 
 	    } else {
 		final ArrayList<UrlyBirdRoomOffer> matchingHotels = new ArrayList<UrlyBirdRoomOffer>(
 			roomOfferDao.find(Arrays.asList(command.getHotel(),
-				null, null, null, null, null, null, null)));
+				null, null, null, null, null, null)));
 		final ArrayList<UrlyBirdRoomOffer> matchingLocations = new ArrayList<UrlyBirdRoomOffer>(
 			roomOfferDao.find(Arrays.asList(null,
 				command.getLocation(), null, null, null, null,
-				null, null)));
+				null)));
 
 		final Set<UrlyBirdRoomOffer> union = new HashSet<UrlyBirdRoomOffer>();
 		union.addAll(matchingHotels);

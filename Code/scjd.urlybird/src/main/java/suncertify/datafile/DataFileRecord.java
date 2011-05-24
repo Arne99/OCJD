@@ -74,7 +74,6 @@ abstract class DataFileRecord implements Record {
 	    }
 
 	}
-	businessValues.add("" + index);
 	return Collections.unmodifiableList(businessValues);
     }
 

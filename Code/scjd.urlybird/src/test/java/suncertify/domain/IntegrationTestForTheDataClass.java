@@ -10,7 +10,7 @@ import com.google.common.io.Files;
 import suncertify.datafile.DataFileService;
 import suncertify.datafile.UnsupportedDataFileFormatException;
 import suncertify.db.DB;
-import suncertify.db.Database;
+import suncertify.db.Data;
 import suncertify.db.DatabaseConnectionException;
 import suncertify.db.DatabaseService;
 

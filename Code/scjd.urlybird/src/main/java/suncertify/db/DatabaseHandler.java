@@ -14,7 +14,7 @@ import suncertify.util.Specification;
  * 
  * To change the database for example from a flat file store to an SQL database
  * like MYSQL you have just to implement the needed {@link DatabaseHandler}. The
- * {@link DB} and {@link Database} classes must not be touched.
+ * {@link DB} and {@link Data} classes must not be touched.
  * 
  * @author arnelandwehr
  * 

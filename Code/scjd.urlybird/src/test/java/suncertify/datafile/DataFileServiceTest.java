@@ -79,7 +79,7 @@ public final class DataFileServiceTest {
 	final Record record = handler.readRecord(0);
 
 	final List<String> expectedReccord = Lists.newArrayList("Palace",
-		"Smallville", "2", "Y", "$150.00", "2005/07/27", "", "0");
+		"Smallville", "2", "Y", "$150.00", "2005/07/27", "");
 
 	assertThat(record.getAllBusinessValues(), is(equalTo(expectedReccord)));
     }
@@ -155,7 +155,7 @@ public final class DataFileServiceTest {
 	final Record record = handler.readRecord(9);
 
 	final List<String> expectedReccord = Lists.newArrayList("Dew Drop Inn",
-		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "", "9");
+		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "");
 	assertThat(record.getAllBusinessValues(), is(equalTo(expectedReccord)));
     }
 
@@ -239,7 +239,7 @@ public final class DataFileServiceTest {
 
 	final Record readRecord = handler.readRecord(100);
 	final List<String> expectedRecord = Lists.newArrayList("TEST",
-		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "", "100");
+		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "");
 	assertThat(readRecord.getAllBusinessValues(),
 		is(equalTo(expectedRecord)));
     }

@@ -57,8 +57,8 @@ public final class UrlyBirdRoomOfferServiceTest {
 
     /** The valid room offer. */
     private final UrlyBirdRoomOffer validRoomOffer = new UrlyBirdRoomOffer(
-	    "Hilton", "Hamburg", 2, false, Money.createDollar("12"), new Date(), "",
-	    12);
+	    "Hilton", "Hamburg", 2, false, Money.createDollar("12"),
+	    new Date(), "", 12);
 
     /** The valid room offer values. */
     private final String[] validRoomOfferValues = new String[] { "Hilton",
@@ -299,7 +299,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 	    throws Exception {
 
 	final ArrayList<String> criteria = Lists.newArrayList(null, null, null,
-		null, null, null, null, null);
+		null, null, null, null);
 	final FindRoomCommand command = new FindRoomCommand(criteria.get(0),
 		criteria.get(1), true);
 
@@ -313,7 +313,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 	final List<RoomOffer> foundRooms = roomOfferService
 		.findRoomOffer(command);
 
-	assertEquals(foundRooms, result);
+	assertEquals(result, foundRooms);
     }
 
     /**
@@ -328,7 +328,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 	    throws Exception {
 
 	final ArrayList<String> criteria = Lists.newArrayList(null, null, null,
-		null, null, null, null, null);
+		null, null, null, null);
 	final FindRoomCommand command = new FindRoomCommand(criteria.get(0),
 		criteria.get(1), true);
 

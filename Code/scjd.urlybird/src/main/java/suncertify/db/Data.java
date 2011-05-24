@@ -1,11 +1,15 @@
 package suncertify.db;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import suncertify.datafile.DataFileService;
+import suncertify.datafile.UnsupportedDataFileFormatException;
 
 /**
  * Implementation of the {@link DB} interface, that abstract the format of the
@@ -16,7 +20,7 @@ import java.util.logging.Logger;
  * @author arnelandwehr
  * 
  */
-public final class Database implements DB {
+public final class Data implements DB {
 
     /** exception logger, global is sufficient here. */
     private final Logger logger = Logger.getLogger("global");
@@ -37,10 +41,23 @@ public final class Database implements DB {
      *            the locker that locks single records for write operations,
      *            must not be <code>null</code>.
      */
-    Database(final DatabaseHandler handler, final RecordLocker locker) {
+    Data(final DatabaseHandler handler, final RecordLocker locker) {
 	super();
 	this.handler = handler;
 	this.locker = locker;
+    }
+
+    /**
+     * Public constructor, because it was not clear if a default constructor
+     * must be provided.
+     * 
+     * @throws IOException
+     * @throws UnsupportedDataFileFormatException
+     */
+    public Data() throws IOException, UnsupportedDataFileFormatException {
+
+	this(DataFileService.instance().getDatabaseHandler(
+		new File("./db-1x1.db")), SynchronizedRecordLocker.instance());
     }
 
     @Override

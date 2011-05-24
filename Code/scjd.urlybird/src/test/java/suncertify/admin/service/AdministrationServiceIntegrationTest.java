@@ -18,9 +18,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import suncertify.admin.service.AdministrationService;
-import suncertify.admin.service.DatabaseConfiguration;
-import suncertify.admin.service.ServerConfiguration;
 import suncertify.common.BookRoomCommand;
 import suncertify.common.CreateRoomCommand;
 import suncertify.common.DeleteRoomCommand;
@@ -75,8 +72,8 @@ public final class AdministrationServiceIntegrationTest {
 
 	service.startServer(serverConfig, dataConfig);
 
-	final ServicProvider services = (ServicProvider) Naming.lookup(serverConfig
-		.getClientServiceName());
+	final ServicProvider services = (ServicProvider) Naming
+		.lookup(serverConfig.getClientServiceName());
 
 	roomOfferService = services.getRoomOfferService();
     }
@@ -101,7 +98,7 @@ public final class AdministrationServiceIntegrationTest {
     }
 
     /**
-     * Should start an server an binds the client services at the given adresse
+     * Should start an server an binds the client services at the given address
      * so that the client can find rooms.
      * 
      * @throws Exception

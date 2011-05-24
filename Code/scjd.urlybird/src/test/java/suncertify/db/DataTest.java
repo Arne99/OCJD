@@ -21,7 +21,7 @@ import com.google.common.io.Files;
 /**
  * The Class DatabaseTest.
  */
-public final class DatabaseTest {
+public final class DataTest {
 
     /** The Constant PATH. */
     private static final String PATH = "/Users/arnelandwehr/Coden/Sun Certified Java Developer/Project/Database/db-1x1.db";
@@ -39,7 +39,7 @@ public final class DatabaseTest {
     private SynchronizedRecordLocker locker;
 
     /** The db. */
-    private Database db;
+    private Data db;
 
     /**
      * Sets the up.
@@ -57,7 +57,7 @@ public final class DatabaseTest {
 
 	databaseHandler = DataFileService.instance().getDatabaseHandler(testDb);
 	locker = new SynchronizedRecordLocker(new HashMap<Integer, Long>());
-	db = new Database(databaseHandler, locker);
+	db = new Data(databaseHandler, locker);
 
     }
 
@@ -106,6 +106,15 @@ public final class DatabaseTest {
 
 	excecuteConcurrent(readFirstRecord);
 	assertFalse(exceptionHappened);
+    }
+
+    @Test
+    public void test() throws IOException, UnsupportedDataFileFormatException,
+	    RecordNotFoundException {
+	final Data data = new Data();
+	final String[] read = data.read(1);
+	System.out.println(Arrays.toString(read));
+
     }
 
     /**

@@ -21,4 +21,13 @@ public final class DuplicateKeyException extends Exception {
 	super();
     }
 
+    /**
+     * Construct a new {@link DuplicateKeyException}.
+     * 
+     * @param message
+     *            the exception message.
+     */
+    public DuplicateKeyException(final String message) {
+	super(message);
+    }
 }
