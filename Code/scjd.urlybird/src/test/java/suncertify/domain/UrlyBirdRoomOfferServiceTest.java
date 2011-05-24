@@ -57,7 +57,7 @@ public final class UrlyBirdRoomOfferServiceTest {
 
     /** The valid room offer. */
     private final UrlyBirdRoomOffer validRoomOffer = new UrlyBirdRoomOffer(
-	    "Hilton", "Hamburg", 2, false, Money.create("12"), new Date(), "",
+	    "Hilton", "Hamburg", 2, false, Money.createDollar("12"), new Date(), "",
 	    12);
 
     /** The valid room offer values. */
