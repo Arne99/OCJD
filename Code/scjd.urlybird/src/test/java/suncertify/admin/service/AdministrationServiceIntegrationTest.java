@@ -73,7 +73,7 @@ public final class AdministrationServiceIntegrationTest {
 	final DatabaseConfiguration dataConfig = new DatabaseConfiguration(
 		anyFile);
 
-	service.startStandAloneServer(serverConfig, dataConfig);
+	service.startServer(serverConfig, dataConfig);
 
 	final Services services = (Services) Naming.lookup(serverConfig
 		.getClientServiceName());

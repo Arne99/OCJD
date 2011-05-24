@@ -8,20 +8,20 @@ import suncertify.common.Services;
 import suncertify.db.DB;
 import suncertify.domain.UrlyBirdRoomOfferService;
 
-public final class ClientServicesImpl extends UnicastRemoteObject implements
+public final class LockableServiceProvider extends UnicastRemoteObject implements
 	Services {
 
-    private static volatile ClientServicesImpl INSTANCE;
+    private static volatile LockableServiceProvider INSTANCE;
 
-    public static ClientServicesImpl instance() throws RemoteException {
+    public static LockableServiceProvider instance() throws RemoteException {
 
 	if (INSTANCE == null) {
-	    INSTANCE = new ClientServicesImpl();
+	    INSTANCE = new LockableServiceProvider();
 	}
 	return INSTANCE;
     }
 
-    private ClientServicesImpl() throws RemoteException {
+    private LockableServiceProvider() throws RemoteException {
 	super();
     }
 

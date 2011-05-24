@@ -15,15 +15,52 @@ import suncertify.db.DatabaseConnectionException;
 import suncertify.db.DatabaseHandler;
 import suncertify.db.DatabaseService;
 
+/**
+ * The <code>AdministrationService</code> provides methods to administrate the
+ * server. The server could be started and stopped.
+ * 
+ * @author arnelandwehr
+ * 
+ */
 public final class AdministrationService {
 
+    /**
+     * States o the server.
+     * 
+     * @author arnelandwehr
+     * 
+     */
     private enum RunningState {
-	RUNNING, RUNNING_EMBEDDED, STOPPED
+	/**
+	 * the server is actually running.
+	 */
+	RUNNING,
+
+	/**
+	 * the server is actually not running.
+	 */
+	STOPPED
     }
 
+    /** the actual state of the server. Initial is stopped. */
     private RunningState state = RunningState.STOPPED;
 
-    public void startStandAloneServer(final ServerConfiguration serverConfig,
+    /**
+     * Starts the server with the given configuration.
+     * 
+     * @param serverConfig
+     *            the configuration for the server, like port and address.
+     * @param dataConfig
+     *            the configuration for the database the server should use.
+     * @throws DatabaseConnectionException
+     *             if the server cannot connect to the database.
+     * @throws RemoteException
+     *             if an remote problem occurs.
+     * @throws MalformedURLException
+     *             if the by the server configuration transmitted url is not
+     *             valid.
+     */
+    public void startServer(final ServerConfiguration serverConfig,
 	    final DatabaseConfiguration dataConfig)
 	    throws DatabaseConnectionException, RemoteException,
 	    MalformedURLException {
@@ -36,7 +73,7 @@ public final class AdministrationService {
 	ServerState.instance().setDatabase(db);
 	ServerState.instance().setConfig(serverConfig);
 
-	// Bug 4457683
+	// JVM Bug 4457683
 	try {
 	    final Registry registry = LocateRegistry.getRegistry(serverConfig
 		    .getPort());
@@ -47,11 +84,20 @@ public final class AdministrationService {
 	Naming.rebind(
 		serverConfig.getHostNameWithPort() + "/"
 			+ serverConfig.getClientServiceName(),
-		ClientServicesImpl.instance());
+		LockableServiceProvider.instance());
 	state = RunningState.RUNNING;
-	ClientServicesImpl.instance().enableServices();
+	LockableServiceProvider.instance().enableServices();
     }
 
+    /**
+     * Connects the server to the database.
+     * 
+     * @param dataConfig
+     *            the database connection configuration parameters
+     * @return the now connected database.
+     * @throws DatabaseConnectionException
+     *             if the server cannot connect to the database
+     */
     private DB connectToDatabase(final DatabaseConfiguration dataConfig)
 	    throws DatabaseConnectionException {
 
@@ -70,6 +116,17 @@ public final class AdministrationService {
 	return db;
     }
 
+    /**
+     * Stops a running server.
+     * 
+     * @throws RemoteException
+     *             if an remote problem occurs.
+     * @throws MalformedURLException
+     *             if the by the server configuration transmitted url is not
+     *             valid.
+     * @throws NotBoundException
+     *             if the server was not bound in the registry.
+     */
     public void stopServer() throws RemoteException, MalformedURLException,
 	    NotBoundException {
 
@@ -78,9 +135,14 @@ public final class AdministrationService {
 	Naming.unbind(config.getHostNameWithPort() + "/"
 		+ config.getClientServiceName());
 	state = RunningState.STOPPED;
-	ClientServicesImpl.instance().disableServices();
+	LockableServiceProvider.instance().disableServices();
     }
 
+    /**
+     * Indicates if the server is actually running.
+     * 
+     * @return <code>true</code> if the server is running.
+     */
     public boolean isServerRunning() {
 	return !state.equals(RunningState.STOPPED);
     }

@@ -164,7 +164,7 @@ public final class ServerAdminPresenter {
 		final DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration(
 			new File(view.getDbPathTextField().getText()));
 		try {
-		    service.startStandAloneServer(serverConfiguration,
+		    service.startServer(serverConfiguration,
 			    databaseConfiguration);
 		    view.getDbPathButton().setEnabled(false);
 		    view.getHostConnectionTextField().setEnabled(false);
