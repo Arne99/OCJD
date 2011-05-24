@@ -10,41 +10,115 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-public class ServerAdminGui {
+/**
+ * Gui for the server administraion. The gui is initialized with {@link #init()}
+ * and visualized with {@link #show()}. It supports the configuration of:
+ * <ul>
+ * <li>the database</li>
+ * <li>the address under which the server is reachable</li>
+ * <li>the port under which the server is reachable</li>
+ * </ul>
+ * 
+ * @author arnelandwehr
+ * 
+ */
+public final class ServerAdminGui {
 
+    /**
+     * the SUID.
+     */
     private static final long serialVersionUID = 4762410272117483890L;
+
+    /**
+     * the main frame.
+     */
     private JFrame mainFrame;
+
+    /**
+     * the pane for the database configuration.
+     */
     private JPanel databasePanel;
+
+    /**
+     * the label "path".
+     */
     private JLabel databasePathLabel;
-    private JFormattedTextField dbPathTextField;
+
+    /**
+     * the text field where the user could specify the database path.
+     */
+    private JTextField dbPathTextField;
+
+    /**
+     * the button that opens the database path file chooser.
+     */
     private JButton dbPathButton;
+
+    /**
+     * the panel for the connection configuration.
+     */
     private JPanel connectionPanel;
+
+    /**
+     * the label "host".
+     */
     private JLabel hostLabel;
-    private JFormattedTextField hostConnectionTextField;
+
+    /**
+     * the text filed where the user could specify the connection address.
+     */
+    private JTextField hostConnectionTextField;
+
+    /**
+     * the label "port".
+     */
     private JLabel portLabel;
-    private JFormattedTextField portTextField;
+
+    /**
+     * the test field for the port.
+     */
+    private JTextField portTextField;
+
+    /**
+     * button to start the server.
+     */
     private JButton startServerButton;
+
+    /**
+     * label "server is".
+     */
     private JLabel serverIsLabel;
+
+    /**
+     * label that shows the server status.
+     */
     private JLabel serverStatusLabel;
+
+    /**
+     * file chooser for the database path.
+     */
     private JFileChooser dbPathChooser;
 
-    public void init() {
+    /**
+     * Initializes the gui.
+     */
+    void init() {
 
 	mainFrame = new JFrame();
 	databasePanel = new JPanel();
 	databasePathLabel = new JLabel();
-	dbPathTextField = new JFormattedTextField();
+	dbPathTextField = new JTextField();
 	dbPathButton = new JButton();
 	connectionPanel = new JPanel();
 	hostLabel = new JLabel();
-	hostConnectionTextField = new JFormattedTextField();
+	hostConnectionTextField = new JTextField();
 	portLabel = new JLabel();
-	portTextField = new JFormattedTextField();
+	portTextField = new JTextField();
 	startServerButton = new JButton();
 	serverIsLabel = new JLabel();
 	serverStatusLabel = new JLabel();
@@ -179,43 +253,82 @@ public class ServerAdminGui {
 
     }
 
-    public JFrame getMainFrame() {
+    /**
+     * Gets the main frame.
+     * 
+     * @return the main frame
+     */
+    JFrame getMainFrame() {
 	return mainFrame;
     }
 
-    public JFormattedTextField getDbPathTextField() {
+    /**
+     * Gets the db path text field.
+     * 
+     * @return the db path text field
+     */
+    JTextField getDbPathTextField() {
 	return dbPathTextField;
     }
 
-    public JButton getDbPathButton() {
+    /**
+     * Gets the db path button.
+     * 
+     * @return the db path button
+     */
+    JButton getDbPathButton() {
 	return dbPathButton;
     }
 
-    public JFormattedTextField getHostConnectionTextField() {
+    /**
+     * Gets the host connection text field.
+     * 
+     * @return the host connection text field
+     */
+    JTextField getHostConnectionTextField() {
 	return hostConnectionTextField;
     }
 
-    public JFormattedTextField getPortTextField() {
+    /**
+     * Gets the port text field.
+     * 
+     * @return the port text field
+     */
+    JTextField getPortTextField() {
 	return portTextField;
     }
 
-    public JButton getStartServerButton() {
+    /**
+     * Gets the start server button.
+     * 
+     * @return the start server button
+     */
+    JButton getStartServerButton() {
 	return startServerButton;
     }
 
-    public JLabel getServerStatusLabel() {
+    /**
+     * Gets the server status label.
+     * 
+     * @return the server status label
+     */
+    JLabel getServerStatusLabel() {
 	return serverStatusLabel;
     }
 
-    public JFileChooser getDbPathChooser() {
+    /**
+     * Gets the db path chooser.
+     * 
+     * @return the db path chooser
+     */
+    JFileChooser getDbPathChooser() {
 	return dbPathChooser;
     }
 
-    public static void main(final String[] args) {
-	new ServerAdminGui().init();
-    }
-
-    public void show() {
+    /**
+     * Shows the gui to the user.
+     */
+    void show() {
 	mainFrame.setVisible(true);
     }
 }
