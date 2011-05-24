@@ -93,7 +93,7 @@ public final class DataTest {
 			final String[] read = db.read(0);
 			if (!Arrays.equals(read, new String[] { "Palace",
 				"Smallville", "2", "Y", "$150.00",
-				"2005/07/27", "", "0" })) {
+				"2005/07/27", "" })) {
 			    exceptionHappened = true;
 			}
 			Thread.yield();
@@ -106,15 +106,6 @@ public final class DataTest {
 
 	excecuteConcurrent(readFirstRecord);
 	assertFalse(exceptionHappened);
-    }
-
-    @Test
-    public void test() throws IOException, UnsupportedDataFileFormatException,
-	    RecordNotFoundException {
-	final Data data = new Data();
-	final String[] read = data.read(1);
-	System.out.println(Arrays.toString(read));
-
     }
 
     /**
@@ -136,10 +127,10 @@ public final class DataTest {
 			final String[] read = db.read(10);
 			Thread.yield();
 			final int[] find = db.find(new String[] { read[0],
-				null, null, null, read[4], null, null, null });
+				null, null, null, read[4], null, null });
 			if (!Arrays.equals(read, new String[] { "Dew Drop Inn",
 				"Digitopolis", "4", "N", "$190.00",
-				"2005/09/17", "", "10" })
+				"2005/09/17", "" })
 				|| !Arrays.equals(find, new int[] { 10 })) {
 			    exceptionHappened = true;
 			}
@@ -180,7 +171,7 @@ public final class DataTest {
 			Thread.yield();
 			final String[] read = db.read(0);
 			if (!Arrays.equals(read, new String[] { "T", "T", "T",
-				"T", "T", "T", "T", "0" })) {
+				"T", "T", "T", "T" })) {
 			    exceptionHappened = true;
 			}
 		    } catch (final Exception e) {
