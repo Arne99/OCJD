@@ -12,16 +12,41 @@ import suncertify.common.RoomOffer;
 import suncertify.common.RoomOfferService;
 import suncertify.common.UpdateRoomCommand;
 
-class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
+/**
+ * Proxy object for an {@link RoomOfferService} that could lock the service and
+ * extends the service with remote functionality.
+ * 
+ * @author arnelandwehr
+ * 
+ */
+class LocableRemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
 	RoomOfferService {
 
+    /**
+     * the SUID.
+     */
     private static final long serialVersionUID = -1158034211648936653L;
 
+    /**
+     * the {@link RoomOfferService} delegate of this proxy.
+     */
     private final RoomOfferService delegate;
 
+    /**
+     * Indicates if the service is actually accessible or not, default is
+     * <code>true</code>.
+     */
     private static boolean accessible = true;
 
-    RemoteRoomOfferServiceProxy(final RoomOfferService delegate)
+    /**
+     * Construct a new {@link LocableRemoteRoomOfferServiceProxy}.
+     * 
+     * @param delegate
+     *            the {@link RoomOfferService} delegate.
+     * @throws RemoteException
+     *             if an remote problem occurs.
+     */
+    LocableRemoteRoomOfferServiceProxy(final RoomOfferService delegate)
 	    throws RemoteException {
 	super();
 	this.delegate = delegate;
@@ -35,9 +60,16 @@ class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
 	return delegate.createRoomOffer(command);
     }
 
+    /**
+     * Htrows an {@link Exception} if the serive is currently not available.
+     * 
+     * @throws Exception
+     *             if the server is currently not available.
+     */
     private void checkAccessibility() throws Exception {
 	if (!accessible) {
-	    throw new Exception("");
+	    throw new Exception(
+		    "The service is currently not available. Perhaps the server is not reachable.");
 	}
 
     }
@@ -66,10 +98,16 @@ class RemoteRoomOfferServiceProxy extends UnicastRemoteObject implements
 	return delegate.updateRoomOffer(command);
     }
 
+    /**
+     * Disables the service access.
+     */
     static void disableAccess() {
 	accessible = false;
     }
 
+    /**
+     * Enalbes the service access.
+     */
     static void enableAccess() {
 	accessible = true;
     }
