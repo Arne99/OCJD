@@ -163,34 +163,25 @@ public final class RoomTableModel extends AbstractTableModel {
 	final RoomOffer roomOffer = rooms.get(row);
 
 	switch (column) {
-	case 0: {
+	case 0:
 	    return roomOffer.getIndex();
-	}
-	case 1: {
+	case 1:
 	    return roomOffer.getHotel();
-	}
-	case 2: {
+	case 2:
 	    return roomOffer.getCity();
-	}
-	case 3: {
+	case 3:
 	    return roomOffer.getRoomSize();
-	}
-	case 4: {
+	case 4:
 	    return (roomOffer.isSmokingAllowed());
-	}
-	case 5: {
+	case 5:
 	    return roomOffer.getPrice();
-	}
-	case 6: {
+	case 6:
 	    return roomOffer.getBookableDate();
-	}
-	case 7: {
+	case 7:
 	    return roomOffer.getCustomerId();
-	}
-	default: {
+	default:
 	    assert false : "" + column + " is not spezified!";
 	    return null;
-	}
 	}
     }
 
