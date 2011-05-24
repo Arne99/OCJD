@@ -415,7 +415,7 @@ public final class BookDialog extends JDialog {
     }
 
     /**
-     * Getter for the main panel
+     * Getter for the main panel.
      * 
      * @return the main panel.
      */

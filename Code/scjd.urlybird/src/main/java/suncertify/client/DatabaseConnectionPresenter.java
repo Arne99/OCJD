@@ -26,7 +26,7 @@ import suncertify.db.DatabaseHandler;
 import suncertify.db.DatabaseService;
 import suncertify.domain.UrlyBirdRoomOfferService;
 
-public class DatabaseConnectionPresenter implements ConnectionPresenter {
+public class DatabaseConnectionPresenter implements RoomOfferServiceProvider {
 
     private RoomOfferService roomOfferService;
 
@@ -67,7 +67,7 @@ public class DatabaseConnectionPresenter implements ConnectionPresenter {
     }
 
     @Override
-    public final RoomOfferService startConnectionDialog(final JFrame frame,
+    public final RoomOfferService startRoomOfferServiceProviderDialog(final JFrame frame,
 	    final RoomOfferService service) {
 
 	this.roomOfferService = service;

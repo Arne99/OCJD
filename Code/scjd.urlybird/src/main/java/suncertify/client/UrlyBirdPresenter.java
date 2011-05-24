@@ -301,12 +301,12 @@ public final class UrlyBirdPresenter {
 
     private RoomTableModel tableModel;
 
-    private final ConnectionPresenter connectionPresenter;
+    private final RoomOfferServiceProvider connectionPresenter;
 
     public UrlyBirdPresenter(final UrlyBirdView view,
 	    final UrlyBirdProperties properties,
 	    final RoomOfferService service,
-	    final ConnectionPresenter connectionPresenter) {
+	    final RoomOfferServiceProvider connectionPresenter) {
 	this.view = view;
 	this.properties = properties;
 	this.service = service;
@@ -328,7 +328,7 @@ public final class UrlyBirdPresenter {
 
 	    @Override
 	    public void actionPerformed(final ActionEvent arg0) {
-		service = connectionPresenter.startConnectionDialog(
+		service = connectionPresenter.startRoomOfferServiceProviderDialog(
 			view.getMainFrame(), service);
 	    }
 	});
