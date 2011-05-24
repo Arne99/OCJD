@@ -5,6 +5,12 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Locale;
 
+/**
+ * 
+ * 
+ * @author arnelandwehr
+ * 
+ */
 public final class Money implements Serializable, Comparable<Money> {
 
     private static final long serialVersionUID = -579919526422533252L;
