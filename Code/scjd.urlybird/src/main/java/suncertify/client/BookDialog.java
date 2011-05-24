@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
@@ -12,38 +11,96 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import suncertify.common.RoomOffer;
 
-public class BookDialog extends JDialog {
+/**
+ * The <code>BookDialog</code> provides a view for the user to book a
+ * {@link RoomOffer}.
+ * 
+ * @author arnelandwehr
+ * 
+ */
+public final class BookDialog extends JDialog {
 
+    /**
+     * the SUID.
+     */
     private static final long serialVersionUID = 4243521563668095100L;
 
+    /** the button to book a room. */
     private JButton bookButton;
+
+    /** the label "book". */
     private JLabel bookRoomLabel;
-    private JFormattedTextField customerIdTextField1;
+
+    /** the customer id test field . */
+    private JFormattedTextField customerIdTextField;
+
+    /** the label "customer". */
     private JLabel customerLabel;
+
+    /** the label "date". */
     private JLabel dateLabel;
+
+    /** the date text field. */
     private JTextField dateTextField;
+
+    /** the button to discard the dialog . */
     private JButton discardButton;
+
+    /** the label "hotel". */
     private JLabel hotelLabel;
+
+    /** the hotel name text field. */
     private JTextField hotelTextField;
+
+    /** the label "id". */
     private JLabel idLabel;
+
+    /** the text field for the id. */
     private JTextField idTextField;
+
+    /** the label "location". */
     private JLabel locationLabel;
+
+    /** the text field for the location. */
     private JTextField locationTextField;
+
+    /** the label "price". */
     private JLabel priceLabel;
+
+    /** the text field for the price. */
     private JTextField priceTextField;
+
+    /** the label "size". */
     private JLabel sizeLabel;
+
+    /** the text field for the size. */
     private JTextField sizeTextField;
+
+    /** the label "smoking". */
     private JLabel smokingLabel;
+
+    /** the smoking text field. */
     private JTextField smokingTextField;
+
+    /** the main panel. */
     private JPanel mainPanel;
 
+    /**
+     * Creates a new modal <code>BookDialog</code>.
+     * 
+     * @param parentFrame
+     *            the parent frame.
+     */
     public BookDialog(final JFrame parentFrame) {
 	super(parentFrame, "Book Room", true);
 	init();
     }
 
+    /**
+     * Initializes the <code>BookDialog</code>.
+     */
     private void init() {
 	GridBagConstraints gridBagConstraints;
 
@@ -59,7 +116,7 @@ public class BookDialog extends JDialog {
 	priceLabel = new JLabel();
 	dateLabel = new JLabel();
 	customerLabel = new JLabel();
-	customerIdTextField1 = new JFormattedTextField();
+	customerIdTextField = new JFormattedTextField();
 	idTextField = new JTextField();
 	locationTextField = new JTextField();
 	sizeTextField = new JTextField();
@@ -92,7 +149,7 @@ public class BookDialog extends JDialog {
 	gridBagConstraints.insets = new Insets(35, 32, 28, 0);
 	mainPanel.add(discardButton, gridBagConstraints);
 
-	bookRoomLabel.setFont(new Font("Lucida Grande", 0, 24)); // NOI18N
+	bookRoomLabel.setFont(new Font("Lucida Grande", 0, 24));
 	bookRoomLabel.setText("Book Room with ");
 	gridBagConstraints = new GridBagConstraints();
 	gridBagConstraints.gridx = 0;
@@ -164,7 +221,7 @@ public class BookDialog extends JDialog {
 	gridBagConstraints.insets = new Insets(28, 36, 0, 0);
 	mainPanel.add(dateLabel, gridBagConstraints);
 
-	customerLabel.setFont(new Font("Lucida Grande", 0, 24)); // NOI18N
+	customerLabel.setFont(new Font("Lucida Grande", 0, 24));
 	customerLabel.setText("for Customer");
 	gridBagConstraints = new GridBagConstraints();
 	gridBagConstraints.gridx = 0;
@@ -174,7 +231,7 @@ public class BookDialog extends JDialog {
 	gridBagConstraints.insets = new Insets(35, 33, 0, 0);
 	mainPanel.add(customerLabel, gridBagConstraints);
 
-	customerIdTextField1.setText("");
+	customerIdTextField.setText("");
 	gridBagConstraints = new GridBagConstraints();
 	gridBagConstraints.gridx = 34;
 	gridBagConstraints.gridy = 15;
@@ -184,7 +241,7 @@ public class BookDialog extends JDialog {
 	gridBagConstraints.ipady = 4;
 	gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
 	gridBagConstraints.insets = new Insets(38, 18, 0, 0);
-	mainPanel.add(customerIdTextField1, gridBagConstraints);
+	mainPanel.add(customerIdTextField, gridBagConstraints);
 
 	idTextField.setText("");
 	gridBagConstraints = new GridBagConstraints();
@@ -267,59 +324,103 @@ public class BookDialog extends JDialog {
 	pack();
     }
 
+    /**
+     * Getter for the book button.
+     * 
+     * @return the book button.
+     */
     public JButton getBookButton() {
 	return bookButton;
     }
 
-    public JFormattedTextField getCustomerIdTextField1() {
-	return customerIdTextField1;
+    /**
+     * Getter for the customer id text field.
+     * 
+     * @return the customer id text field.
+     */
+    public JTextField getCustomerIdTextField() {
+	return customerIdTextField;
     }
 
+    /**
+     * Getter for the date text field.
+     * 
+     * @return the date text field.
+     */
     public JTextField getDateTextField() {
 	return dateTextField;
     }
 
+    /**
+     * Getter for the discard button.
+     * 
+     * @return the discard button.
+     */
     public JButton getDiscardButton() {
 	return discardButton;
     }
 
+    /**
+     * Getter for the hotel text field.
+     * 
+     * @return the hotel text field.
+     */
     public JTextField getHotelTextField() {
 	return hotelTextField;
     }
 
+    /**
+     * Getter for the customer id text field.
+     * 
+     * @return the customer id text field.
+     */
     public JTextField getIdTextField() {
 	return idTextField;
     }
 
+    /**
+     * Getter for the location text field.
+     * 
+     * @return the location text field.
+     */
     public JTextField getLocationTextField() {
 	return locationTextField;
     }
 
+    /**
+     * Getter for the price text field.
+     * 
+     * @return the price text field.
+     */
     public JTextField getPriceTextField() {
 	return priceTextField;
     }
 
+    /**
+     * Getter for the size text field.
+     * 
+     * @return the size text field.
+     */
     public JTextField getSizeTextField() {
 	return sizeTextField;
     }
 
+    /**
+     * Getter for the smoking text field.
+     * 
+     * @return the smoking text field.
+     */
     public JTextField getSmokingTextField() {
 	return smokingTextField;
     }
 
+    /**
+     * Getter for the main panel
+     * 
+     * @return the main panel.
+     */
     public JPanel getMainPanel() {
 	return mainPanel;
-    }
-
-    public static void main(final String[] args) {
-	SwingUtilities.invokeLater(new Runnable() {
-
-	    @Override
-	    public void run() {
-		final BookDialog dialog = new BookDialog(null);
-		dialog.setVisible(true);
-	    }
-	});
     }
 
 }

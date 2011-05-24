@@ -35,10 +35,10 @@ public final class UrlyBirdPresenter {
 
     private final class ToggleBookButtonListener implements DocumentListener {
 	private final BookDialog dialog;
-	private final JFormattedTextField customerIdTextField;
+	private final JTextField customerIdTextField;
 
 	private ToggleBookButtonListener(final BookDialog dialog,
-		final JFormattedTextField customerIdTextField) {
+		final JTextField customerIdTextField) {
 	    this.dialog = dialog;
 	    this.customerIdTextField = customerIdTextField;
 	}
@@ -399,9 +399,9 @@ public final class UrlyBirdPresenter {
 		sizeTextField.setText(tableModel
 			.getRoomSizeAtIndex(selectedModelRow));
 
-		final JFormattedTextField customerIdTextField1 = dialog
-			.getCustomerIdTextField1();
-		customerIdTextField1.setDocument(new PlainDocument() {
+		final JTextField customerIdTextField = dialog
+			.getCustomerIdTextField();
+		customerIdTextField.setDocument(new PlainDocument() {
 
 		    @Override
 		    public void insertString(final int offs, final String str,
@@ -414,9 +414,9 @@ public final class UrlyBirdPresenter {
 		});
 
 		final ToggleBookButtonListener toggleBookButtonListener = new ToggleBookButtonListener(
-			dialog, customerIdTextField1);
+			dialog, customerIdTextField);
 
-		customerIdTextField1.getDocument().addDocumentListener(
+		customerIdTextField.getDocument().addDocumentListener(
 			toggleBookButtonListener);
 
 		dialog.getBookButton().setEnabled(false);
@@ -436,7 +436,7 @@ public final class UrlyBirdPresenter {
 			    final RoomOffer bookedRoomOffer = service
 				    .bookRoomOffer(new BookRoomCommand(
 					    roomToBook, dialog
-						    .getCustomerIdTextField1()
+						    .getCustomerIdTextField()
 						    .getText().trim()));
 			    tableModel.replaceRoom(bookedRoomOffer);
 			    dialog.dispose();
