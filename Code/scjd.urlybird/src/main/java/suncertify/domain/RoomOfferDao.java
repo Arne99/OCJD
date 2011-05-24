@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import suncertify.common.Money;
 import suncertify.db.DB;
@@ -26,6 +27,9 @@ import suncertify.db.SecurityException;
  * 
  */
 final class RoomOfferDao implements DataAccessObject<UrlyBirdRoomOffer> {
+
+    /** exception logger, global is sufficient here. */
+    private final Logger logger = Logger.getLogger("global");
 
     /** the database where the <code>RoomOffers</code> are stored. */
     private final DB database;
@@ -77,7 +81,9 @@ final class RoomOfferDao implements DataAccessObject<UrlyBirdRoomOffer> {
 		roomOffer = read(index);
 		matchingRooms.add(roomOffer);
 	    } catch (final RecordNotFoundException e) {
-		e.printStackTrace();
+		// this cannot happen here.
+		logger.throwing(getClass().getName(), "find", e);
+
 	    }
 	}
 
