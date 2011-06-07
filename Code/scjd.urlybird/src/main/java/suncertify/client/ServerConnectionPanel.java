@@ -10,23 +10,54 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-public class ServerConnectionPanel extends JPanel {
+/**
+ * A <code>ServerConnectionPanel</code> provides the user with the needed gui to
+ * specify the required parameters for an server connection and a button to
+ * establish this connection.
+ * 
+ * @author arnelandwehr
+ * 
+ */
+public final class ServerConnectionPanel extends JPanel {
 
+    /**
+     * the SUID.
+     */
     private static final long serialVersionUID = -6561677906315526844L;
 
+    /** the button to connect to to the server. */
     private JButton connectButton;
-    private JButton discardButton;
-    private JLabel connectLabel;
-    private JLabel hostLabel;
-    private JLabel portLabel;
-    private JFormattedTextField hostTextField;
-    private JFormattedTextField portTextField;
 
+    /** the button to discard the dialog. */
+    private JButton discardButton;
+
+    /** the label "connect". */
+    private JLabel connectLabel;
+
+    /** the label "host". */
+    private JLabel hostLabel;
+
+    /** the label "port". */
+    private JLabel portLabel;
+
+    /** the host address text field. */
+    private JTextField hostTextField;
+
+    /** the port number text field. */
+    private JTextField portTextField;
+
+    /**
+     * Constructs a new <code>ServerConnectionPanel</code>.
+     */
     public ServerConnectionPanel() {
 	init();
     }
 
+    /**
+     * Initializes the panel.
+     */
     private void init() {
 	GridBagConstraints gridBagConstraints;
 
@@ -115,31 +146,39 @@ public class ServerConnectionPanel extends JPanel {
 
     }
 
+    /**
+     * Getter for the connect button.
+     * 
+     * @return the connect button.
+     */
     public JButton getConnectButton() {
 	return connectButton;
     }
 
+    /**
+     * Getter for the discard button.
+     * 
+     * @return the discard button
+     */
     public JButton getDiscardButton() {
 	return discardButton;
     }
 
-    public JLabel getConnectLabel() {
-	return connectLabel;
-    }
-
-    public JLabel getHostLabel() {
-	return hostLabel;
-    }
-
-    public JLabel getPortLabel() {
-	return portLabel;
-    }
-
-    public JFormattedTextField getHostTextField() {
+    /**
+     * Getter for the host text field.
+     * 
+     * @return the host text field.
+     */
+    public JTextField getHostTextField() {
 	return hostTextField;
     }
 
-    public JFormattedTextField getPortTextField() {
+    /**
+     * The port text field.
+     * 
+     * @return the port text field.
+     */
+    public JTextField getPortTextField() {
 	return portTextField;
     }
 
