@@ -16,29 +16,75 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-public class FindDialog extends JDialog {
+import suncertify.common.RoomOffer;
 
+/**
+ * The <code>FindDialog</code> provides a view for the user to find
+ * {@link RoomOffer} that matches a combination of hotel and/or city name.
+ * 
+ * @author arnelandwehr
+ * 
+ */
+public final class FindDialog extends JDialog {
+
+    /**
+     * the SUID.
+     */
     private static final long serialVersionUID = -4765527763438947184L;
 
+    /** the button to start the search. */
     private JButton findButton;
+
+    /** the button to clos the dialog. */
     private JButton discardButton;
+
+    /** specifies if any hotel name is searched. */
     private JCheckBox anyHotelCheckBox;
+
+    /** specifies if any ciyt is searched. */
     private JCheckBox anyLocationCheckBox;
+
+    /** the label \"hotel\". */
     private JLabel hotelLabel;
+
+    /** the label \"location\". */
     private JLabel locationLabel;
+
+    /** the label \"Find\". */
     private JLabel findRoomsLabel;
+
+    /** specifies the "and" option in the search. */
     private JRadioButton andRadioButton;
+
+    /** specifies the "on" option in the search. */
     private JRadioButton orRadioButton;
+
+    /** the field with the hotel name. */
     private JTextField hotelTextField;
+
+    /** the field with the location name. */
     private JTextField locationTextField;
+
+    /** button group for \"and\" and "\or\" button . */
     private ButtonGroup buttonGroup;
+
+    /** the main panel of this dialog. */
     private JPanel mainPanel;
 
+    /**
+     * Constructs and shows a new modal <code>FindDialog</code>.
+     * 
+     * @param parentFrame
+     *            the parent frame, must not be <code>null</code>.
+     */
     public FindDialog(final JFrame parentFrame) {
 	super(parentFrame, "Find Rooms", true);
 	init();
     }
 
+    /**
+     * Initializes the view and shows it.
+     */
     public void init() {
 
 	mainPanel = new JPanel();
@@ -186,46 +232,74 @@ public class FindDialog extends JDialog {
 	discardButton.setMnemonic(KeyEvent.VK_D);
     }
 
+    /**
+     * Getter for the find button.
+     * 
+     * @return the find button.
+     */
     public JButton getFindButton() {
 	return findButton;
     }
 
+    /**
+     * Getter for the discard button.
+     * 
+     * @return the discard button.
+     */
     public JButton getDiscardButton() {
 	return discardButton;
     }
 
+    /**
+     * Getter for the any hotel check box.
+     * 
+     * @return the any hotel check box.
+     */
     public JCheckBox getAnyHotelCheckBox() {
 	return anyHotelCheckBox;
     }
 
+    /**
+     * Getter for the any location check box.
+     * 
+     * @return the any location text check box.
+     */
     public JCheckBox getAnyLocationCheckBox() {
 	return anyLocationCheckBox;
     }
 
-    public JLabel getHotelLabel() {
-	return hotelLabel;
-    }
-
-    public JLabel getLocationLabel() {
-	return locationLabel;
-    }
-
-    public JLabel getFindRoomsLabel() {
-	return findRoomsLabel;
-    }
-
+    /**
+     * Getter for the \"and\" radio button.
+     * 
+     * @return the \"and\" radio button.
+     */
     public JRadioButton getAndRadioButton() {
 	return andRadioButton;
     }
 
+    /**
+     * Getter for the \"or\" radio button.
+     * 
+     * @return the \"or\" radio button.
+     */
     public JRadioButton getOrRadioButton() {
 	return orRadioButton;
     }
 
+    /**
+     * Getter for the hotel text field.
+     * 
+     * @return the hotel text field.
+     */
     public JTextField getHotelTextField() {
 	return hotelTextField;
     }
 
+    /**
+     * Getter for the location text field.
+     * 
+     * @return the location text field.
+     */
     public JTextField getLocationTextField() {
 	return locationTextField;
     }
