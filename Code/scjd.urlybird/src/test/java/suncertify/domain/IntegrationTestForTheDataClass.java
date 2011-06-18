@@ -2,9 +2,7 @@ package suncertify.domain;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 import suncertify.datafile.DataFileService;
@@ -15,7 +13,8 @@ import suncertify.db.DatabaseConnectionException;
 import suncertify.db.DatabaseService;
 
 /**
- * The <code>DataClassTest</code> tests the main functionalities of the
+ * The <code>DataClassTest</code> tests the main functionalities of the.
+ * 
  * {@link Data} class. In order to simulate several clients trying to use it and
  * exercise the locking mechanism, it also has several inner classes that extend
  * the {@link Thread} class, where each class represents one client requesting
@@ -26,15 +25,15 @@ import suncertify.db.DatabaseService;
  * @author Roberto Perillo
  * @version 1.0 05/11/2008
  */
-public class IntegrationTestForTheDataClass {
+public final class IntegrationTestForTheDataClass {
 
+    /** The data. */
     private static DB data = null;
     static {
 	File anyFile = null;
 	try {
 	    anyFile = File.createTempFile("test", "test");
 	} catch (final IOException e1) {
-	    // TODO Auto-generated catch block
 	    e1.printStackTrace();
 	}
 	try {
@@ -43,28 +42,33 @@ public class IntegrationTestForTheDataClass {
 			    "/Users/arnelandwehr/Coden/Sun Certified Java Developer/Project/Code/scjd.urlybird/src/test/ressources/db-1x1.db"),
 		    anyFile);
 	} catch (final IOException e1) {
-	    // TODO Auto-generated catch block
 	    e1.printStackTrace();
 	}
 	try {
 	    data = DatabaseService.instance().connectToDatabase(
 		    DataFileService.instance().getDatabaseHandler(anyFile));
 	} catch (final DatabaseConnectionException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (final IOException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (final UnsupportedDataFileFormatException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
     }
 
+    /**
+     * The main method.
+     * 
+     * @param args
+     *            the arguments
+     */
     public static void main(final String[] args) {
 	new IntegrationTestForTheDataClass().startTests();
     }
 
+    /**
+     * Start tests.
+     */
     public void startTests() {
 	try {
 
@@ -91,10 +95,17 @@ public class IntegrationTestForTheDataClass {
 
     }
 
+    /**
+     * The Class UpdatingRandomRecordThread.
+     */
     private class UpdatingRandomRecordThread extends Thread {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
-	@SuppressWarnings("deprecation")
 	public void run() {
 
 	    final int recNo = (int) (Math.random() * 50);
@@ -141,10 +152,17 @@ public class IntegrationTestForTheDataClass {
 	}
     }
 
+    /**
+     * The Class UpdatingRecord1Thread.
+     */
     private class UpdatingRecord1Thread extends Thread {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
-	@SuppressWarnings("deprecation")
 	public void run() {
 
 	    try {
@@ -173,10 +191,17 @@ public class IntegrationTestForTheDataClass {
 	}
     }
 
+    /**
+     * The Class CreatingRecordThread.
+     */
     private class CreatingRecordThread extends Thread {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
-	@SuppressWarnings("deprecation")
 	public void run() {
 
 	    try {
@@ -190,8 +215,16 @@ public class IntegrationTestForTheDataClass {
 	}
     }
 
+    /**
+     * The Class DeletingRecord1Thread.
+     */
     private class DeletingRecord1Thread extends Thread {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 	    try {
@@ -213,8 +246,16 @@ public class IntegrationTestForTheDataClass {
 	}
     }
 
+    /**
+     * The Class FindingRecordsThread.
+     */
     private class FindingRecordsThread extends Thread {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 	    try {

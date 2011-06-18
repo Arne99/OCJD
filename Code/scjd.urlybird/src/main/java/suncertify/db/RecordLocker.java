@@ -36,8 +36,6 @@ public interface RecordLocker {
      * @throws SecurityException
      *             if the given lockId does not match the lockId the
      *             <code>Record</code> was locked with.
-     * 
-     * @see {@link RecordLocker}{@link #lockRecord(int)}
      */
     void unlockRecord(final int index, long lockId) throws SecurityException;
 

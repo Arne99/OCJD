@@ -1,5 +1,6 @@
 package suncertify.common;
 
+
 /**
  * The <code>BookRoomCommand</code> is a message to the server that an client
  * want to book an specified room. It encapsulates the there for required

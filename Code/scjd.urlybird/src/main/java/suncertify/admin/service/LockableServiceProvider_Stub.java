@@ -3,77 +3,82 @@
 
 package suncertify.admin.service;
 
-public final class LockableServiceProvider_Stub
-    extends java.rmi.server.RemoteStub
-    implements suncertify.common.ServicProvider, java.rmi.Remote
-{
-    private static final java.rmi.server.Operation[] operations = {
-	new java.rmi.server.Operation("suncertify.common.RoomOfferService getRoomOfferService()")
-    };
-    
+@SuppressWarnings("deprecation")
+public final class LockableServiceProvider_Stub extends
+	java.rmi.server.RemoteStub implements suncertify.common.ServicProvider,
+	java.rmi.Remote {
+    private static final java.rmi.server.Operation[] operations = { new java.rmi.server.Operation(
+	    "suncertify.common.RoomOfferService getRoomOfferService()") };
+
     private static final long interfaceHash = 8825923882540309865L;
-    
+
     private static final long serialVersionUID = 2;
-    
+
     private static boolean useNewInvoke;
     private static java.lang.reflect.Method $method_getRoomOfferService_0;
-    
+
     static {
 	try {
 	    java.rmi.server.RemoteRef.class.getMethod("invoke",
-		new java.lang.Class[] {
-		    java.rmi.Remote.class,
-		    java.lang.reflect.Method.class,
-		    java.lang.Object[].class,
-		    long.class
-		});
+		    new java.lang.Class[] { java.rmi.Remote.class,
+			    java.lang.reflect.Method.class,
+			    java.lang.Object[].class, long.class });
 	    useNewInvoke = true;
-	    $method_getRoomOfferService_0 = suncertify.common.ServicProvider.class.getMethod("getRoomOfferService", new java.lang.Class[] {});
-	} catch (java.lang.NoSuchMethodException e) {
+	    $method_getRoomOfferService_0 = suncertify.common.ServicProvider.class
+		    .getMethod("getRoomOfferService", new java.lang.Class[] {});
+	} catch (final java.lang.NoSuchMethodException e) {
 	    useNewInvoke = false;
 	}
     }
-    
+
     // constructors
     public LockableServiceProvider_Stub() {
 	super();
     }
-    public LockableServiceProvider_Stub(java.rmi.server.RemoteRef ref) {
+
+    public LockableServiceProvider_Stub(final java.rmi.server.RemoteRef ref) {
 	super(ref);
     }
-    
+
     // methods from remote interfaces
-    
+
     // implementation of getRoomOfferService()
+    @Override
     public suncertify.common.RoomOfferService getRoomOfferService()
-	throws java.rmi.RemoteException
-    {
+	    throws java.rmi.RemoteException {
 	try {
 	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_getRoomOfferService_0, null, -2859605693618835423L);
+		final Object $result = ref.invoke(this,
+			$method_getRoomOfferService_0, null,
+			-2859605693618835423L);
 		return ((suncertify.common.RoomOfferService) $result);
 	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 0, interfaceHash);
+		final java.rmi.server.RemoteCall call = ref.newCall(this,
+			operations, 0, interfaceHash);
 		ref.invoke(call);
 		suncertify.common.RoomOfferService $result;
 		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = (suncertify.common.RoomOfferService) in.readObject();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} catch (java.lang.ClassNotFoundException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
+		    final java.io.ObjectInput in = call.getInputStream();
+		    $result = (suncertify.common.RoomOfferService) in
+			    .readObject();
+		} catch (final java.io.IOException e) {
+		    throw new java.rmi.UnmarshalException(
+			    "error unmarshalling return", e);
+		} catch (final java.lang.ClassNotFoundException e) {
+		    throw new java.rmi.UnmarshalException(
+			    "error unmarshalling return", e);
 		} finally {
 		    ref.done(call);
 		}
 		return $result;
 	    }
-	} catch (java.lang.RuntimeException e) {
+	} catch (final java.lang.RuntimeException e) {
 	    throw e;
-	} catch (java.rmi.RemoteException e) {
+	} catch (final java.rmi.RemoteException e) {
 	    throw e;
-	} catch (java.lang.Exception e) {
-	    throw new java.rmi.UnexpectedException("undeclared checked exception", e);
+	} catch (final java.lang.Exception e) {
+	    throw new java.rmi.UnexpectedException(
+		    "undeclared checked exception", e);
 	}
     }
 }

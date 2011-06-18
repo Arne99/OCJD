@@ -3,22 +3,23 @@
 
 package suncertify.admin.service;
 
-public final class LockableServiceProvider_Skel
-    implements java.rmi.server.Skeleton
-{
-    private static final java.rmi.server.Operation[] operations = {
-	new java.rmi.server.Operation("suncertify.common.RoomOfferService getRoomOfferService()")
-    };
-    
+@SuppressWarnings("deprecation")
+public final class LockableServiceProvider_Skel implements
+	java.rmi.server.Skeleton {
+    private static final java.rmi.server.Operation[] operations = { new java.rmi.server.Operation(
+	    "suncertify.common.RoomOfferService getRoomOfferService()") };
+
     private static final long interfaceHash = 8825923882540309865L;
-    
+
+    @Override
     public java.rmi.server.Operation[] getOperations() {
-	return (java.rmi.server.Operation[]) operations.clone();
+	return operations.clone();
     }
-    
-    public void dispatch(java.rmi.Remote obj, java.rmi.server.RemoteCall call, int opnum, long hash)
-	throws java.lang.Exception
-    {
+
+    @Override
+    public void dispatch(final java.rmi.Remote obj,
+	    final java.rmi.server.RemoteCall call, int opnum, final long hash)
+	    throws java.lang.Exception {
 	if (opnum < 0) {
 	    if (hash == -2859605693618835423L) {
 		opnum = 0;
@@ -26,25 +27,29 @@ public final class LockableServiceProvider_Skel
 		throw new java.rmi.UnmarshalException("invalid method hash");
 	    }
 	} else {
-	    if (hash != interfaceHash)
-		throw new java.rmi.server.SkeletonMismatchException("interface hash mismatch");
+	    if (hash != interfaceHash) {
+		throw new java.rmi.server.SkeletonMismatchException(
+			"interface hash mismatch");
+	    }
 	}
-	
-	suncertify.admin.service.LockableServiceProvider server = (suncertify.admin.service.LockableServiceProvider) obj;
+
+	final suncertify.admin.service.LockableServiceProvider server = (suncertify.admin.service.LockableServiceProvider) obj;
 	switch (opnum) {
 	case 0: // getRoomOfferService()
 	{
 	    call.releaseInputStream();
-	    suncertify.common.RoomOfferService $result = server.getRoomOfferService();
+	    final suncertify.common.RoomOfferService $result = server
+		    .getRoomOfferService();
 	    try {
-		java.io.ObjectOutput out = call.getResultStream(true);
+		final java.io.ObjectOutput out = call.getResultStream(true);
 		out.writeObject($result);
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.MarshalException("error marshalling return", e);
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.MarshalException("error marshalling return",
+			e);
 	    }
 	    break;
 	}
-	    
+
 	default:
 	    throw new java.rmi.UnmarshalException("invalid method number");
 	}

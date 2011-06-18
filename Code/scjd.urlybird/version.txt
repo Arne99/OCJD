@@ -1,0 +1,3 @@
+// includes the used jdk version and the host platform
+jdk = 1.6.0_24-b07-334-10M3326
+host platform = Mac OS X / x86_64 / 10.6.7 

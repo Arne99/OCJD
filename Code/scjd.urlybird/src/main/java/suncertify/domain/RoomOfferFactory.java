@@ -267,7 +267,7 @@ class RoomOfferFactory {
      * 
      * @param string
      *            the <code>String</code> to convert, must be of the form
-     *            {@value #DATE_FORMAT}.
+     *            {@link #DATE_FORMAT}.
      * @return the created <code>Date</code>.
      */
     private Date convertStringToDate(final String string) {

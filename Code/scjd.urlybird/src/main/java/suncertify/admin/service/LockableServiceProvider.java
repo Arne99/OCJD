@@ -3,9 +3,9 @@ package suncertify.admin.service;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import suncertify.client.ServiceProvider;
 import suncertify.common.RoomOfferService;
 import suncertify.common.ServicProvider;
+import suncertify.common.ServiceProvider;
 import suncertify.db.DB;
 import suncertify.domain.UrlyBirdRoomOfferService;
 

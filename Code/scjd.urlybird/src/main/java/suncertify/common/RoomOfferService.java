@@ -3,6 +3,7 @@ package suncertify.common;
 import java.rmi.Remote;
 import java.util.List;
 
+
 /**
  * Interface between the client and the server for all business methods that
  * belongs to {@link RoomOffer}s. The implementation of this interface is on the

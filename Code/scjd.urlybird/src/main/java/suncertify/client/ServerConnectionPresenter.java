@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.Naming;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.swing.JDialog;
@@ -23,14 +24,39 @@ import suncertify.common.ServicProvider;
 import suncertify.common.UrlyBirdProperties;
 import suncertify.common.UrlyBirdProperties.PropertyName;
 
+/**
+ * An <code>ServerConnectionPresenter</code> controls an Gui which allows an
+ * user to configure an establish an server connection.The presenter creates an
+ * remote {@link RoomOfferService} and provides it to the client.
+ * 
+ * @author arnelandwehr
+ * 
+ */
 public final class ServerConnectionPresenter implements
 	RoomOfferServiceProvider {
 
+    /** exception logger, global is sufficient here. */
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+    /** the properties to store or retrieve the last user input. */
     private final UrlyBirdProperties properties = UrlyBirdProperties
 	    .getInstance();
 
+    /**
+     * the {@link RoomOfferService}, could be the given default or the new
+     * created one.
+     */
     private RoomOfferService service = null;
 
+    /**
+     * Starts an modal server connection dialog where the user must specify a
+     * connection and establish it.
+     * 
+     * @param frame
+     *            the parent frame.
+     * @return the created remote {@link RoomOfferService}, never
+     *         <code>null</code>.
+     */
     public RoomOfferService startInitialConnectionDialogToFindService(
 	    final JFrame frame) {
 
@@ -44,13 +70,23 @@ public final class ServerConnectionPresenter implements
 		}
 	    });
 	} catch (final InterruptedException e) {
-	    e.printStackTrace();
+	    logger.throwing(getClass().getSimpleName(),
+		    "startInitialConnectionDialogToFindService", e);
 	} catch (final InvocationTargetException e) {
-	    e.printStackTrace();
+	    logger.throwing(getClass().getSimpleName(),
+		    "startInitialConnectionDialogToFindService", e);
 	}
 	return service;
     }
 
+    /**
+     * 
+     * 
+     * @param dialog
+     * @param frame
+     * @param exitDialog
+     * @return
+     */
     private RoomOfferService initDialog(final JDialog dialog,
 	    final JFrame frame, final ExitDialogAdapter exitDialog) {
 	final ServerConnectionPanel connectionPanel = new ServerConnectionPanel();
@@ -62,6 +98,9 @@ public final class ServerConnectionPresenter implements
 	connectionPanel.getConnectButton().setEnabled(false);
 
 	connectionPanel.getPortTextField().setDocument(new PlainDocument() {
+
+	    /** the SUID. */
+	    private static final long serialVersionUID = 1L;
 
 	    @Override
 	    public void insertString(final int arg0, final String arg1,

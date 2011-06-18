@@ -135,8 +135,7 @@ final class ApplicationStarter {
 		.connectToDatabaseWithDialog(frame);
 	frame.dispose();
 
-	new UrlyBirdPresenter(new UrlyBirdView(),
-		UrlyBirdProperties.getInstance(), roomOfferService,
+	new UrlyBirdPresenter(new UrlyBirdView(), roomOfferService,
 		new DatabaseConnectionPresenter(new DatabaseConnectionPanel(),
 			DatabaseService.instance())).startGui();
     }
@@ -163,8 +162,7 @@ final class ApplicationStarter {
 		.startInitialConnectionDialogToFindService(frame);
 	frame.dispose();
 
-	new UrlyBirdPresenter(new UrlyBirdView(),
-		UrlyBirdProperties.getInstance(), service,
+	new UrlyBirdPresenter(new UrlyBirdView(), service,
 		new ServerConnectionPresenter()).startGui();
     }
 

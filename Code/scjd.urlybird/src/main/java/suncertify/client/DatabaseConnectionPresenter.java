@@ -29,9 +29,9 @@ import suncertify.db.DatabaseService;
 import suncertify.domain.UrlyBirdRoomOfferService;
 
 /**
- * An <code>DatabaseConnectionPresenter</code> controls an GUi which allows an
+ * An <code>DatabaseConnectionPresenter</code> controls an Gui which allows an
  * user to configure an establish an database connection.The presenter creates
- * an local {@link RoomOfferService} an provides it.
+ * an local {@link RoomOfferService} and provides it to the client.
  * 
  * @author arnelandwehr
  * 

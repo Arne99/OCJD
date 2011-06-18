@@ -3,26 +3,32 @@
 
 package suncertify.domain;
 
-public final class UrlyBirdRoomOfferService_Skel
-    implements java.rmi.server.Skeleton
-{
+@SuppressWarnings("deprecation")
+public final class UrlyBirdRoomOfferService_Skel implements
+	java.rmi.server.Skeleton {
     private static final java.rmi.server.Operation[] operations = {
-	new java.rmi.server.Operation("suncertify.common.RoomOffer bookRoomOffer(suncertify.common.BookRoomCommand)"),
-	new java.rmi.server.Operation("suncertify.common.RoomOffer createRoomOffer(suncertify.common.CreateRoomCommand)"),
-	new java.rmi.server.Operation("int deleteRoomOffer(suncertify.common.DeleteRoomCommand)"),
-	new java.rmi.server.Operation("java.util.List findRoomOffer(suncertify.common.FindRoomCommand)"),
-	new java.rmi.server.Operation("suncertify.common.RoomOffer updateRoomOffer(suncertify.common.UpdateRoomCommand)")
-    };
-    
+	    new java.rmi.server.Operation(
+		    "suncertify.common.RoomOffer bookRoomOffer(suncertify.common.BookRoomCommand)"),
+	    new java.rmi.server.Operation(
+		    "suncertify.common.RoomOffer createRoomOffer(suncertify.common.CreateRoomCommand)"),
+	    new java.rmi.server.Operation(
+		    "int deleteRoomOffer(suncertify.common.DeleteRoomCommand)"),
+	    new java.rmi.server.Operation(
+		    "java.util.List findRoomOffer(suncertify.common.FindRoomCommand)"),
+	    new java.rmi.server.Operation(
+		    "suncertify.common.RoomOffer updateRoomOffer(suncertify.common.UpdateRoomCommand)") };
+
     private static final long interfaceHash = 1053142336499096830L;
-    
+
+    @Override
     public java.rmi.server.Operation[] getOperations() {
-	return (java.rmi.server.Operation[]) operations.clone();
+	return operations.clone();
     }
-    
-    public void dispatch(java.rmi.Remote obj, java.rmi.server.RemoteCall call, int opnum, long hash)
-	throws java.lang.Exception
-    {
+
+    @Override
+    public void dispatch(final java.rmi.Remote obj,
+	    final java.rmi.server.RemoteCall call, int opnum, final long hash)
+	    throws java.lang.Exception {
 	if (opnum < 0) {
 	    if (hash == -524781279216578706L) {
 		opnum = 0;
@@ -38,127 +44,154 @@ public final class UrlyBirdRoomOfferService_Skel
 		throw new java.rmi.UnmarshalException("invalid method hash");
 	    }
 	} else {
-	    if (hash != interfaceHash)
-		throw new java.rmi.server.SkeletonMismatchException("interface hash mismatch");
+	    if (hash != interfaceHash) {
+		throw new java.rmi.server.SkeletonMismatchException(
+			"interface hash mismatch");
+	    }
 	}
-	
-	suncertify.domain.UrlyBirdRoomOfferService server = (suncertify.domain.UrlyBirdRoomOfferService) obj;
+
+	final suncertify.domain.UrlyBirdRoomOfferService server = (suncertify.domain.UrlyBirdRoomOfferService) obj;
 	switch (opnum) {
 	case 0: // bookRoomOffer(BookRoomCommand)
 	{
 	    suncertify.common.BookRoomCommand $param_BookRoomCommand_1;
 	    try {
-		java.io.ObjectInput in = call.getInputStream();
-		$param_BookRoomCommand_1 = (suncertify.common.BookRoomCommand) in.readObject();
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
-	    } catch (java.lang.ClassNotFoundException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+		final java.io.ObjectInput in = call.getInputStream();
+		$param_BookRoomCommand_1 = (suncertify.common.BookRoomCommand) in
+			.readObject();
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
+	    } catch (final java.lang.ClassNotFoundException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
 	    } finally {
 		call.releaseInputStream();
 	    }
-	    suncertify.common.RoomOffer $result = server.bookRoomOffer($param_BookRoomCommand_1);
+	    final suncertify.common.RoomOffer $result = server
+		    .bookRoomOffer($param_BookRoomCommand_1);
 	    try {
-		java.io.ObjectOutput out = call.getResultStream(true);
+		final java.io.ObjectOutput out = call.getResultStream(true);
 		out.writeObject($result);
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.MarshalException("error marshalling return", e);
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.MarshalException("error marshalling return",
+			e);
 	    }
 	    break;
 	}
-	    
+
 	case 1: // createRoomOffer(CreateRoomCommand)
 	{
 	    suncertify.common.CreateRoomCommand $param_CreateRoomCommand_1;
 	    try {
-		java.io.ObjectInput in = call.getInputStream();
-		$param_CreateRoomCommand_1 = (suncertify.common.CreateRoomCommand) in.readObject();
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
-	    } catch (java.lang.ClassNotFoundException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+		final java.io.ObjectInput in = call.getInputStream();
+		$param_CreateRoomCommand_1 = (suncertify.common.CreateRoomCommand) in
+			.readObject();
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
+	    } catch (final java.lang.ClassNotFoundException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
 	    } finally {
 		call.releaseInputStream();
 	    }
-	    suncertify.common.RoomOffer $result = server.createRoomOffer($param_CreateRoomCommand_1);
+	    final suncertify.common.RoomOffer $result = server
+		    .createRoomOffer($param_CreateRoomCommand_1);
 	    try {
-		java.io.ObjectOutput out = call.getResultStream(true);
+		final java.io.ObjectOutput out = call.getResultStream(true);
 		out.writeObject($result);
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.MarshalException("error marshalling return", e);
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.MarshalException("error marshalling return",
+			e);
 	    }
 	    break;
 	}
-	    
+
 	case 2: // deleteRoomOffer(DeleteRoomCommand)
 	{
 	    suncertify.common.DeleteRoomCommand $param_DeleteRoomCommand_1;
 	    try {
-		java.io.ObjectInput in = call.getInputStream();
-		$param_DeleteRoomCommand_1 = (suncertify.common.DeleteRoomCommand) in.readObject();
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
-	    } catch (java.lang.ClassNotFoundException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+		final java.io.ObjectInput in = call.getInputStream();
+		$param_DeleteRoomCommand_1 = (suncertify.common.DeleteRoomCommand) in
+			.readObject();
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
+	    } catch (final java.lang.ClassNotFoundException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
 	    } finally {
 		call.releaseInputStream();
 	    }
-	    int $result = server.deleteRoomOffer($param_DeleteRoomCommand_1);
+	    final int $result = server
+		    .deleteRoomOffer($param_DeleteRoomCommand_1);
 	    try {
-		java.io.ObjectOutput out = call.getResultStream(true);
+		final java.io.ObjectOutput out = call.getResultStream(true);
 		out.writeInt($result);
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.MarshalException("error marshalling return", e);
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.MarshalException("error marshalling return",
+			e);
 	    }
 	    break;
 	}
-	    
+
 	case 3: // findRoomOffer(FindRoomCommand)
 	{
 	    suncertify.common.FindRoomCommand $param_FindRoomCommand_1;
 	    try {
-		java.io.ObjectInput in = call.getInputStream();
-		$param_FindRoomCommand_1 = (suncertify.common.FindRoomCommand) in.readObject();
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
-	    } catch (java.lang.ClassNotFoundException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+		final java.io.ObjectInput in = call.getInputStream();
+		$param_FindRoomCommand_1 = (suncertify.common.FindRoomCommand) in
+			.readObject();
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
+	    } catch (final java.lang.ClassNotFoundException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
 	    } finally {
 		call.releaseInputStream();
 	    }
-	    java.util.List $result = server.findRoomOffer($param_FindRoomCommand_1);
+	    final java.util.List $result = server
+		    .findRoomOffer($param_FindRoomCommand_1);
 	    try {
-		java.io.ObjectOutput out = call.getResultStream(true);
+		final java.io.ObjectOutput out = call.getResultStream(true);
 		out.writeObject($result);
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.MarshalException("error marshalling return", e);
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.MarshalException("error marshalling return",
+			e);
 	    }
 	    break;
 	}
-	    
+
 	case 4: // updateRoomOffer(UpdateRoomCommand)
 	{
 	    suncertify.common.UpdateRoomCommand $param_UpdateRoomCommand_1;
 	    try {
-		java.io.ObjectInput in = call.getInputStream();
-		$param_UpdateRoomCommand_1 = (suncertify.common.UpdateRoomCommand) in.readObject();
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
-	    } catch (java.lang.ClassNotFoundException e) {
-		throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+		final java.io.ObjectInput in = call.getInputStream();
+		$param_UpdateRoomCommand_1 = (suncertify.common.UpdateRoomCommand) in
+			.readObject();
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
+	    } catch (final java.lang.ClassNotFoundException e) {
+		throw new java.rmi.UnmarshalException(
+			"error unmarshalling arguments", e);
 	    } finally {
 		call.releaseInputStream();
 	    }
-	    suncertify.common.RoomOffer $result = server.updateRoomOffer($param_UpdateRoomCommand_1);
+	    final suncertify.common.RoomOffer $result = server
+		    .updateRoomOffer($param_UpdateRoomCommand_1);
 	    try {
-		java.io.ObjectOutput out = call.getResultStream(true);
+		final java.io.ObjectOutput out = call.getResultStream(true);
 		out.writeObject($result);
-	    } catch (java.io.IOException e) {
-		throw new java.rmi.MarshalException("error marshalling return", e);
+	    } catch (final java.io.IOException e) {
+		throw new java.rmi.MarshalException("error marshalling return",
+			e);
 	    }
 	    break;
 	}
-	    
+
 	default:
 	    throw new java.rmi.UnmarshalException("invalid method number");
 	}
