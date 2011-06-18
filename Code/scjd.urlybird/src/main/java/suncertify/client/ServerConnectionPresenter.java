@@ -23,7 +23,8 @@ import suncertify.common.ServicProvider;
 import suncertify.common.UrlyBirdProperties;
 import suncertify.common.UrlyBirdProperties.PropertyName;
 
-public class ServerConnectionPresenter implements RoomOfferServiceProvider {
+public final class ServerConnectionPresenter implements
+	RoomOfferServiceProvider {
 
     private final UrlyBirdProperties properties = UrlyBirdProperties
 	    .getInstance();
@@ -154,8 +155,8 @@ public class ServerConnectionPresenter implements RoomOfferServiceProvider {
     }
 
     @Override
-    public RoomOfferService startRoomOfferServiceProviderDialog(final JFrame frame,
-	    final RoomOfferService service) {
+    public RoomOfferService startRoomOfferServiceProviderDialog(
+	    final JFrame frame, final RoomOfferService service) {
 
 	this.service = service;
 	final JDialog dialog = new JDialog(frame, true);

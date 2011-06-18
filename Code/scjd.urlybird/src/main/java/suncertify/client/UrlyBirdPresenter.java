@@ -1,13 +1,14 @@
 package suncertify.client;
 
 import java.awt.Component;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 import java.util.List;
+import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -21,8 +22,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.MaskFormatter;
 import javax.swing.text.PlainDocument;
 
 import suncertify.common.BookRoomCommand;
@@ -33,10 +32,34 @@ import suncertify.common.UrlyBirdProperties;
 
 public final class UrlyBirdPresenter {
 
+    /**
+     * exception logger, global is sufficient here.
+     */
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+    /**
+     * Enables the book button if the customerId TextField is filled or disables
+     * it if the field is empty.
+     * 
+     * @author arnelandwehr
+     * 
+     */
     private final class ToggleBookButtonListener implements DocumentListener {
+
+	/** the dialog of the book button. */
 	private final BookDialog dialog;
+
+	/** the customerid {@link TextField}. */
 	private final JTextField customerIdTextField;
 
+	/**
+	 * Construct a new {@link ToggleBookButtonListener}.
+	 * 
+	 * @param dialog
+	 *            the dialog of the book button.
+	 * @param customerIdTextField
+	 *            the customerid {@link TextField}.
+	 */
 	private ToggleBookButtonListener(final BookDialog dialog,
 		final JTextField customerIdTextField) {
 	    this.dialog = dialog;
@@ -58,12 +81,25 @@ public final class UrlyBirdPresenter {
 	    dialog.getBookButton().setEnabled(isCustomerIdComplete());
 	}
 
+	/**
+	 * Specifies if the customerid in the customerid {@link TextField} is
+	 * correctly filled.
+	 * 
+	 * @return <code>true</code> if the customerid is filled.
+	 */
 	private boolean isCustomerIdComplete() {
 	    return customerIdTextField.getText().trim().matches("\\d{8}");
 	}
     }
 
-    private final class FindAllRooms implements ActionListener {
+    /**
+     * Executes a search for all rooms and displays the result in the roomtable.
+     * 
+     * @author arnelandwehr
+     * 
+     */
+    private final class FindAllRoomsListener implements ActionListener {
+
 	@Override
 	public void actionPerformed(final ActionEvent arg0) {
 
@@ -73,15 +109,31 @@ public final class UrlyBirdPresenter {
 		tableModel.replaceAll(rooms);
 	    } catch (final Exception e) {
 		showUserTheError(view.getMainFrame(), e.getMessage());
-		e.printStackTrace();
+		logger.throwing(this.getClass().getSimpleName(),
+			"actionPerformed", e);
 	    }
 	}
     }
 
-    private final static class DisposeDialog implements ActionListener {
+    /**
+     * Disposes the {@link FindDialog}.
+     * 
+     * @author arnelandwehr
+     * 
+     */
+    private static final class DisposeFindDialogListener implements
+	    ActionListener {
+
+	/** the find dialog to dispose. */
 	private final FindDialog dialog;
 
-	private DisposeDialog(final FindDialog dialog) {
+	/**
+	 * Construct a new <code>DisposeFindDialog</code>.
+	 * 
+	 * @param dialog
+	 *            the find dialog to dispose.
+	 */
+	private DisposeFindDialogListener(final FindDialog dialog) {
 	    this.dialog = dialog;
 	}
 
@@ -91,41 +143,58 @@ public final class UrlyBirdPresenter {
 	}
     }
 
-    private final class StartFindDialog implements ActionListener {
+    /**
+     * Opens a modal dialog that enables the user to search for
+     * {@link RoomOffer}s that match an specified criteria.
+     * 
+     * @author arnelandwehr
+     */
+    private final class FindRoomsListener implements ActionListener {
 
-	private final class FindRooms implements ActionListener {
-	    private final FindDialog dialog;
+	/** the find rooms dialog to open. */
+	private final FindDialog dialog;
 
-	    private FindRooms(final FindDialog dialog) {
-		this.dialog = dialog;
-	    }
+	/**
+	 * Construct a new {@link FindRoomsListener}.
+	 * 
+	 * @param dialog
+	 *            the dialog to open.
+	 */
+	private FindRoomsListener(final FindDialog dialog) {
+	    this.dialog = dialog;
+	}
 
-	    @Override
-	    public void actionPerformed(final ActionEvent arg0) {
+	@Override
+	public void actionPerformed(final ActionEvent event) {
 
-		final JTextField hotelTextField = dialog.getHotelTextField();
-		final String hotelCriteria = (hotelTextField.isEnabled()) ? hotelTextField
-			.getText().trim() : null;
+	    final JTextField hotelTextField = dialog.getHotelTextField();
+	    final String hotelCriteria = (hotelTextField.isEnabled()) ? hotelTextField
+		    .getText().trim() : null;
 
-		final JTextField locationTextField = dialog
-			.getLocationTextField();
-		final String locationCriteria = (locationTextField.isEnabled()) ? locationTextField
-			.getText().trim() : null;
+	    final JTextField locationTextField = dialog.getLocationTextField();
+	    final String locationCriteria = (locationTextField.isEnabled()) ? locationTextField
+		    .getText().trim() : null;
 
-		final FindRoomCommand command = new FindRoomCommand(
-			hotelCriteria, locationCriteria, dialog
-				.getAndRadioButton().isSelected());
+	    final FindRoomCommand command = new FindRoomCommand(hotelCriteria,
+		    locationCriteria, dialog.getAndRadioButton().isSelected());
 
-		try {
-		    final List<RoomOffer> rooms = service
-			    .findRoomOffer(command);
-		    tableModel.replaceAll(rooms);
-		    dialog.dispose();
-		} catch (final Exception e) {
-		    showUserTheError(dialog, e.getMessage());
-		}
+	    try {
+		final List<RoomOffer> rooms = service.findRoomOffer(command);
+		tableModel.replaceAll(rooms);
+		dialog.dispose();
+	    } catch (final Exception e) {
+		showUserTheError(dialog, e.getMessage());
 	    }
 	}
+    }
+
+    /**
+     * 
+     * 
+     * @author arnelandwehr
+     *
+     */
+    private final class StartFindDialogListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(final ActionEvent arg0) {
@@ -158,9 +227,10 @@ public final class UrlyBirdPresenter {
 			    .getLocationTextField()));
 
 	    dialog.getDiscardButton().addActionListener(
-		    new DisposeDialog(dialog));
+		    new DisposeFindDialogListener(dialog));
 
-	    dialog.getFindButton().addActionListener(new FindRooms(dialog));
+	    dialog.getFindButton().addActionListener(
+		    new FindRoomsListener(dialog));
 
 	    dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	    dialog.setVisible(true);
@@ -328,8 +398,9 @@ public final class UrlyBirdPresenter {
 
 	    @Override
 	    public void actionPerformed(final ActionEvent arg0) {
-		service = connectionPresenter.startRoomOfferServiceProviderDialog(
-			view.getMainFrame(), service);
+		service = connectionPresenter
+			.startRoomOfferServiceProviderDialog(
+				view.getMainFrame(), service);
 	    }
 	});
 	view.getChangeButton().setEnabled(false);
@@ -337,8 +408,8 @@ public final class UrlyBirdPresenter {
 	view.getNewButton().setEnabled(false);
 	view.getDeleteButton().setEnabled(false);
 
-	view.getFindButton().addActionListener(new StartFindDialog());
-	view.getAllButton().addActionListener(new FindAllRooms());
+	view.getFindButton().addActionListener(new StartFindDialogListener());
+	view.getAllButton().addActionListener(new FindAllRoomsListener());
 	view.getExitButton().addActionListener(new ExitApplication());
 	view.getRoomTable().getSelectionModel()
 		.addListSelectionListener(new ListSelectionListener() {
