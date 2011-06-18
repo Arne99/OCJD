@@ -39,7 +39,7 @@
 	</target>
 
 	<target name="javadoc" depends="compile">
-		<javadoc access="private" destdir="docs/javadoc" author="true" version="true" use="true" windowtitle="Urly Bird ">
+		<javadoc access="package" destdir="docs/javadoc" author="true" version="true" use="true" windowtitle="Urly Bird ">
 			<fileset dir="${src}" defaultexcludes="yes">
 				<include name="**/*.java" />
 			</fileset>
