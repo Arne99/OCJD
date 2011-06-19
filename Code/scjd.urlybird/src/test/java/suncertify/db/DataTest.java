@@ -104,11 +104,14 @@ public class DataTest {
 
     @Test
     public void shouldUpdateARecordWithTheDatabaseHandler()
-	    throws RecordNotFoundException, SecurityException {
+	    throws RecordNotFoundException, SecurityException, IOException {
 
 	final int index = 15;
 	final int cookie = 33;
 	final String[] values = new String[] {};
+
+	when(record.isValid()).thenReturn(true);
+	when(databaseHandler.readRecord(15)).thenReturn(record);
 
 	data.update(index, values, cookie);
     }
@@ -123,6 +126,36 @@ public class DataTest {
 
 	doThrow(new SecurityException()).when(recordLocker).checkRecordOwner(
 		index, cookie);
+
+	data.update(index, values, cookie);
+    }
+
+    @Test(expected = RecordNotFoundException.class)
+    public void shouldThrowARecordNotFoundExceptionIfTheRecordToUpdateIsNotStored()
+	    throws IOException, RecordNotFoundException, SecurityException {
+
+	final int index = 15;
+	final int cookie = 33;
+	final String[] values = new String[] {};
+
+	when(record.isValid()).thenReturn(false);
+	when(databaseHandler.readRecord(15)).thenReturn(record);
+
+	data.update(index, values, cookie);
+    }
+
+    @Test(expected = RecordNotFoundException.class)
+    public void shouldThrowARecordNotFoundExceptionIfAnIoExceptionOccurs()
+	    throws IOException, RecordNotFoundException, SecurityException {
+
+	final int index = 15;
+	final int cookie = 33;
+	final String[] values = new String[] {};
+
+	when(record.isValid()).thenReturn(true);
+	when(databaseHandler.readRecord(15)).thenReturn(record);
+	doThrow(new IOException()).when(databaseHandler).writeRecord(anyList(),
+		anyInt());
 
 	data.update(index, values, cookie);
     }

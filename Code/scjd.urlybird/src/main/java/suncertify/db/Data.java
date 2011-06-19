@@ -93,6 +93,7 @@ public final class Data implements DB {
 	locker.checkRecordOwner(recNo, lockCookie);
 
 	try {
+	    checkIfValidRecordIsAtIndex(recNo);
 	    handler.writeRecord(Arrays.asList(data), recNo);
 	} catch (final IOException e) {
 	    throw new RecordNotFoundException(
@@ -107,7 +108,7 @@ public final class Data implements DB {
 
 	locker.checkRecordOwner(recNo, lockCookie);
 	try {
-	    checkIfThereIsARecordToDelete(recNo);
+	    checkIfValidRecordIsAtIndex(recNo);
 	    handler.deleteRecord(recNo);
 	} catch (final IOException e) {
 	    // transforms the IOException in a RecordNotFoundException to
@@ -129,7 +130,7 @@ public final class Data implements DB {
      * @throws RecordNotFoundException
      *             if no valid record is stored under the given index.
      */
-    private void checkIfThereIsARecordToDelete(final int recNo)
+    private void checkIfValidRecordIsAtIndex(final int recNo)
 	    throws IOException, RecordNotFoundException {
 	read(recNo);
     }
