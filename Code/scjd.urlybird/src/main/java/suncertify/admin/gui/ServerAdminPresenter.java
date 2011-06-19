@@ -207,7 +207,7 @@ public final class ServerAdminPresenter {
      * @author arnelandwehr
      * 
      */
-    private final class Maximal4DigitsAllowedDocument extends PlainDocument {
+    private final class Maximal4DigitsAllowedDocumentListener extends PlainDocument {
 
 	/**
 	 * the SUID.
@@ -318,7 +318,7 @@ public final class ServerAdminPresenter {
 	view.getDbPathTextField().setEnabled(false);
 
 	view.getPortTextField()
-		.setDocument(new Maximal4DigitsAllowedDocument());
+		.setDocument(new Maximal4DigitsAllowedDocumentListener());
 
 	view.getMainFrame().addWindowListener(new CloseApplicationListener());
 

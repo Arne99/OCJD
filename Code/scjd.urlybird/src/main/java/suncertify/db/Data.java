@@ -106,8 +106,8 @@ public final class Data implements DB {
 	    throws RecordNotFoundException, SecurityException {
 
 	locker.checkRecordOwner(recNo, lockCookie);
-
 	try {
+	    checkIfThereIsARecordToDelete(recNo);
 	    handler.deleteRecord(recNo);
 	} catch (final IOException e) {
 	    // transforms the IOException in a RecordNotFoundException to
@@ -117,6 +117,21 @@ public final class Data implements DB {
 		    "The database could not obtain any record for the given index: "
 			    + recNo + " because of: " + e.getMessage(), e);
 	}
+    }
+
+    /**
+     * Checks if a valid record is stored under the given index.
+     * 
+     * @param recNo
+     *            the index to check.
+     * @throws IOException
+     *             if an io problem occurs during the check.
+     * @throws RecordNotFoundException
+     *             if no valid record is stored under the given index.
+     */
+    private void checkIfThereIsARecordToDelete(final int recNo)
+	    throws IOException, RecordNotFoundException {
+	read(recNo);
     }
 
     @Override
@@ -150,10 +165,17 @@ public final class Data implements DB {
     @Override
     public int create(final String[] data) throws DuplicateKeyException {
 
-	synchronized (handler) {
+	// must be synchronized there must not be an concurrent create between
+	// find, findEmptyIndex and create.
+	synchronized (this) {
 	    try {
-		if (find(data).length != 0) {
-		    throw new DuplicateKeyException();
+		final int[] duplicateRecordIndices = find(data);
+		if (duplicateRecordIndices.length != 0) {
+		    throw new DuplicateKeyException(
+			    "the row to insert into the database is already stored. Data to insert: "
+				    + Arrays.toString(data)
+				    + " rows with the same data: "
+				    + Arrays.toString(duplicateRecordIndices));
 		}
 		final int emptyIndex = handler.findEmptyIndex();
 		handler.writeRecord(Arrays.asList(data), emptyIndex);

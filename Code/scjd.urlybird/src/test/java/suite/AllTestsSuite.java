@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 
 import suncertify.admin.service.AdministrationServiceIntegrationTest;
 import suncertify.datafile.DataFileTestSuite;
-import suncertify.db.DataTest;
+import suncertify.db.DataConcurrencyTest;
 import suncertify.db.SynchronizedRecordLockerTest;
 import suncertify.domain.DomainTestSuite;
 
@@ -14,7 +14,7 @@ import suncertify.domain.DomainTestSuite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ DataFileTestSuite.class, DomainTestSuite.class,
-	AdministrationServiceIntegrationTest.class, DataTest.class,
+	AdministrationServiceIntegrationTest.class, DataConcurrencyTest.class,
 	SynchronizedRecordLockerTest.class })
 public class AllTestsSuite {
 

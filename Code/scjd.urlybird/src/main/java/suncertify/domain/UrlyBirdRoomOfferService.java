@@ -112,7 +112,8 @@ public final class UrlyBirdRoomOfferService implements RoomOfferService {
 	    checkStaleRoomData(clientRoomToBook, dbRoomToBook);
 
 	    if (!isRoomBookable.isSatisfiedBy(dbRoomToBook)) {
-		throw new Exception();
+		throw new Exception("the room to book: " + clientRoomToBook
+			+ " is already booked");
 	    }
 
 	    final UrlyBirdRoomOffer bookedRoomOffer = factory
@@ -137,7 +138,8 @@ public final class UrlyBirdRoomOfferService implements RoomOfferService {
 	final List<String> values = command.getValues();
 	final Date date = factory.getBookableDateFromValues(values);
 	if (!isOccupancyIn48Hours.isSatisfiedBy(date)) {
-	    throw new Exception("");
+	    throw new Exception(
+		    "the occupany of the new room is not in the next 48 hours, the room can not be added");
 	}
 
 	UrlyBirdRoomOffer roomOffer = null;
