@@ -271,4 +271,36 @@ public class DataTest {
 	data.read(index);
     }
 
+    @Test
+    public void shouldFindAllIndicesThatContainsRecordsThatMatchesTheGivenCriteria()
+	    throws IOException {
+
+	final String[] criteria = new String[] {};
+
+	final Record record1 = mock(Record.class);
+	final Record record2 = mock(Record.class);
+
+	when(record1.getIndex()).thenReturn(1);
+	when(record2.getIndex()).thenReturn(2);
+
+	final HashSet<Record> records = Sets.newHashSet(record1, record2);
+	when(databaseHandler.findMatchingRecords((Specification<Record>) any()))
+		.thenReturn(records);
+
+	final int[] result = data.find(criteria);
+
+	assertThat(result, is(equalTo(new int[] { 1, 2 })));
+    }
+
+    @Test(expected = DatabaseException.class)
+    public void shouldThrowADatabaseExceptionIfAnIoExceptionOccurs()
+	    throws IOException {
+
+	final String[] criteria = new String[] {};
+
+	when(databaseHandler.findMatchingRecords((Specification<Record>) any()))
+		.thenThrow(new IOException());
+
+	data.find(criteria);
+    }
 }

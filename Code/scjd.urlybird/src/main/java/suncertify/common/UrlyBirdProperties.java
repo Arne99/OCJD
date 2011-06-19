@@ -158,7 +158,6 @@ public final class UrlyBirdProperties {
 	    propertyWriter = new BufferedWriter(new FileWriter(propertyFile));
 	    properties.store(propertyWriter, "");
 	} finally {
-	    propertyWriter.flush();
 	    propertyWriter.close();
 	}
     }
