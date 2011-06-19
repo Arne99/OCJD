@@ -131,7 +131,7 @@ public final class Data implements DB {
      *             if no valid record is stored under the given index.
      */
     private void checkIfValidRecordIsAtIndex(final int recNo)
-	    throws IOException, RecordNotFoundException {
+	    throws RecordNotFoundException {
 	read(recNo);
     }
 
@@ -196,7 +196,7 @@ public final class Data implements DB {
     @Override
     public long lock(final int recNo) throws RecordNotFoundException {
 
-	read(recNo);
+	checkIfValidRecordIsAtIndex(recNo);
 	return locker.lockRecord(recNo);
     }
 
@@ -204,6 +204,7 @@ public final class Data implements DB {
     public void unlock(final int recNo, final long cookie)
 	    throws RecordNotFoundException, SecurityException {
 
+	checkIfValidRecordIsAtIndex(recNo);
 	locker.unlockRecord(recNo, cookie);
     }
 

@@ -159,4 +159,72 @@ public class DataTest {
 
 	data.update(index, values, cookie);
     }
+
+    @Test
+    public void shouldUnlockALockedRecordWithTheRecordLocker()
+	    throws RecordNotFoundException, SecurityException, IOException {
+
+	final int index = 15;
+	final int cookie = 33;
+
+	when(record.isValid()).thenReturn(true);
+	when(databaseHandler.readRecord(index)).thenReturn(record);
+
+	data.unlock(index, cookie);
+    }
+
+    @Test(expected = RecordNotFoundException.class)
+    public void shouldThrowARecordNotFoundExceptionIfTheRecordToUnlockDoesNotExist()
+	    throws IOException, RecordNotFoundException, SecurityException {
+
+	final int index = 15;
+	final int cookie = 33;
+
+	when(record.isValid()).thenReturn(false);
+	when(databaseHandler.readRecord(index)).thenReturn(record);
+
+	data.unlock(index, cookie);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void shouldThrowAnSecurityExceptionIfTheRecordIsLockedByAnOtherOwner()
+	    throws IOException, RecordNotFoundException, SecurityException {
+
+	final int index = 15;
+	final int cookie = 33;
+
+	when(record.isValid()).thenReturn(true);
+	when(databaseHandler.readRecord(index)).thenReturn(record);
+	doThrow(new SecurityException()).when(recordLocker).unlockRecord(index,
+		cookie);
+
+	data.unlock(index, cookie);
+    }
+
+    @Test
+    public void shouldLockARecordWithTheRecordLocker()
+	    throws RecordNotFoundException, SecurityException, IOException {
+
+	final int index = 15;
+	final int cookie = 33;
+
+	when(record.isValid()).thenReturn(true);
+	when(databaseHandler.readRecord(index)).thenReturn(record);
+
+	data.lock(index);
+    }
+
+    @Test(expected = RecordNotFoundException.class)
+    public void shouldThrowARecordNotFoundExceptionIfTheRecordToLockDoesNotExist()
+	    throws IOException, RecordNotFoundException, SecurityException {
+
+	final int index = 15;
+	final int cookie = 33;
+
+	when(record.isValid()).thenReturn(false);
+	when(databaseHandler.readRecord(index)).thenReturn(record);
+
+	data.lock(index);
+    }
+
 }
