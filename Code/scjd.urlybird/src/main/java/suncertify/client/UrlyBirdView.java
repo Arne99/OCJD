@@ -53,41 +53,11 @@ public final class UrlyBirdView {
     /** The urly bird menu. */
     private JMenu urlyBirdMenu;
 
-    /** The edit menu. */
-    private JMenu editMenu;
-
-    /** The help menu. */
-    private JMenu helpMenu;
-
-    /** The view menu. */
-    private JMenu viewMenu;
-
     /** The menu bar. */
     private JMenuBar menuBar;
 
-    /** The new menu item. */
-    private JMenuItem newMenuItem;
-
-    /** The book menu item. */
-    private JMenuItem bookMenuItem;
-
-    /** The delete menu item. */
-    private JMenuItem deleteMenuItem;
-
-    /** The change menu item. */
-    private JMenuItem changeMenuItem;
-
-    /** The all menu item. */
-    private JMenuItem allMenuItem;
-
-    /** The find menu item. */
-    private JMenuItem findMenuItem;
-
     /** The connection menu item. */
     private JMenuItem connectionMenuItem;
-
-    /** The about menu item. */
-    private JMenuItem aboutMenuItem;
 
     /** The table scroll pane. */
     private JScrollPane tableScrollPane;
@@ -177,33 +147,6 @@ public final class UrlyBirdView {
     }
 
     /**
-     * Gets the edits the menu.
-     * 
-     * @return the edits the menu
-     */
-    public JMenu getEditMenu() {
-	return editMenu;
-    }
-
-    /**
-     * Gets the help menu.
-     * 
-     * @return the help menu
-     */
-    public JMenu getHelpMenu() {
-	return helpMenu;
-    }
-
-    /**
-     * Gets the view menu.
-     * 
-     * @return the view menu
-     */
-    public JMenu getViewMenu() {
-	return viewMenu;
-    }
-
-    /**
      * Gets the menu bar.
      * 
      * @return the menu bar
@@ -213,75 +156,12 @@ public final class UrlyBirdView {
     }
 
     /**
-     * Gets the new menu item.
-     * 
-     * @return the new menu item
-     */
-    public JMenuItem getNewMenuItem() {
-	return newMenuItem;
-    }
-
-    /**
-     * Gets the book menu item.
-     * 
-     * @return the book menu item
-     */
-    public JMenuItem getBookMenuItem() {
-	return bookMenuItem;
-    }
-
-    /**
-     * Gets the delete menu item.
-     * 
-     * @return the delete menu item
-     */
-    public JMenuItem getDeleteMenuItem() {
-	return deleteMenuItem;
-    }
-
-    /**
-     * Gets the change menu item.
-     * 
-     * @return the change menu item
-     */
-    public JMenuItem getChangeMenuItem() {
-	return changeMenuItem;
-    }
-
-    /**
-     * Gets the all menu item.
-     * 
-     * @return the all menu item
-     */
-    public JMenuItem getAllMenuItem() {
-	return allMenuItem;
-    }
-
-    /**
-     * Gets the find menu item.
-     * 
-     * @return the find menu item
-     */
-    public JMenuItem getFindMenuItem() {
-	return findMenuItem;
-    }
-
-    /**
      * Gets the connection menu item.
      * 
      * @return the connection menu item
      */
     public JMenuItem getConnectionMenuItem() {
 	return connectionMenuItem;
-    }
-
-    /**
-     * Gets the about menu item.
-     * 
-     * @return the about menu item
-     */
-    public JMenuItem getAboutMenuItem() {
-	return aboutMenuItem;
     }
 
     /**
@@ -319,16 +199,6 @@ public final class UrlyBirdView {
 	menuBar = new JMenuBar();
 	urlyBirdMenu = new JMenu();
 	connectionMenuItem = new JMenuItem();
-	aboutMenuItem = new JMenuItem();
-	viewMenu = new JMenu();
-	allMenuItem = new JMenuItem();
-	findMenuItem = new JMenuItem();
-	editMenu = new JMenu();
-	newMenuItem = new JMenuItem();
-	bookMenuItem = new JMenuItem();
-	deleteMenuItem = new JMenuItem();
-	changeMenuItem = new JMenuItem();
-	helpMenu = new JMenu();
 
 	final Container contentPane = mainFrame.getContentPane();
 	contentPane.setLayout(new GridBagLayout());
@@ -425,39 +295,7 @@ public final class UrlyBirdView {
 	connectionMenuItem.setText("Connection");
 	urlyBirdMenu.add(connectionMenuItem);
 
-	aboutMenuItem.setText("About");
-	urlyBirdMenu.add(aboutMenuItem);
-
 	menuBar.add(urlyBirdMenu);
-
-	viewMenu.setText("View");
-
-	allMenuItem.setText("All");
-	viewMenu.add(allMenuItem);
-
-	findMenuItem.setText("Find");
-	viewMenu.add(findMenuItem);
-
-	menuBar.add(viewMenu);
-
-	editMenu.setText("Edit");
-
-	newMenuItem.setText("New");
-	editMenu.add(newMenuItem);
-
-	bookMenuItem.setText("Book");
-	editMenu.add(bookMenuItem);
-
-	deleteMenuItem.setText("Delete");
-	editMenu.add(deleteMenuItem);
-
-	changeMenuItem.setText("Change");
-	editMenu.add(changeMenuItem);
-
-	menuBar.add(editMenu);
-
-	helpMenu.setText("Help");
-	menuBar.add(helpMenu);
 
 	mainFrame.setJMenuBar(menuBar);
 	mainFrame.pack();
@@ -471,10 +309,6 @@ public final class UrlyBirdView {
 	changeButton.setMnemonic(KeyEvent.VK_C);
 	allButton.setMnemonic(KeyEvent.VK_A);
 	urlyBirdMenu.setMnemonic(KeyEvent.VK_U);
-	editMenu.setMnemonic(KeyEvent.VK_I);
-	helpMenu.setMnemonic(KeyEvent.VK_H);
-	viewMenu.setMnemonic(KeyEvent.VK_V);
-
     }
 
     /**
