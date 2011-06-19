@@ -81,9 +81,13 @@ public final class DatabaseConnectionPresenter implements
 			"Connection Failure!", JOptionPane.ERROR_MESSAGE);
 		return;
 	    } catch (final IOException e) {
-		logger.throwing(getClass().getName(), "actionPerformed", e);
+		JOptionPane.showMessageDialog(null, e.getMessage(),
+			"Connection Failure!", JOptionPane.ERROR_MESSAGE);
+		return;
 	    } catch (final UnsupportedDataFileFormatException e) {
-		logger.throwing(getClass().getName(), "actionPerformed", e);
+		JOptionPane.showMessageDialog(null, e.getMessage(),
+			"Connection Failure!", JOptionPane.ERROR_MESSAGE);
+		return;
 	    }
 
 	    try {
@@ -278,6 +282,8 @@ public final class DatabaseConnectionPresenter implements
 	dialog.pack();
 	dialog.addWindowListener(exitAdapter);
 
+	panel.getConnectButton().setEnabled(false);
+
 	panel.getSelectButton().addActionListener(
 		new SelectDatabasePathWithFileChooserListener(dialog));
 
@@ -293,8 +299,9 @@ public final class DatabaseConnectionPresenter implements
 	    final String path = properties
 		    .getProperty(PropertyName.CLIENT_DATABASE_GUI_PATH);
 	    panel.getDatabaseTextField().setText(path);
-	} catch (final IOException e1) {
-	    e1.printStackTrace();
+	} catch (final IOException exception) {
+	    logger.throwing(getClass().getSimpleName(), "initDatabaseDialog",
+		    exception);
 	}
 
 	dialog.setLocationRelativeTo(null);

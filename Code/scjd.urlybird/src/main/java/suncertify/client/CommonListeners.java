@@ -78,11 +78,9 @@ final class ExitApplication extends ExitDialogAdapter {
      * really wants to close the application and shuts it down if he agrees.
      */
     private void askUserForExit() {
-	final int result = JOptionPane
-		.showConfirmDialog(
-			null,
-			"Do you really want to exit, without connectiong to a database? The application will be terminated!",
-			"Exit?", JOptionPane.OK_CANCEL_OPTION);
+	final int result = JOptionPane.showConfirmDialog(null,
+		"Do you really want to exit and leave UrlyBird?", "Exit?",
+		JOptionPane.OK_CANCEL_OPTION);
 	if (result == JOptionPane.OK_OPTION) {
 	    System.exit(0);
 	}

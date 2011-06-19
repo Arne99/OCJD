@@ -350,6 +350,9 @@ public final class RoomTableModel extends AbstractTableModel {
 
 	@Override
 	protected void setValue(final Object value) {
+	    if (value == null) {
+		return;
+	    }
 	    final Date date = (Date) value;
 	    setText(convertDate(date));
 	}
@@ -381,7 +384,9 @@ public final class RoomTableModel extends AbstractTableModel {
 
 	@Override
 	protected void setValue(final Object value) {
-
+	    if (value == null) {
+		return;
+	    }
 	    final Money money = (Money) value;
 	    setText(convertMoney(money));
 	}
@@ -414,6 +419,9 @@ public final class RoomTableModel extends AbstractTableModel {
 
 	@Override
 	protected void setValue(final Object value) {
+	    if (value == null) {
+		return;
+	    }
 	    final Boolean bool = (Boolean) value;
 	    setText(convertSmokingBoolean(bool));
 	}

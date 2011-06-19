@@ -35,6 +35,93 @@ import suncertify.common.UrlyBirdProperties.PropertyName;
 public final class ServerConnectionPresenter implements
 	RoomOfferServiceProvider {
 
+    /**
+     * Establishes a connection to the server with the specified parameters and
+     * fetches a remote {@link RoomOfferService} from it.
+     * 
+     * @author arnelandwehr
+     * 
+     */
+    private final class GetServiceFromServerListener implements ActionListener {
+
+	/** the dialog . */
+	private final JDialog dialog;
+
+	/** the connection panel. */
+	private final ServerConnectionPanel connectionPanel;
+
+	/**
+	 * Construct a new <code>GetServiceFromServerListener</code>.
+	 * 
+	 * @param dialog
+	 *            the dialog.
+	 * @param connectionPanel
+	 *            the connection panel
+	 */
+	private GetServiceFromServerListener(final JDialog dialog,
+		final ServerConnectionPanel connectionPanel) {
+	    this.dialog = dialog;
+	    this.connectionPanel = connectionPanel;
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent arg0) {
+
+	    final String host = connectionPanel.getHostTextField().getText()
+		    .trim();
+	    final int port = Integer.parseInt(connectionPanel
+		    .getPortTextField().getText().trim());
+
+	    final ServerConfiguration serverConfiguration = new ServerConfiguration(
+		    port, host);
+	    try {
+		final ServicProvider services = (ServicProvider) Naming
+			.lookup(serverConfiguration.getHostNameWithPort() + "/"
+				+ serverConfiguration.getClientServiceName());
+
+		service = services.getRoomOfferService();
+
+	    } catch (final Exception e) {
+		logger.throwing(getClass().getSimpleName(), "actionPerformed",
+			e);
+		JOptionPane.showMessageDialog(null, e.getCause());
+		return;
+	    }
+
+	    try {
+		properties.setProperty(PropertyName.CLIENT_CONNECTION_GUI_HOST,
+			host);
+		properties.setProperty(PropertyName.CLIENT_CONNECTION_GUI_PORT,
+			port + "");
+	    } catch (final IOException e) {
+		logger.throwing(getClass().getSimpleName(), "actionPerformed",
+			e);
+	    }
+	    dialog.dispose();
+	}
+    }
+
+    /**
+     * Allows only digits as input.
+     * 
+     * @author arnelandwehr
+     * 
+     */
+    private final class AllowsOnlyDigitsAsInputListener extends PlainDocument {
+	/** the SUID. */
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public void insertString(final int arg0, final String arg1,
+		final AttributeSet arg2) throws BadLocationException {
+	    if (!Pattern.matches("\\d*", arg1)) {
+		return;
+	    }
+
+	    super.insertString(arg0, arg1, arg2);
+	}
+    }
+
     /** exception logger, global is sufficient here. */
     private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -66,7 +153,7 @@ public final class ServerConnectionPresenter implements
 		@Override
 		public void run() {
 		    final JDialog dialog = new JDialog(frame, true);
-		    initDialog(dialog, frame, new ExitApplication());
+		    showDialog(dialog, frame, new ExitApplication());
 		}
 	    });
 	} catch (final InterruptedException e) {
@@ -80,15 +167,19 @@ public final class ServerConnectionPresenter implements
     }
 
     /**
-     * 
+     * Initializes and shows the modal server connection dialog.
      * 
      * @param dialog
+     *            the dialog to initialize
      * @param frame
+     *            the parent frame
      * @param exitDialog
-     * @return
+     *            the dialog that appears if the user wants to exit.
+     * @return the created {@link RoomOfferService}.
      */
-    private RoomOfferService initDialog(final JDialog dialog,
+    private RoomOfferService showDialog(final JDialog dialog,
 	    final JFrame frame, final ExitDialogAdapter exitDialog) {
+
 	final ServerConnectionPanel connectionPanel = new ServerConnectionPanel();
 	dialog.add(connectionPanel);
 	dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -97,22 +188,29 @@ public final class ServerConnectionPresenter implements
 
 	connectionPanel.getConnectButton().setEnabled(false);
 
-	connectionPanel.getPortTextField().setDocument(new PlainDocument() {
+	loadLastUserInput(connectionPanel);
 
-	    /** the SUID. */
-	    private static final long serialVersionUID = 1L;
+	addListener(dialog, exitDialog, connectionPanel);
 
-	    @Override
-	    public void insertString(final int arg0, final String arg1,
-		    final AttributeSet arg2) throws BadLocationException {
-		if (!Pattern.matches("\\d*", arg1)) {
-		    return;
-		}
+	dialog.setVisible(true);
+	return service;
+    }
 
-		super.insertString(arg0, arg1, arg2);
-	    }
-
-	});
+    /**
+     * Adds the needed listeners to the dialog.
+     * 
+     * @param dialog
+     *            the dialog
+     * @param exitDialog
+     *            the exit dialog
+     * @param connectionPanel
+     *            the connection panel
+     */
+    private void addListener(final JDialog dialog,
+	    final ExitDialogAdapter exitDialog,
+	    final ServerConnectionPanel connectionPanel) {
+	connectionPanel.getPortTextField().setDocument(
+		new AllowsOnlyDigitsAsInputListener());
 
 	connectionPanel
 		.getHostTextField()
@@ -132,48 +230,20 @@ public final class ServerConnectionPresenter implements
 				.getPortTextField()));
 
 	connectionPanel.getConnectButton().addActionListener(
-		new ActionListener() {
+		new GetServiceFromServerListener(dialog, connectionPanel));
 
-		    @Override
-		    public void actionPerformed(final ActionEvent arg0) {
+	connectionPanel.getDiscardButton().addActionListener(exitDialog);
+	dialog.addWindowListener(exitDialog);
+    }
 
-			final String host = connectionPanel.getHostTextField()
-				.getText().trim();
-			final int port = Integer.parseInt(connectionPanel
-				.getPortTextField().getText().trim());
-
-			final ServerConfiguration serverConfiguration = new ServerConfiguration(
-				port, host);
-			try {
-			    final ServicProvider services = (ServicProvider) Naming
-				    .lookup(serverConfiguration
-					    .getHostNameWithPort()
-					    + "/"
-					    + serverConfiguration
-						    .getClientServiceName());
-
-			    service = services.getRoomOfferService();
-
-			} catch (final Exception e) {
-			    e.printStackTrace();
-			    JOptionPane.showMessageDialog(null, e.getCause());
-			    return;
-			}
-
-			try {
-			    properties.setProperty(
-				    PropertyName.CLIENT_CONNECTION_GUI_HOST,
-				    host);
-			    properties.setProperty(
-				    PropertyName.CLIENT_CONNECTION_GUI_PORT,
-				    port + "");
-			} catch (final IOException e) {
-			    e.printStackTrace();
-			}
-			dialog.dispose();
-		    }
-		});
-
+    /**
+     * Loads the last user input for the connection fields from the property
+     * file and fills the specified fields with it.
+     * 
+     * @param connectionPanel
+     *            the connection panel
+     */
+    private void loadLastUserInput(final ServerConnectionPanel connectionPanel) {
 	try {
 	    final String host = properties
 		    .getProperty(PropertyName.CLIENT_CONNECTION_GUI_HOST);
@@ -182,15 +252,8 @@ public final class ServerConnectionPresenter implements
 		    .getProperty(PropertyName.CLIENT_CONNECTION_GUI_PORT);
 	    connectionPanel.getPortTextField().setText(port);
 	} catch (final IOException e1) {
-	    e1.printStackTrace();
+	    logger.throwing(getClass().getSimpleName(), "actionPerformed", e1);
 	}
-
-	connectionPanel.getDiscardButton().addActionListener(exitDialog);
-	dialog.addWindowListener(exitDialog);
-
-	dialog.setVisible(true);
-
-	return service;
     }
 
     @Override
@@ -199,7 +262,7 @@ public final class ServerConnectionPresenter implements
 
 	this.service = service;
 	final JDialog dialog = new JDialog(frame, true);
-	initDialog(dialog, frame, new ExitDialog(dialog));
+	showDialog(dialog, frame, new ExitDialog(dialog));
 	return service;
     }
 
