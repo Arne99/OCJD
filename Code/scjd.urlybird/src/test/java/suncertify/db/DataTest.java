@@ -1,15 +1,19 @@
 package suncertify.db;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import suncertify.util.Specification;
 
 import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 public class DataTest {
 
@@ -32,7 +36,9 @@ public class DataTest {
 	    throws DuplicateKeyException, IOException {
 
 	final HashSet<Record> result = Sets.newHashSet(mock(Record.class));
-	when(databaseHandler.findMatchingRecords(any(Specification.class)))
+	when(
+		databaseHandler
+			.findMatchingRecords((Specification<Record>) anyObject()))
 		.thenReturn(result);
 	data.create(new String[] {});
     }
@@ -206,7 +212,6 @@ public class DataTest {
 	    throws RecordNotFoundException, SecurityException, IOException {
 
 	final int index = 15;
-	final int cookie = 33;
 
 	when(record.isValid()).thenReturn(true);
 	when(databaseHandler.readRecord(index)).thenReturn(record);
@@ -219,12 +224,51 @@ public class DataTest {
 	    throws IOException, RecordNotFoundException, SecurityException {
 
 	final int index = 15;
-	final int cookie = 33;
 
 	when(record.isValid()).thenReturn(false);
 	when(databaseHandler.readRecord(index)).thenReturn(record);
 
 	data.lock(index);
+    }
+
+    @Test
+    public void shouldReadARecordWithTheGiveIndexnAndReturnItAsAnStringArrays()
+	    throws RecordNotFoundException, IOException {
+
+	final int index = 29;
+	final ArrayList<String> recordValues = Lists.newArrayList("Hallo",
+		"Test");
+
+	when(record.isValid()).thenReturn(true);
+	when(databaseHandler.readRecord(index)).thenReturn(record);
+	when(record.getAllBusinessValues()).thenReturn(recordValues);
+
+	final String[] values = data.read(index);
+
+	assertThat(values, is(equalTo(recordValues.toArray(new String[] {}))));
+    }
+
+    @Test(expected = RecordNotFoundException.class)
+    public void shouldThrowARecordNotFoundExceptionIfTheIndexToReadContainsNoRecord()
+	    throws RecordNotFoundException, IOException {
+
+	final int index = 29;
+
+	when(record.isValid()).thenReturn(false);
+	when(databaseHandler.readRecord(index)).thenReturn(record);
+
+	data.read(index);
+    }
+
+    @Test(expected = RecordNotFoundException.class)
+    public void shouldThrowAtReadARecordNotFoundExceptionIfAIoExceptionOccurs()
+	    throws RecordNotFoundException, IOException {
+
+	final int index = 29;
+
+	when(databaseHandler.readRecord(index)).thenThrow(new IOException());
+
+	data.read(index);
     }
 
 }
