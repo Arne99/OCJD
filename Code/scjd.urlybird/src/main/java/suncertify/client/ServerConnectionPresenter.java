@@ -152,7 +152,8 @@ public final class ServerConnectionPresenter implements
 
 		@Override
 		public void run() {
-		    final JDialog dialog = new JDialog(frame, true);
+		    final JDialog dialog = new JDialog(frame,
+			    "Server Connection", true);
 		    showDialog(dialog, frame, new ExitApplication());
 		}
 	    });
@@ -183,15 +184,15 @@ public final class ServerConnectionPresenter implements
 	final ServerConnectionPanel connectionPanel = new ServerConnectionPanel();
 	dialog.add(connectionPanel);
 	dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-	dialog.setLocationRelativeTo(frame);
 	dialog.pack();
 
 	connectionPanel.getConnectButton().setEnabled(false);
 
-	loadLastUserInput(connectionPanel);
-
 	addListener(dialog, exitDialog, connectionPanel);
 
+	loadLastUserInput(connectionPanel);
+
+	dialog.setLocationRelativeTo(null);
 	dialog.setVisible(true);
 	return service;
     }
@@ -261,7 +262,7 @@ public final class ServerConnectionPresenter implements
 	    final JFrame frame, final RoomOfferService service) {
 
 	this.service = service;
-	final JDialog dialog = new JDialog(frame, true);
+	final JDialog dialog = new JDialog(frame, "Server Connection", true);
 	showDialog(dialog, frame, new ExitDialog(dialog));
 	return service;
     }

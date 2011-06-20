@@ -1,6 +1,10 @@
 package suncertify;
 
 import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
@@ -95,6 +99,12 @@ final class ApplicationStarter {
      */
     public static void main(final String[] args) throws IOException {
 
+	final Logger globalLogger = LogManager.getLogManager().getLogger(
+		Logger.GLOBAL_LOGGER_NAME);
+	globalLogger.addHandler(new FileHandler(System.getProperty("user.dir")
+		+ "/error.log"));
+	globalLogger.setLevel(Level.FINEST);
+
 	final START_MODE mode = getStartMode(args);
 
 	switch (mode) {
@@ -131,6 +141,7 @@ final class ApplicationStarter {
 	final DatabaseConnectionPresenter databaseConnectionPresenter = new DatabaseConnectionPresenter(
 		new DatabaseConnectionPanel(), DatabaseService.instance());
 	final JFrame frame = new JFrame();
+	frame.setLocationRelativeTo(null);
 	final RoomOfferService roomOfferService = databaseConnectionPresenter
 		.connectToDatabaseWithDialog(frame);
 	frame.dispose();
@@ -158,6 +169,7 @@ final class ApplicationStarter {
 
 	final ServerConnectionPresenter serverConnectionPresenter = new ServerConnectionPresenter();
 	final JFrame frame = new JFrame();
+	frame.setLocationRelativeTo(null);
 	final RoomOfferService service = serverConnectionPresenter
 		.startInitialConnectionDialogToFindService(frame);
 	frame.dispose();

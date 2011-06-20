@@ -81,6 +81,8 @@ public final class DatabaseConnectionPresenter implements
 			"Connection Failure!", JOptionPane.ERROR_MESSAGE);
 		return;
 	    } catch (final IOException e) {
+		logger.throwing(getClass().getSimpleName(), "actionPerformed",
+			e);
 		JOptionPane.showMessageDialog(null, e.getMessage(),
 			"Connection Failure!", JOptionPane.ERROR_MESSAGE);
 		return;
