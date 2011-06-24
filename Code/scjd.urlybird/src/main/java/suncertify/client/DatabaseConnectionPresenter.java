@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import suncertify.admin.service.DatabaseConfiguration;
+import suncertify.admin.DatabaseConfiguration;
 import suncertify.common.RoomOfferService;
 import suncertify.common.UrlyBirdProperties;
 import suncertify.common.UrlyBirdProperties.PropertyName;

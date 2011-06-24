@@ -18,6 +18,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import suncertify.admin.AdministrationService;
+import suncertify.admin.DatabaseConfiguration;
+import suncertify.admin.ServerConfiguration;
 import suncertify.common.BookRoomCommand;
 import suncertify.common.CreateRoomCommand;
 import suncertify.common.DeleteRoomCommand;

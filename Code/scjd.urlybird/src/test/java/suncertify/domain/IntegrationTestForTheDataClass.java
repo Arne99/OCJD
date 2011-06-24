@@ -3,6 +3,8 @@ package suncertify.domain;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Test;
+
 import com.google.common.io.Files;
 
 import suncertify.datafile.DataFileService;
@@ -56,14 +58,10 @@ public final class IntegrationTestForTheDataClass {
 	}
     }
 
-    /**
-     * The main method.
-     * 
-     * @param args
-     *            the arguments
-     */
-    public static void main(final String[] args) {
+    @Test
+    public void testMe() {
 	new IntegrationTestForTheDataClass().startTests();
+	System.out.println("finish");
     }
 
     /**
@@ -77,7 +75,7 @@ public final class IntegrationTestForTheDataClass {
 	     * time, but if you want, you can increase the controller variable,
 	     * so it is executed as many times as you want
 	     */
-	    for (int i = 0; i < 500; i++) {
+	    for (int i = 0; i < 100; i++) {
 		final Thread updatingRandom = new UpdatingRandomRecordThread();
 		updatingRandom.start();
 		final Thread updatingRecord1 = new UpdatingRecord1Thread();

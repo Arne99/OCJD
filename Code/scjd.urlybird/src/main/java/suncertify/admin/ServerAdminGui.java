@@ -1,4 +1,4 @@
-package suncertify.admin.gui;
+package suncertify.admin;
 
 import java.awt.Container;
 import java.awt.Dimension;

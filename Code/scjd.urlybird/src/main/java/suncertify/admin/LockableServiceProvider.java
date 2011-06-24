@@ -1,4 +1,4 @@
-package suncertify.admin.service;
+package suncertify.admin;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

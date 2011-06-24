@@ -1,4 +1,4 @@
-package suncertify.admin.service;
+package suncertify.admin;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

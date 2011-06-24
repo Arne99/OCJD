@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
-import suncertify.admin.gui.ServerAdminGui;
-import suncertify.admin.gui.ServerAdminPresenter;
-import suncertify.admin.service.AdministrationService;
+import suncertify.admin.AdministrationService;
+import suncertify.admin.ServerAdminGui;
+import suncertify.admin.ServerAdminPresenter;
 import suncertify.client.DatabaseConnectionPanel;
 import suncertify.client.DatabaseConnectionPresenter;
 import suncertify.client.ServerConnectionPresenter;

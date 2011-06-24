@@ -1,4 +1,4 @@
-package suncertify.admin.gui;
+package suncertify.admin;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,9 +19,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import suncertify.admin.service.AdministrationService;
-import suncertify.admin.service.DatabaseConfiguration;
-import suncertify.admin.service.ServerConfiguration;
 import suncertify.common.UrlyBirdProperties;
 import suncertify.common.UrlyBirdProperties.PropertyName;
 
