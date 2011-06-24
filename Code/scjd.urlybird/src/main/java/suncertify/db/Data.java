@@ -125,8 +125,6 @@ public final class Data implements DB {
      * 
      * @param recNo
      *            the index to check.
-     * @throws IOException
-     *             if an io problem occurs during the check.
      * @throws RecordNotFoundException
      *             if no valid record is stored under the given index.
      */
