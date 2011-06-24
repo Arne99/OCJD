@@ -4,7 +4,8 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
-import suncertify.util.Range;
+
+import suncertify.common.Range;
 
 /**
  * The Class DeletedColumnTest.

@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import suncertify.util.Specification;
+import suncertify.common.Specification;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;

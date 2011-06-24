@@ -3,7 +3,7 @@ package suncertify.domain;
 import java.util.Calendar;
 import java.util.Date;
 
-import suncertify.util.Specification;
+import suncertify.common.Specification;
 
 /**
  * Business rule that specifies if the occupancy of the given room is in the

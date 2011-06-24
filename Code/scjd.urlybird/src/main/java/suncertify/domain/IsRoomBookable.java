@@ -1,7 +1,7 @@
 package suncertify.domain;
 
 import suncertify.common.RoomOffer;
-import suncertify.util.Specification;
+import suncertify.common.Specification;
 
 /**
  * Business rule that specifies if a {@link RoomOffer} is bookable or not. A

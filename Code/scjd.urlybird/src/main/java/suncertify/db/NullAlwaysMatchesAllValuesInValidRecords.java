@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import suncertify.util.Specification;
+import suncertify.common.Specification;
 
 /**
  * {@link Specification} to search for valid {@link Record}s with a set of

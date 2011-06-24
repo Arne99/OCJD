@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 
-import suncertify.util.Range;
+import suncertify.common.Range;
 
 /**
  * The Class RecordValueTest.

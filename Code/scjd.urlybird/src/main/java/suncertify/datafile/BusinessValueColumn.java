@@ -1,8 +1,8 @@
 package suncertify.datafile;
 
-import static suncertify.util.DesignByContract.*;
+import static suncertify.common.DesignByContract.*;
 
-import suncertify.util.Range;
+import suncertify.common.Range;
 
 /**
  * An <code>BusinessValueColumn</code> represents an {@link DataFileColumn}

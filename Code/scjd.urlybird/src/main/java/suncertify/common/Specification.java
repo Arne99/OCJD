@@ -1,4 +1,4 @@
-package suncertify.util;
+package suncertify.common;
 
 /**
  * An {@link Specification} is a fixed rule that could be fulfilled by an object

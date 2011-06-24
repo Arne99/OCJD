@@ -29,9 +29,9 @@ import suncertify.common.DeleteRoomCommand;
 import suncertify.common.FindRoomCommand;
 import suncertify.common.Money;
 import suncertify.common.RoomOffer;
+import suncertify.common.Specification;
 import suncertify.common.UpdateRoomCommand;
 import suncertify.db.RecordNotFoundException;
-import suncertify.util.Specification;
 
 import com.google.common.collect.Lists;
 

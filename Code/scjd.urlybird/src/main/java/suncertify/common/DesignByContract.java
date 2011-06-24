@@ -1,4 +1,4 @@
-package suncertify.util;
+package suncertify.common;
 
 import java.util.Collection;
 

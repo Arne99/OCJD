@@ -15,9 +15,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import suncertify.common.Range;
+import suncertify.common.Specification;
 import suncertify.db.Record;
-import suncertify.util.Range;
-import suncertify.util.Specification;
 
 import com.google.common.collect.Lists;
 

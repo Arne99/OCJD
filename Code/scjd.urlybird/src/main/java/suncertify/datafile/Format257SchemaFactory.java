@@ -1,6 +1,6 @@
 package suncertify.datafile;
 
-import static suncertify.util.DesignByContract.*;
+import static suncertify.common.DesignByContract.*;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-import suncertify.util.Range;
+import suncertify.common.Range;
 
 /**
  * Implementation of a {@link SchemaFactory} for the schema with the identifier

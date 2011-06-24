@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import suncertify.common.Specification;
 import suncertify.db.DatabaseHandler;
 import suncertify.db.Record;
 import suncertify.db.RecordNotFoundException;
-import suncertify.util.Specification;
 
 import org.junit.After;
 import org.junit.Before;

@@ -1,6 +1,6 @@
-package suncertify.util;
+package suncertify.common;
 
-import static suncertify.util.DesignByContract.*;
+import static suncertify.common.DesignByContract.*;
 
 /**
  * A {@link Range} represents an interval of integer values with an fixed start

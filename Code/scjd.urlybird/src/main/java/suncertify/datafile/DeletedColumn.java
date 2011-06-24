@@ -1,9 +1,9 @@
 package suncertify.datafile;
 
-import static suncertify.util.DesignByContract.*;
+import static suncertify.common.DesignByContract.*;
 
+import suncertify.common.Range;
 import suncertify.db.Record;
-import suncertify.util.Range;
 
 /**
  * 

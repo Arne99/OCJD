@@ -1,6 +1,6 @@
 package suncertify.domain;
 
-import static suncertify.util.DesignByContract.checkNotNull;
+import static suncertify.common.DesignByContract.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,10 +17,10 @@ import suncertify.common.DeleteRoomCommand;
 import suncertify.common.FindRoomCommand;
 import suncertify.common.RoomOffer;
 import suncertify.common.RoomOfferService;
+import suncertify.common.Specification;
 import suncertify.common.UpdateRoomCommand;
 import suncertify.db.DB;
 import suncertify.db.RecordNotFoundException;
-import suncertify.util.Specification;
 
 /**
  * The <code>UrlyBirdRoomOfferService</code> includes the main domain logic for

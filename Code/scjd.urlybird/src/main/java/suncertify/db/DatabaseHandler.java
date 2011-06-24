@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import suncertify.util.Specification;
+import suncertify.common.Specification;
 
 /**
  * A <code>DatabaseHandler</code> supports read and write operations on a record

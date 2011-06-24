@@ -1,6 +1,6 @@
 package suncertify.datafile;
 
-import static suncertify.util.DesignByContract.*;
+import static suncertify.common.DesignByContract.*;
 
 import java.io.File;
 

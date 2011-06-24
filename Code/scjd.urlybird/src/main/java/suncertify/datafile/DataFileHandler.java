@@ -1,6 +1,6 @@
 package suncertify.datafile;
 
-import static suncertify.util.DesignByContract.*;
+import static suncertify.common.DesignByContract.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,9 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import suncertify.common.Specification;
 import suncertify.db.DatabaseHandler;
 import suncertify.db.Record;
-import suncertify.util.Specification;
 
 /**
  * A <code>DataFileHandler</code> is a {@link DatabaseHandler} for DataFiles. It

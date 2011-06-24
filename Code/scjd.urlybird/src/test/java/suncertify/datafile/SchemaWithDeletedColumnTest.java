@@ -11,7 +11,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 
-import suncertify.util.Range;
+import suncertify.common.Range;
 
 import com.google.common.collect.Lists;
 

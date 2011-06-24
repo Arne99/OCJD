@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
 
-import suncertify.util.Range;
+import suncertify.common.Range;
 
 // TODO: Auto-generated Javadoc
 /**
