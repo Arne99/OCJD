@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import suncertify.common.RoomOfferService;
-import suncertify.common.ServicProvider;
 import suncertify.common.ServiceProvider;
 import suncertify.db.DB;
 import suncertify.domain.UrlyBirdRoomOfferService;
@@ -22,7 +21,7 @@ import suncertify.domain.UrlyBirdRoomOfferService;
  * 
  */
 public final class LockableServiceProvider extends UnicastRemoteObject
-	implements ServicProvider {
+	implements ServiceProvider {
 
     /** thread safe singleton instance. */
     private static volatile LockableServiceProvider instance;
@@ -74,7 +73,7 @@ public final class LockableServiceProvider extends UnicastRemoteObject
     @Override
     public RoomOfferService getRoomOfferService() throws RemoteException {
 	final DB database = ServerState.instance().getDatabase();
-	return new LocableRemoteRoomOfferServiceProxy(new UrlyBirdRoomOfferService(
-		database));
+	return new LocableRemoteRoomOfferServiceProxy(
+		new UrlyBirdRoomOfferService(database));
     }
 }

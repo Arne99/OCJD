@@ -1,19 +1,24 @@
 package suncertify.common;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
- * An <code>ServiceProvider</code> allows the client to retrieve an
- * {@link RoomOfferService}.
+ * Gateway for the client to all services the server offers. An implementation
+ * of this interface is stored under a specific address in the naming service
+ * and could be located there by the client.
  * 
  * @author arnelandwehr
+ * 
  */
-public interface ServiceProvider {
+public interface ServiceProvider extends Remote {
 
     /**
-     * Getter for a <code>RoomOfferService</code>.
+     * Return a {@link RoomOfferService}.
      * 
-     * @return a <code>RoomOfferService</code>, never null.
+     * @return a <code>RoomOfferService</code>, never <code>null</code>.
+     * @throws RemoteException
+     *             if an remote problem occurs.
      */
-    RoomOfferService getRoomOfferService();
-
+    RoomOfferService getRoomOfferService() throws RemoteException;
 }

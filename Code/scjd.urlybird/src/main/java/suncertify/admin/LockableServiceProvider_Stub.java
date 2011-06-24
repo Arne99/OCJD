@@ -9,7 +9,7 @@ package suncertify.admin;
  */
 @SuppressWarnings("deprecation")
 public final class LockableServiceProvider_Stub extends
-	java.rmi.server.RemoteStub implements suncertify.common.ServicProvider,
+	java.rmi.server.RemoteStub implements suncertify.common.ServiceProvider,
 	java.rmi.Remote {
     private static final java.rmi.server.Operation[] operations = { new java.rmi.server.Operation(
 	    "suncertify.common.RoomOfferService getRoomOfferService()") };
@@ -28,7 +28,7 @@ public final class LockableServiceProvider_Stub extends
 			    java.lang.reflect.Method.class,
 			    java.lang.Object[].class, long.class });
 	    useNewInvoke = true;
-	    $method_getRoomOfferService_0 = suncertify.common.ServicProvider.class
+	    $method_getRoomOfferService_0 = suncertify.common.ServiceProvider.class
 		    .getMethod("getRoomOfferService", new java.lang.Class[] {});
 	} catch (final java.lang.NoSuchMethodException e) {
 	    useNewInvoke = false;
