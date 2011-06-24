@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 import suncertify.admin.AdministrationService;
-import suncertify.admin.ServerAdminGui;
+import suncertify.admin.ServerAdminView;
 import suncertify.admin.ServerAdminPresenter;
 import suncertify.client.DatabaseConnectionPanel;
 import suncertify.client.DatabaseConnectionPresenter;
@@ -155,7 +155,7 @@ final class ApplicationStarter {
      * Starts the server.
      */
     private static void startServer() {
-	final ServerAdminGui view = new ServerAdminGui();
+	final ServerAdminView view = new ServerAdminView();
 	final ServerAdminPresenter serverAdminPresenter = new ServerAdminPresenter(
 		view, new AdministrationService(),
 		UrlyBirdProperties.getInstance());

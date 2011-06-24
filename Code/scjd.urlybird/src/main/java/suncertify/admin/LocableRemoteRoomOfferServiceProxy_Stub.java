@@ -3,6 +3,10 @@
 
 package suncertify.admin;
 
+/**
+ * Fully generated.
+ * 
+ */
 @SuppressWarnings("deprecation")
 public final class LocableRemoteRoomOfferServiceProxy_Stub extends
 	java.rmi.server.RemoteStub implements
@@ -62,11 +66,18 @@ public final class LocableRemoteRoomOfferServiceProxy_Stub extends
 	}
     }
 
-    // constructors
+    /**
+     * Fully generated.
+     * 
+     */
     public LocableRemoteRoomOfferServiceProxy_Stub() {
 	super();
     }
 
+    /**
+     * Fully generated.
+     * 
+     */
     public LocableRemoteRoomOfferServiceProxy_Stub(
 	    final java.rmi.server.RemoteRef ref) {
 	super(ref);

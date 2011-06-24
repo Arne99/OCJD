@@ -3,6 +3,10 @@
 
 package suncertify.domain;
 
+/**
+ * Fully generated.
+ * 
+ */
 @SuppressWarnings("deprecation")
 public final class UrlyBirdRoomOfferService_Skel implements
 	java.rmi.server.Skeleton {

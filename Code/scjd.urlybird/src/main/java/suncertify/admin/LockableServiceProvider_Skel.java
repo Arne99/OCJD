@@ -3,6 +3,10 @@
 
 package suncertify.admin;
 
+/**
+ * Fully generated.
+ * 
+ */
 @SuppressWarnings("deprecation")
 public final class LockableServiceProvider_Skel implements
 	java.rmi.server.Skeleton {

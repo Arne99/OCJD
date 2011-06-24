@@ -23,7 +23,7 @@ import suncertify.common.UrlyBirdProperties;
 import suncertify.common.UrlyBirdProperties.PropertyName;
 
 /**
- * Presenter for the {@link ServerAdminGui}. Initializes the gui and contains
+ * Presenter for the {@link ServerAdminView}. Initializes the gui and contains
  * the gui logic in form of Listeners.
  * 
  * Follows the MVP pattern by Martin Fowler, for a better testability.
@@ -275,7 +275,7 @@ public final class ServerAdminPresenter {
     private final Logger logger = Logger.getLogger("global");
 
     /** the view. */
-    private final ServerAdminGui view;
+    private final ServerAdminView view;
 
     /** the service to start or stop the server. */
     private final AdministrationService service;
@@ -293,7 +293,7 @@ public final class ServerAdminPresenter {
      * @param properties
      *            the properties to load or store the user input.
      */
-    public ServerAdminPresenter(final ServerAdminGui view,
+    public ServerAdminPresenter(final ServerAdminView view,
 	    final AdministrationService service,
 	    final UrlyBirdProperties properties) {
 	super();

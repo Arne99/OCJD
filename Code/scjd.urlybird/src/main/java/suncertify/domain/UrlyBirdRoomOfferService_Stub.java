@@ -3,6 +3,10 @@
 
 package suncertify.domain;
 
+/**
+ * Fully generated.
+ * 
+ */
 @SuppressWarnings("deprecation")
 public final class UrlyBirdRoomOfferService_Stub extends
 	java.rmi.server.RemoteStub implements
@@ -62,11 +66,18 @@ public final class UrlyBirdRoomOfferService_Stub extends
 	}
     }
 
-    // constructors
+    /**
+     * Fully generated.
+     * 
+     */
     public UrlyBirdRoomOfferService_Stub() {
 	super();
     }
 
+    /**
+     * Fully generated.
+     * 
+     */
     public UrlyBirdRoomOfferService_Stub(final java.rmi.server.RemoteRef ref) {
 	super(ref);
     }

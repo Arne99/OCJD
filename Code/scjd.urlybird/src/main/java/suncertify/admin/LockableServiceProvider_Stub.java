@@ -3,6 +3,10 @@
 
 package suncertify.admin;
 
+/**
+ * Fully generated.
+ * 
+ */
 @SuppressWarnings("deprecation")
 public final class LockableServiceProvider_Stub extends
 	java.rmi.server.RemoteStub implements suncertify.common.ServicProvider,
@@ -31,11 +35,18 @@ public final class LockableServiceProvider_Stub extends
 	}
     }
 
-    // constructors
+    /**
+     * Fully generated.
+     * 
+     */
     public LockableServiceProvider_Stub() {
 	super();
     }
 
+    /**
+     * Fully generated.
+     * 
+     */
     public LockableServiceProvider_Stub(final java.rmi.server.RemoteRef ref) {
 	super(ref);
     }

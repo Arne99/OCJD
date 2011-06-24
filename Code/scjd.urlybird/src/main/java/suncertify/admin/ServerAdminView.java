@@ -27,7 +27,7 @@ import javax.swing.JTextField;
  * @author arnelandwehr
  * 
  */
-public final class ServerAdminGui {
+public final class ServerAdminView {
 
     /**
      * the SUID.

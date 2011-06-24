@@ -3,6 +3,11 @@
 
 package suncertify.admin;
 
+/**
+ * 
+ * Fully generated
+ * 
+ */
 @SuppressWarnings("deprecation")
 public final class LocableRemoteRoomOfferServiceProxy_Skel implements
 	java.rmi.server.Skeleton {
