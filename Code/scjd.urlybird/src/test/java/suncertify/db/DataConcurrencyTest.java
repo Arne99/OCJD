@@ -16,6 +16,7 @@ import org.junit.Test;
 import suncertify.datafile.DataFileService;
 import suncertify.datafile.UnsupportedDataFileFormatException;
 
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 /**
@@ -91,8 +92,9 @@ public final class DataConcurrencyTest {
 		for (int i = 0; i <= 100; i++) {
 		    try {
 			final String[] read = db.read(0);
-			if (!Arrays.equals(read, new String[] { "Palace",
-				"Smallville", "2", "Y", "$150.00",
+			final String[] trimmedRead = trimStrings(read);
+			if (!Arrays.equals(trimmedRead, new String[] {
+				"Palace", "Smallville", "2", "Y", "$150.00",
 				"2005/07/27", "" })) {
 			    exceptionHappened = true;
 			}
@@ -125,12 +127,13 @@ public final class DataConcurrencyTest {
 		for (int i = 0; i <= 100; i++) {
 		    try {
 			final String[] read = db.read(10);
+			final String[] trimmedRead = trimStrings(read);
 			Thread.yield();
 			final int[] find = db.find(new String[] { read[0],
 				null, null, null, read[4], null, null });
-			if (!Arrays.equals(read, new String[] { "Dew Drop Inn",
-				"Digitopolis", "4", "N", "$190.00",
-				"2005/09/17", "" })
+			if (!Arrays.equals(trimmedRead, new String[] {
+				"Dew Drop Inn", "Digitopolis", "4", "N",
+				"$190.00", "2005/09/17", "" })
 				|| !Arrays.equals(find, new int[] { 10 })) {
 			    exceptionHappened = true;
 			}
@@ -170,8 +173,9 @@ public final class DataConcurrencyTest {
 			db.update(0, updatedData, lock);
 			Thread.yield();
 			final String[] read = db.read(0);
-			if (!Arrays.equals(read, new String[] { "T", "T", "T",
-				"T", "T", "T", "T" })) {
+			final String[] trimmedRead = trimStrings(read);
+			if (!Arrays.equals(trimmedRead, new String[] { "T",
+				"T", "T", "T", "T", "T", "T" })) {
 			    exceptionHappened = true;
 			}
 		    } catch (final Exception e) {
@@ -186,6 +190,7 @@ public final class DataConcurrencyTest {
 		}
 
 	    }
+
 	};
 
 	excecuteConcurrent(updateAndReadTheFirstRecord);
@@ -215,6 +220,14 @@ public final class DataConcurrencyTest {
 	for (final Thread thread : threads) {
 	    thread.join();
 	}
+    }
+
+    private String[] trimStrings(final String[] read) {
+	final List<String> trimmed = Lists.newArrayList();
+	for (final String string : read) {
+	    trimmed.add(string.trim());
+	}
+	return trimmed.toArray(new String[] {});
     }
 
 }

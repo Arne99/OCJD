@@ -1,7 +1,9 @@
 package suncertify.datafile;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -9,16 +11,14 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-
-import suncertify.common.Specification;
-import suncertify.db.DatabaseHandler;
-import suncertify.db.Record;
-import suncertify.db.RecordNotFoundException;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import suncertify.db.DatabaseHandler;
+import suncertify.db.Record;
+import suncertify.db.RecordNotFoundException;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
@@ -77,40 +77,12 @@ public final class DataFileServiceTest {
 	final DatabaseHandler handler = DataFileService.instance()
 		.getDatabaseHandler(anyFile);
 	final Record record = handler.readRecord(0);
+	final List<String> expected = trimValues(record.getAllBusinessValues());
 
 	final List<String> expectedReccord = Lists.newArrayList("Palace",
 		"Smallville", "2", "Y", "$150.00", "2005/07/27", "");
 
-	assertThat(record.getAllBusinessValues(), is(equalTo(expectedReccord)));
-    }
-
-    /**
-     * Test test.
-     * 
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     * @throws UnsupportedDataFileFormatException
-     *             the unsupported data file format exception
-     */
-    @Test
-    public void testTest() throws IOException,
-	    UnsupportedDataFileFormatException {
-
-	final DatabaseHandler handler = DataFileService.instance()
-		.getDatabaseHandler(anyFile);
-	final Set<Record> records = handler
-		.findMatchingRecords(new Specification<Record>() {
-
-		    @Override
-		    public boolean isSatisfiedBy(final Record record) {
-			return true;
-		    }
-		});
-
-	for (final Record record : records) {
-	    System.out.println(record);
-	}
-
+	assertThat(expected, is(equalTo(expectedReccord)));
     }
 
     /**
@@ -153,10 +125,11 @@ public final class DataFileServiceTest {
 	final DatabaseHandler handler = DataFileService.instance()
 		.getDatabaseHandler(anyFile);
 	final Record record = handler.readRecord(9);
+	final List<String> expected = trimValues(record.getAllBusinessValues());
 
 	final List<String> expectedReccord = Lists.newArrayList("Dew Drop Inn",
 		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "");
-	assertThat(record.getAllBusinessValues(), is(equalTo(expectedReccord)));
+	assertThat(expected, is(equalTo(expectedReccord)));
     }
 
     /**
@@ -238,10 +211,12 @@ public final class DataFileServiceTest {
 	handler.writeRecord(writeRecord, 100);
 
 	final Record readRecord = handler.readRecord(100);
+	final List<String> expected = trimValues(readRecord
+		.getAllBusinessValues());
+
 	final List<String> expectedRecord = Lists.newArrayList("TEST",
 		"Pleasantville", "6", "N", "$160.00", "2005/03/04", "");
-	assertThat(readRecord.getAllBusinessValues(),
-		is(equalTo(expectedRecord)));
+	assertThat(expected, is(equalTo(expectedRecord)));
     }
 
     /**
@@ -262,6 +237,15 @@ public final class DataFileServiceTest {
 
 	final Record record = handler.readRecord(6);
 	assertFalse(record.isValid());
+    }
+
+    private List<String> trimValues(final List<String> strings) {
+
+	final List<String> trimmed = Lists.newArrayList();
+	for (final String string : strings) {
+	    trimmed.add(string.trim());
+	}
+	return trimmed;
     }
 
 }

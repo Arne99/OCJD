@@ -39,11 +39,12 @@
 	</target>
 
 	<target name="javadoc" depends="compile">
-		<javadoc access="package" destdir="docs/javadoc" author="true" version="true" use="true" windowtitle="Urly Bird ">
+		<javadoc overview="${src}/overview.html" access="package" destdir="docs/javadoc" author="true" version="true" use="true" windowtitle="Urly Bird ">
 			<fileset dir="${src}" defaultexcludes="yes">
 				<include name="**/*.java" />
 			</fileset>
 			<link href="http://download.oracle.com/javase/6/docs/api/" />
+			 
 		</javadoc>
 	</target>
 

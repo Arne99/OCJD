@@ -2,9 +2,12 @@ package suncertify.db;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import org.junit.Test;
+import org.mockito.internal.util.ArrayUtils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -31,8 +34,8 @@ public class DataTest {
 	verify(databaseHandler).writeRecord(anyList(), anyInt());
     }
 
-    @Test(expected = DuplicateKeyException.class)
-    public void shouldThrowAnDuplicateKEyExceptionIfTheRecordIsAlreadyStoredInTheDatabase()
+    @Test
+    public void shouldNotThrowAnDuplicateKeyExceptionIfTheRecordIsAlreadyStoredInTheDatabase()
 	    throws DuplicateKeyException, IOException {
 
 	final HashSet<Record> result = Sets.newHashSet(mock(Record.class));
@@ -289,7 +292,8 @@ public class DataTest {
 
 	final int[] result = data.find(criteria);
 
-	assertThat(result, is(equalTo(new int[] { 1, 2 })));
+	assertTrue(Arrays.equals(result, new int[] { 1, 2 })
+		|| Arrays.equals(result, new int[] { 2, 1 }));
     }
 
     @Test(expected = DatabaseException.class)

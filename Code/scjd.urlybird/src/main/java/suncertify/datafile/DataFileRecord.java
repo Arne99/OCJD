@@ -69,8 +69,7 @@ abstract class DataFileRecord implements Record {
 
 	for (final RecordValue recordValue : values) {
 	    if (recordValue.isBuisnessValue()) {
-		final String trimmedValue = recordValue.getValue().trim();
-		businessValues.add(trimmedValue);
+		businessValues.add(recordValue.getValue());
 	    }
 
 	}

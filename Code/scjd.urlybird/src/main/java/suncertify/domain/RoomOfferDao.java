@@ -3,7 +3,6 @@ package suncertify.domain;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -99,8 +98,14 @@ final class RoomOfferDao implements DataAccessObject<UrlyBirdRoomOffer> {
     public UrlyBirdRoomOffer read(final int index)
 	    throws RecordNotFoundException, ConstraintViolationException {
 	final String[] values = database.read(index);
+
+	final List<String> trimmedValues = new ArrayList<String>();
+	for (final String value : values) {
+	    trimmedValues.add(value.trim());
+	}
+
 	final UrlyBirdRoomOffer roomOffer = factory.createRoomOffer(
-		Arrays.asList(values), index);
+		trimmedValues, index);
 
 	return roomOffer;
     }

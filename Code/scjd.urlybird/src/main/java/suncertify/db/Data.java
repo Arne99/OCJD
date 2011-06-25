@@ -164,18 +164,12 @@ public final class Data implements DB {
     @Override
     public int create(final String[] data) throws DuplicateKeyException {
 
-	// must be synchronized there must not be an concurrent create between
-	// find, findEmptyIndex and create.
+	// must be synchronized there must not be a concurrent create between
+	// findEmptyIndex and create.
 	synchronized (this) {
 	    try {
-		final int[] duplicateRecordIndices = find(data);
-		if (duplicateRecordIndices.length != 0) {
-		    throw new DuplicateKeyException(
-			    "the row to insert into the database is already stored. Data to insert: "
-				    + Arrays.toString(data)
-				    + " rows with the same data: "
-				    + Arrays.toString(duplicateRecordIndices));
-		}
+		// throws never a DuplicateKeyExceptio, because the only key is
+		// the index and it can not be duplicate.
 		final int emptyIndex = handler.findEmptyIndex();
 		handler.writeRecord(Arrays.asList(data), emptyIndex);
 		return emptyIndex;

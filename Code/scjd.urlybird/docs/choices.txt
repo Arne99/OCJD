@@ -1,0 +1,52 @@
+------------- Design choices for the UrlyBird application ------------- 
+
+
+-------- Content -------- 
+1. Code style
+2. General architecture decisions
+3. Networking
+4. Concurrency
+5. Database
+6. Domain
+7. Client
+
+
+1. Code style
+	- sun coding conventions
+	- final 
+	- small methods
+	- small classes
+	- expressive method names
+	- very few comments
+	- javadoc for private methods
+	
+2. 	General architecture decisions
+	- layers (3 vs.2 tier)
+	- package structure
+	- extension points
+	- interfaces as gateways to every package
+	
+3. Networking
+	- rmi vs. sockets
+	- the admin package
+	- the lockableservice
+	- bypassing the network in local mode
+	- mvp pattern for the admin gui
+	
+4. Concurrency
+	- general considerations
+	- no cache
+	- immutable classes
+	- data class implementation, locker implementation
+	- synchronized methods
+	- index as key
+
+5. Database
+	- exchangable with the databasehandler (SQL databse is possible)
+	- divide the structure from the data (schema from rows)
+	- chain pattern
+	- read and write everything at once
+	- null object
+	- deleted as column	
+	- no duplicate key exception
+	- 		
