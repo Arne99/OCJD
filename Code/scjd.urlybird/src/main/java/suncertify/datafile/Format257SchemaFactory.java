@@ -1,6 +1,6 @@
 package suncertify.datafile;
 
-import static suncertify.common.DesignByContract.*;
+import static suncertify.common.DesignByContract.checkNotNull;
 
 import java.io.DataInputStream;
 import java.io.File;

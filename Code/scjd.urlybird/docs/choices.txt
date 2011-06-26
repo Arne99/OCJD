@@ -59,7 +59,8 @@ Architecture decisions to solve the goals:
 							  
 - package structure: 		  The package structure should be consistent in the application. Every package lies under suncertify and could be viewed as one cohesive unit. For example: the package datafile 
 							  contains all classes that are needed to access the data file. Every package has a public service as an access point to the package functionality (like the DataFileService).
-							  This guarantees a low coupling inside the application.  
+							  This guarantees a low coupling inside the application.
+							  There should also be no cycle package dependency (the only cycle is given through the default constructor of the data class... this is a work around because i did not know if i have to support one for the automatic tests).
 							  
 - stable interfaces:          The possible replacement of the client and/or the data file without affecting the rest of the application needs stable interfaces that supports this. 
 							  
@@ -73,14 +74,22 @@ Architecture decisions to solve the goals:
 - testability: 				  A high degree of testability is provided by the dependency injection pattern ( mainly constructor injection). One example here for is the Data class, the needed dependences (RecordLocker, DatabaseHandler) are supported by intefaces and 
 							  could be injected through the constructor. So the Data functionality could be tested without writing to an real data file. 	
 	
-
+- logging					  For a better maintainability in the exception case is the global logger used. Because of the relative simple application only the global logger is used and only for exceptons. 
+							  It protocols every exception in an error log in the current working dir of the user. 
 
 -------- Networking --------
 
-
+- rmi vs. sockets: 			  RMI has the advantages that it is less code and a clean and simple design for the client. The disadvantage is that the creation of threads is out of the control of the application developer. 
+							  So every class must be thread safe (s. rmi factory pattern). Sockets is a more low level solution that must (could?) be fully implemented by the application developer.
+							  Because of the more elegant approach i have chosen the RMI solution.
+							  
+- rmi factory pattern: 		  RMI has the problem that the developer does not know if 					  
 	
 3. Networking
 	- rmi vs. sockets
+	- concurrency with rmi factory
+	- lockable service
+	- 
 	- the admin package
 	- the lockableservice
 	- bypassing the network in local mode

@@ -1,6 +1,6 @@
 package suncertify.datafile;
 
-import static suncertify.common.DesignByContract.*;
+import static suncertify.common.DesignByContract.checkNotNull;
 
 /**
  * An <code>Utf8Decoder</code> could be used to transform an array of UTF8

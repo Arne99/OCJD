@@ -83,10 +83,10 @@ final class ApplicationStarter {
      * The UrlyBird application main method. The following command line
      * arguments are supported:
      * <ul>
-     * <li>blanc string \"\" => starts the client application</li>
-     * <li>\"alone\" => starts the stand alone application without server and
+     * <li>blanc string "" => starts the client application</li>
+     * <li>"alone" => starts the stand alone application without server and
      * networking</li>
-     * <li>\"server\" \"\" => starts the server application</li>
+     * <li>"server" => starts the server application</li>
      * </ul>
      * 
      * Every other command line parameter will not be excepted and terminate the
