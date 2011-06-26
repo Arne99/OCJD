@@ -11,20 +11,73 @@
 7. Client
 
 
-1. Code style
-	- sun coding conventions
-	- final 
-	- small methods
-	- small classes
-	- expressive method names
-	- very few comments
-	- javadoc for private methods
+
+-------- Coding style -------- 
+- the coding style follows the sun coding conventions.
+- every class that is not designed for inheritance is marked as final.
+- in favor to in line comments have the mostly short methods and classes expressive names.
+- in line comments are only available if the code can not express a certain circumstance. 
+- the classes are kept short for a better understandability and object oriented design, 116 classes contains 5597 lines of code =  48,25 lines per class.
+- every class contains only the related methods for a better cohesion. 116 classes contains 420 methods = 3,62 ,methods per class.
+- the methods are kept short and should just provide one single function on one level of abstraction. 420 methods contains 5597 lines of code = 13,3 lines per method.
+- anonymous classes are transformed to inner classes to give them also an expressive method name: an anonymous ActionListerner => inner class EnableConnectionButtonListener.
+- non public methods and classes has also an JavaDoc comment for a better maintainability.
+ -every class, method and member has the lowest possible access modifier to guarantee a lower coupling. 
+
+
+
+-------- General architecture decisions --------
+
+
+Main goals of the chosen architecture:
+
+Functional requirements:
+- Networking: s. 3.
+- Concurreny: s. 4.
+- Database access: s. 5.
+- Domain logic: s. 6.
+
+Non functional requirements main goals:
+
+- Extensibility: the UrlyBird application to create should be the first step to an application with an 
+				 web front end where the customers could book and find rooms for themselves. So the client application (the swing client) must be exchangeable in the future. 
+				 The same could be supposed for the flat file store. A larger application would need a real database (maybe a rational database).
+				 So the application must provide extension points for a replacement of the swing client and the data file access code. Also the business logic should be reusable.  
+				 
+- Maintainability: The UrlyBird application should be only the first step for a company wide solution. So it must be highly maintainable. 
+				   The design of the application should be simple, consistent and clear. It should also support a good testability of the applciation.
+
+Architecture decisions to solve the goals:
+
+- 2 vs. 3 layer architecture: The simplest approach would be a 2 layer architecture, presentation (client) and data access (server). In this approach would the business logic and the concurrency control
+							  (record locking) be on the client side. The server would have the database access code and the networking services.  
+							  This would not allow a high degree on extensibility. By replacing the client you have also to reimplement the whole business logic. Also the record locking on client side is 
+							  very insecure (What if a client dies? How get the locks released?) and must also be reimplemented if the client changes. 
+							  The alternative is a 3 layer approach, presentation (client), domain logic (server) and data access (also server). In this approach is the domain logic layer reusable and the presentation and data access
+							  layer could be replaced (this follows the MVC design pattern on an architecture level). This is what will be needed in the future. Furthermore the server is responsible for the concurrency control, so it is also reusable and securer.
+							  Although the 3 layer solution is more complex it is chosen because of the necessary advantages.
+							  
+- package structure: 		  The package structure should be consistent in the application. Every package lies under suncertify and could be viewed as one cohesive unit. For example: the package datafile 
+							  contains all classes that are needed to access the data file. Every package has a public service as an access point to the package functionality (like the DataFileService).
+							  This guarantees a low coupling inside the application.  
+							  
+- stable interfaces:          The possible replacement of the client and/or the data file without affecting the rest of the application needs stable interfaces that supports this. 
+							  
+							  DatabaseHandler and DB:
+							  The database access layer is reachable through the DB interface. This is independent of the underlying database (flat file or what ever). A new database could be simple supported by implementing a new (SQL based?) DatabaseHandler.
+							  The locking of the records is unaffected of this because it is in the responsibility of the DB implementation. 
+							  
+							  RoomService:
+							  The client only talks to the server through the RommService interface. So a replacement of the client does not affect the server.
+							  
+- testability: 				  A high degree of testability is provided by the dependency injection pattern ( mainly constructor injection). One example here for is the Data class, the needed dependences (RecordLocker, DatabaseHandler) are supported by intefaces and 
+							  could be injected through the constructor. So the Data functionality could be tested without writing to an real data file. 	
 	
-2. 	General architecture decisions
-	- layers (3 vs.2 tier)
-	- package structure
-	- extension points
-	- interfaces as gateways to every package
+
+
+-------- Networking --------
+
+
 	
 3. Networking
 	- rmi vs. sockets
@@ -49,4 +102,21 @@
 	- null object
 	- deleted as column	
 	- no duplicate key exception
-	- 		
+	- SecurityException
+	- find algorithm
+	- IO Exception handling (RecordNotFound or DatabaseException)
+	- record caching
+	
+6. Domain
+	- one Service class
+	- RoomOffers only on Server
+	- Factory
+	- Dirty Reads
+	- Synchronized Methods?
+	- Problem stale data in find class not solved
+	
+7. Client
+	- one main window and some dialogs
+	- MVP pattern for better testability
+	- nested classes for listeners to name them
+	- 				

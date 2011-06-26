@@ -1,6 +1,7 @@
 package suncertify.datafile;
 
-import static suncertify.common.DesignByContract.*;
+import static suncertify.common.DesignByContract.checkNotNegativ;
+import static suncertify.common.DesignByContract.checkNotNull;
 
 import java.io.File;
 import java.io.IOException;
