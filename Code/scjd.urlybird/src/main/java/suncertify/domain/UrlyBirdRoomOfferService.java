@@ -32,6 +32,11 @@ import suncertify.db.RecordNotFoundException;
  */
 public final class UrlyBirdRoomOfferService implements RoomOfferService {
 
+    /**
+     * the SUID.
+     */
+    private static final long serialVersionUID = 8381952360611208057L;
+
     /** logger for the thrown exceptions, global is sufficient here. */
     private final Logger logger = Logger.getLogger("global");
 
