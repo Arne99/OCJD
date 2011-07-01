@@ -17,10 +17,34 @@ import suncertify.datafile.UnsupportedDataFileFormatException;
  * relational and flat file databases if the necessary {@link DatabaseHandler}
  * is provided.
  * 
+ * Singleton because the should be only one access to the database.
+ * 
  * @author arnelandwehr
  * 
  */
 public final class Data implements DB {
+
+    /** the singleton instance. */
+    private static Data instance;
+
+    /**
+     * Return the instance of the Data class.
+     * 
+     * @param handler
+     *            the handler that operates with the real database in the
+     *            back-end, must not be <code>null</code>.
+     * @param locker
+     *            the locker that locks single records for write operations,
+     *            must not be <code>null</code>.
+     * @return the singleton instance of the <code>Data</code> class.
+     */
+    static synchronized Data getInstance(final DatabaseHandler handler,
+	    final RecordLocker locker) {
+	if (instance == null) {
+	    instance = new Data(handler, locker);
+	}
+	return instance;
+    }
 
     /** exception logger, global is sufficient here. */
     private final Logger logger = Logger.getLogger("global");

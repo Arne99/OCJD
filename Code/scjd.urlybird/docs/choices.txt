@@ -12,7 +12,7 @@
 
 
 
--------- Coding style -------- 
+-------- 1. Coding style -------- 
 - the coding style follows the sun coding conventions.
 - every class that is not designed for inheritance is marked as final.
 - in favor to in line comments have the mostly short methods and classes expressive names.
@@ -26,7 +26,7 @@
 
 
 
--------- General architecture decisions --------
+-------- 2. General architecture decisions --------
 
 
 Main goals of the chosen architecture:
@@ -77,23 +77,33 @@ Architecture decisions to solve the goals:
 - logging					  For a better maintainability in the exception case is the global logger used. Because of the relative simple application only the global logger is used and only for exceptons. 
 							  It protocols every exception in an error log in the current working dir of the user. 
 
--------- Networking --------
+-------- 3. Networking --------
 
 - rmi vs. sockets: 			  RMI has the advantages that it is less code and a clean and simple design for the client. The disadvantage is that the creation of threads is out of the control of the application developer. 
 							  So every class must be thread safe (s. rmi factory pattern). Sockets is a more low level solution that must (could?) be fully implemented by the application developer.
 							  Because of the more elegant approach i have chosen the RMI solution.
 							  
-- rmi factory pattern: 		  RMI has the problem that the developer does not know if 					  
+- rmi factory pattern: 		  RMI has the problem that the developer does not know if and when a objects are used by multiple threads. So every class must be thread safe, even the domain classes. 
+							  To Êcircumvent this the rmi factory pattern is used. In place of publishing one RoomOfferService object to the client by putting it in the Naming service, a RoomOfferService factory the LocableServiceProvider is reachable for the client.
+							  Every client constructs its own RoomOfferService, so the concurrency is limited to the database layer (s. 4.).
+							  
+- loackable server services:  The server could be stopped at any time. This prevents the client from getting new services by the Naming service. But existing references to the RoomOfferService are still valid.
+							  With these could a client still modify the database with a stopped server. To prevent this the proxy pattern is used, with the classes LocableRemoteRoomOfferServiceProxy and LockableSerivceProvider.
+							  Every published service could be locked by this gateway classes.
+							  
+- bypassing the network code: In the alone mode must the network (rmi) code be bypassed. This is accomplished with the dependency injection pattern. In the server mode the UrlyBirdPresenter gets an remote RoomOfferService from the Naming service, in the local mode
+							  the presenter gets a new created RoomOfferService. THe new created RoomOfferService is no remote object an does not communicate to any server.
+							    							     				  
+- changing the connection:    The established connection to the database (in the alone mode) or the server (in the network mode) could be modified by the user. This is also reached with the dependency injection pattern.
+							  The UrlyBridPresnter only needs an object from the type RoomOfferServiceProvider. This is injected by the ApplicationStarter. In the local mode an DatabaseConnectionPresenter and in the network mode an ServerConnectionPresenter is injected.	
+
+
+
+-------- 4. Concurrency --------
 	
-3. Networking
-	- rmi vs. sockets
-	- concurrency with rmi factory
-	- lockable service
-	- 
-	- the admin package
-	- the lockableservice
-	- bypassing the network in local mode
-	- mvp pattern for the admin gui
+- narrow concurrcy to the database layer:  By using the rmi factory fattern (s. 3.) the concurency problems are limited to the database layer. This is a huge benefit for avoiding concurrency related problems.
+
+- singletons as data gateways:              				   	
 	
 4. Concurrency
 	- general considerations
