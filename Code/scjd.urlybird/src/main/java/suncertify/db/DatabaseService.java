@@ -35,7 +35,6 @@ public class DatabaseService {
     public final DB connectToDatabase(final DatabaseHandler databaseHandler)
 	    throws DatabaseConnectionException {
 
-	return Data.getInstance(databaseHandler,
-		SynchronizedRecordLocker.instance());
+	return new Data(databaseHandler, SynchronizedRecordLocker.instance());
     }
 }
