@@ -1,0 +1,158 @@
+------------- Design choices for the UrlyBird application ------------- 
+
+
+-------- Content -------- 
+1. Code style
+2. General architecture decisions
+3. Networking
+4. Concurrency
+5. Database
+6. Domain
+7. Client
+
+
+
+-------- 1. Coding style -------- 
+- the coding style follows the sun coding conventions.
+- every class that is not designed for inheritance is marked as final.
+- in favor to in line comments have the mostly short methods and classes expressive names.
+- in line comments are only available if the code can not express a certain circumstance. 
+- the classes are kept short for a better understandability and object oriented design, 116 classes contains 5597 lines of code =  48,25 lines per class.
+- every class contains only the related methods for a better cohesion. 116 classes contains 420 methods = 3,62 ,methods per class.
+- the methods are kept short and should just provide one single function on one level of abstraction. 420 methods contains 5597 lines of code = 13,3 lines per method.
+- anonymous classes are transformed to inner classes to give them also an expressive method name: an anonymous ActionListerner => inner class EnableConnectionButtonListener.
+- non public methods and classes has also an JavaDoc comment for a better maintainability.
+ -every class, method and member has the lowest possible access modifier to guarantee a lower coupling. 
+
+
+
+-------- 2. General architecture decisions --------
+
+
+Main goals of the chosen architecture:
+
+Functional requirements:
+- Networking: s. 3.
+- Concurrency: s. 4.
+- Database access: s. 5.
+- Domain logic: s. 6.
+
+Non functional requirements main goals:
+
+- Extensibility: the UrlyBird application to create should be the first step to an application with an 
+				 web front end where the customers could book and find rooms for themselves. So the client application (the swing client) must be exchangeable in the future. 
+				 The same could be supposed for the flat file store. A larger application would need a real database (maybe a rational database).
+				 So the application must provide extension points for a replacement of the swing client and the data file access code. Also the business logic should be reusable.  
+				 
+- Maintainability: The UrlyBird application should be only the first step for a company wide solution. So it must be highly maintainable. 
+				   The design of the application should be simple, consistent and clear. It should also support a good testability of the applciation.
+
+Architecture decisions to solve the goals:
+
+- 2 vs. 3 layer architecture: The simplest approach would be a 2 layer architecture, presentation (client) and data access (server). In this approach would the business logic and the concurrency control
+							  (record locking) be on the client side. The server would have the database access code and the networking services.  
+							  This would not allow a high degree on extensibility. By replacing the client you have also to reimplement the whole business logic. Also the record locking on client side is 
+							  very insecure (What if a client dies? How get the locks released?) and must also be reimplemented if the client changes. 
+							  The alternative is a 3 layer approach, presentation (client), domain logic (server) and data access (also server). In this approach is the domain logic layer reusable and the presentation and data access
+							  layer could be replaced (this follows the MVC design pattern on an architecture level). This is what will be needed in the future. Furthermore the server is responsible for the concurrency control, so it is also reusable and securer.
+							  Although the 3 layer solution is more complex it is chosen because of the necessary advantages.
+							  
+- package structure: 		  The package structure should be consistent in the application. Every package lies under suncertify and could be viewed as one cohesive unit. For example: the package datafile 
+							  contains all classes that are needed to access the data file. Every package has a public service as an access point to the package functionality (like the DataFileService).
+							  This guarantees a low coupling inside the application.
+							  There should also be no cycle package dependency (the only cycle is given through the default constructor of the data class... this is a work around because i did not know if i have to support one for the automatic tests).
+							  
+- stable interfaces:          The possible replacement of the client and/or the data file without affecting the rest of the application needs stable interfaces that supports this. 
+							  
+							  DatabaseHandler and DB:
+							  The database access layer is reachable through the DB interface. This is independent of the underlying database (flat file or what ever). A new database could be simple supported by implementing a new (SQL based?) DatabaseHandler.
+							  The locking of the records is unaffected of this because it is in the responsibility of the DB implementation. 
+							  
+							  RoomService:
+							  The client only talks to the server through the RommService interface. So a replacement of the client does not affect the server.
+							  
+- testability: 				  A high degree of testability is provided by the dependency injection pattern ( mainly constructor injection). One example here for is the Data class, the needed dependences (RecordLocker, DatabaseHandler) are supported by intefaces and 
+							  could be injected through the constructor. So the Data functionality could be tested without writing to an real data file. 	
+	
+- logging					  For a better maintainability in the exception case is the global logger used. Because of the relative simple application only the global logger is used and only for exceptons. 
+							  It protocols every exception in an error log in the current working dir of the user. 
+
+-------- 3. Networking --------
+
+- rmi vs. sockets: 			  RMI has the advantages that it is less code and a clean and simple design for the client. The disadvantage is that the creation of threads is out of the control of the application developer. 
+							  So every class must be thread safe (s. rmi factory pattern). Sockets is a more low level solution that must (could?) be fully implemented by the application developer.
+							  Because of the more elegant approach i have chosen the RMI solution.
+							  
+- rmi factory pattern: 		  RMI has the problem that the developer does not know if and when a objects are used by multiple threads. So every class must be thread safe, even the domain classes. 
+							  To Êcircumvent this the rmi factory pattern is used. In place of publishing one RoomOfferService object to the client by putting it in the Naming service, a RoomOfferService factory the LocableServiceProvider is reachable for the client.
+							  Every client constructs its own RoomOfferService, so the concurrency is limited to the database layer (s. 4.).
+							  
+- loackable server services:  The server could be stopped at any time. This prevents the client from getting new services by the Naming service. But existing references to the RoomOfferService are still valid.
+							  With these could a client still modify the database with a stopped server. To prevent this the proxy pattern is used, with the classes LocableRemoteRoomOfferServiceProxy and LockableSerivceProvider.
+							  Every published service could be locked by this gateway classes.
+							  
+- bypassing the network code: In the alone mode must the network (rmi) code be bypassed. This is accomplished with the dependency injection pattern. In the server mode the UrlyBirdPresenter gets an remote RoomOfferService from the Naming service, in the local mode
+							  the presenter gets a new created RoomOfferService. THe new created RoomOfferService is no remote object an does not communicate to any server.
+							    							     				  
+- changing the connection:    The established connection to the database (in the alone mode) or the server (in the network mode) could be modified by the user. This is also reached with the dependency injection pattern.
+							  The UrlyBridPresnter only needs an object from the type RoomOfferServiceProvider. This is injected by the ApplicationStarter. In the local mode an DatabaseConnectionPresenter and in the network mode an ServerConnectionPresenter is injected.	
+
+
+
+-------- 4. Concurrency --------
+
+- general considerations: 				   The Data class has two different functions: 1. the CRUD operations on the database and 2. the locking of records. For a better cohesion the composition is used. The whole database access operations are provided by the DataFileHandler and
+									       the locking operations are provided by the SynchronizedRecordLocker. 
+	
+- narrow concurrcy to the database layer:  By using the rmi factory fattern (s. 3.) the concurency problems are limited to the database layer. This is a huge benefit for avoiding concurrency related problems.
+
+- record locker as singleton:			   The locking of single records is done by the SynchronizedRecordLocker. This class follows the singleton pattern, so there could be only one record locker object in the application. 	              				   	
+
+- record owner id:						   The SynchronizedRecordLocker has a Map that stores every currently locked record	and its owner. So an identifier for the different owners are needed. By using a 3 layer approach the owners are not the different client but the different threads on the server side.
+										   So an record owner is identified by his thread id, which must be unique for every thread.
+
+- synchronized areas: 					  The record locker completely synchronized on one mutex. This prevents race conditions for the record lock. Also the create method of the data class is internally synchronized. Because it has to find an empty index and then write 
+										  the record to it, this operations must also be atomic.
+										  
+- immutable classes:					  The most classes are immutable to be naturally thread safe. An Examples is the DataFileHandler.
+
+- atomic read and write operations:  	  Every write and read operation in the DataFileHandler is atomic. This means the whole data is for example written in one block to the data file, to prevent race conditions on the IO level.  
+	
+- no record cache:						  "Premature optimization is the root of all evil" (Donald Knuth) so i decided not to use a record cache. It would make the application more complicated and the performance is good enough.
+
+- index as RoomOffer attribute:           Every update operation need the index of the record. So normally you have to get the index of the record before you can update it. So every update method would not consist of the two operations find and update. This is not atomic and must be synchronized.
+										  I solved this problem by using the index as an attribute of every RoomOffer.
+
+
+
+-------- 4. Database --------
+
+- abstracting from the data file:		To fulfill the maintainability goals (s. 1.) the data file must be replaceable by an other database. There for the data access code is divided in two packages. The db package that does not know anything about the real backend database and the datafile package that
+										contains the specific CRUD code for the data file. If the data file must be replaced, for example by am relational database, the db package could be reused. Only a new DatabaseHandler in a new package for the new database must be implemented.	
+						   
+- flexible data file schema: 			 						   
+	- exchangable with the databasehandler (SQL databse is possible)
+	- divide the structure from the data (schema from rows)
+	- chain pattern
+	- read and write everything at once
+	- null object
+	- deleted as column	
+	- no duplicate key exception
+	- SecurityException
+	- find algorithm
+	- IO Exception handling (RecordNotFound or DatabaseException)
+	- record caching
+	
+6. Domain
+	- one Service class
+	- RoomOffers only on Server
+	- Factory
+	- Dirty Reads
+	- Synchronized Methods?
+	- Problem stale data in find class not solved
+	
+7. Client
+	- one main window and some dialogs
+	- MVP pattern for better testability
+	- nested classes for listeners to name them
+	- 				
